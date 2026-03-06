@@ -39,7 +39,7 @@ jobs:
         env:
           # ⚠️  Set this to /your-repo-name/  (include slashes)
           # Example: VITE_BASE_PATH: /pinz-bowling-league/
-          VITE_BASE_PATH: /pinz-bowling-league/
+          VITE_BASE_PATH: /tues-nite/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
