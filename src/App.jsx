@@ -35,8 +35,9 @@ export default function App() {
   const [data, setData]               = useState(null)
   const [loading, setLoading]         = useState(true)
   const [error, setError]             = useState(null)
-  const [currentView, setCurrentView] = useState('dashboard')
+  const [currentView, setCurrentView] = useState('teams')
   const [selectedWeek, setSelectedWeek] = useState(null)
+  const [selectedTeam, setSelectedTeam] = useState(null)
 
   useEffect(() => {
     fetch('./data.json')
@@ -55,7 +56,12 @@ export default function App() {
   const sortedWeekNums = Object.keys(data.weeks).map(Number).sort((a, b) => a - b)
   const weekData = data.weeks[String(selectedWeek)] ?? data.weeks[String(sortedWeekNums.at(-1))]
 
-  const viewProps = { data, weekData, allWeeks: data.weeks, meta: data.meta }
+  function navigateToTeam(teamName) {
+    setSelectedTeam(teamName)
+    setCurrentView('bowlers')
+  }
+
+  const viewProps = { data, weekData, allWeeks: data.weeks, meta: data.meta, selectedTeam, onTeamClick: navigateToTeam }
 
   return (
     <div className="min-h-screen bg-alley-900 font-body">
@@ -106,7 +112,7 @@ export default function App() {
       </header>
 
       {/* ── Nav ── */}
-      <Nav currentView={currentView} onViewChange={setCurrentView} />
+      <Nav currentView={currentView} onViewChange={v => { if (v !== 'bowlers') setSelectedTeam(null); setCurrentView(v) }} />
 
       {/* ── Main ── */}
       <main className="max-w-7xl mx-auto px-3 sm:px-4 py-6 animate-fade-in">

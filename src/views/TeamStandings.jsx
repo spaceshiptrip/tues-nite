@@ -1,143 +1,329 @@
 import { useState, useMemo } from 'react'
-import { computeTeams } from '../utils/dataUtils.js'
 
-const SORT_OPTS = [
-  { key: 'teamAvg',     label: 'Team Avg',   dir: 'desc' },
-  { key: 'TeamName',    label: 'Name',        dir: 'asc'  },
-  { key: 'highGame',    label: 'High Game',   dir: 'desc' },
-  { key: 'highSeries',  label: 'High Series', dir: 'desc' },
+const SORT_COLS = [
+  { key: 'place',          label: 'Place',       num: true  },
+  { key: 'teamNum',        label: '#',            num: true  },
+  { key: 'teamName',       label: 'Team Name',    num: false },
+  { key: 'pctWon',         label: '% Won',        num: true  },
+  { key: 'pointsWon',      label: 'Pts Won',      num: true  },
+  { key: 'pointsLost',     label: 'Pts Lost',     num: true  },
+  { key: 'unearnedPoints', label: 'Unearned',     num: true  },
+  { key: 'ytdWon',         label: 'YTD Won',      num: true  },
+  { key: 'ytdLost',        label: 'YTD Lost',     num: true  },
+  { key: 'gamesWon',       label: 'Games Won',    num: true  },
+  { key: 'scratchPins',    label: 'Scratch Pins', num: true  },
+  { key: 'hdcpPins',       label: 'HDCP Pins',    num: true  },
 ]
 
-function TeamCard({ team, rank }) {
-  const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : null
+function PlaceBadge({ place }) {
+  if (place === 1) return <span className="text-xl">🥇</span>
+  if (place === 2) return <span className="text-xl">🥈</span>
+  if (place === 3) return <span className="text-xl">🥉</span>
+  return <span className="font-mono text-gray-500 text-sm">{place}</span>
+}
+
+function SortArrow({ colKey, sort }) {
+  if (sort.key !== colKey) return <span className="text-gray-700 ml-1">⇅</span>
+  return <span className="text-pin-400 ml-1">{sort.dir === 'asc' ? '↑' : '↓'}</span>
+}
+
+function RosterPanel({ teamName, bowlers, onClose, onFullStats }) {
+  const active = [...bowlers]
+    .filter(b => b.TotalGames > 0)
+    .sort((a, b) => b.Average - a.Average)
+
+  const teamScratchAvg = active.length
+    ? Math.round(active.reduce((s, b) => s + b.Average, 0) / active.length)
+    : 0
+  const teamHcpAvg = active.length
+    ? Math.round(active.reduce((s, b) => s + b.HandicapAfterBowling, 0) / active.length)
+    : 0
+
   return (
-    <div className="stat-card rounded-lg p-4 hover:border-pin-500/40">
-      <div className="flex items-start justify-between mb-3">
+    <div className="mt-1 mb-1 rounded-lg border border-pin-500/20 overflow-hidden animate-slide-up">
+      <div className="flex items-center justify-between px-4 py-2 bg-alley-600 border-b border-white/[0.06]">
+        <div className="flex items-center gap-3">
+          <h4 className="font-ui font-800 text-pin-400 uppercase tracking-wider text-sm">
+            🎳 {teamName}
+          </h4>
+          <span className="badge badge-gold text-xs">Scratch avg {teamScratchAvg}</span>
+          <span className="badge badge-blue text-xs">Hcp avg {teamHcpAvg}</span>
+          <span className="badge badge-gray text-xs">Combined {teamScratchAvg + teamHcpAvg}</span>
+        </div>
         <div className="flex items-center gap-2">
-          {medal && <span className="text-xl">{medal}</span>}
-          {!medal && <span className="font-mono text-gray-600 w-6 text-sm">#{rank}</span>}
-          <div>
-            <h3 className="font-ui font-800 text-gray-100 text-base leading-tight">{team.TeamName}</h3>
-            <p className="font-ui text-xs text-gray-500">{team.bowlers.length} bowlers</p>
-          </div>
-        </div>
-        <div className="text-right">
-          <div className="font-display text-3xl text-pin-400">{team.teamAvg}</div>
-          <div className="font-ui text-xs text-gray-600 uppercase tracking-wider">Team Avg</div>
+          <button
+            onClick={onFullStats}
+            className="text-xs font-ui text-gray-500 hover:text-pin-400 transition-colors border border-white/10 rounded px-2 py-0.5"
+          >
+            Full stats →
+          </button>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-300 text-lg leading-none ml-1">×</button>
         </div>
       </div>
 
-      {/* Stat row */}
-      <div className="grid grid-cols-4 gap-2 text-center border-t border-white/[0.06] pt-3">
-        {[
-          { label: 'Hi Game', val: team.highGame },
-          { label: 'Hi Series', val: team.highSeries },
-          { label: 'Hi Hcp Game', val: team.highHcpGame },
-          { label: 'Total Pins', val: team.totalPins.toLocaleString() },
-        ].map(({ label, val }) => (
-          <div key={label}>
-            <div className="font-mono text-sm text-gray-200">{val || '—'}</div>
-            <div className="font-ui text-xs text-gray-600">{label}</div>
-          </div>
-        ))}
-      </div>
-
-      {/* Top bowlers */}
-      <div className="mt-3 space-y-1">
-        {[...team.bowlers]
-          .filter(b => b.TotalGames > 0)
-          .sort((a, b) => b.Average - a.Average)
-          .slice(0, 4)
-          .map(b => (
-            <div key={b.BowlerID} className="flex items-center justify-between text-xs">
-              <span className="font-ui text-gray-400">{b.BowlerName}</span>
-              <span className="font-mono text-gray-300">{b.Average}</span>
-            </div>
-          ))}
+      <div className="overflow-x-auto bg-alley-800">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-alley-700">
+              <th className="text-left px-3 py-2 font-ui text-xs text-gray-500 uppercase tracking-wider">Bowler</th>
+              <th className="text-center px-3 py-2 font-ui text-xs text-gray-500 uppercase tracking-wider">G</th>
+              <th className="text-right px-3 py-2 font-ui text-xs text-pin-500 uppercase tracking-wider">Scratch Avg</th>
+              <th className="text-right px-3 py-2 font-ui text-xs text-blue-500 uppercase tracking-wider">Handicap</th>
+              <th className="text-right px-3 py-2 font-ui text-xs text-green-500 uppercase tracking-wider">Avg + Hcp</th>
+              <th className="text-right px-3 py-2 font-ui text-xs text-gray-500 uppercase tracking-wider">Hi Game</th>
+              <th className="text-right px-3 py-2 font-ui text-xs text-gray-500 uppercase tracking-wider">Hi Series</th>
+              <th className="text-right px-3 py-2 font-ui text-xs text-gray-500 uppercase tracking-wider">Hi Hcp Gm</th>
+              <th className="text-right px-3 py-2 font-ui text-xs text-gray-500 uppercase tracking-wider">Hi Hcp Ser</th>
+            </tr>
+          </thead>
+          <tbody>
+            {active.map((b, i) => {
+              const combined = b.Average + b.HandicapAfterBowling
+              return (
+                <tr key={b.BowlerID} className={`${i % 2 === 0 ? 'bg-alley-800' : 'bg-alley-700'} hover:bg-white/[0.03]`}>
+                  <td className="px-3 py-2">
+                    <span className="font-ui font-700 text-gray-200">{b.BowlerName}</span>
+                    <span className={`ml-2 text-xs ${b.Gender === 'W' ? 'text-blue-400' : 'text-gray-600'}`}>
+                      {b.Gender}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2 text-center font-mono text-gray-500">{b.TotalGames}</td>
+                  <td className="px-3 py-2 text-right font-mono text-pin-400 font-bold text-base">{b.Average}</td>
+                  <td className="px-3 py-2 text-right font-mono text-blue-400">{b.HandicapAfterBowling}</td>
+                  <td className="px-3 py-2 text-right font-mono text-green-400 font-bold">{combined}</td>
+                  <td className="px-3 py-2 text-right font-mono text-gray-300">{b.HighScratchGame || '—'}</td>
+                  <td className="px-3 py-2 text-right font-mono text-gray-300">{b.HighScratchSeries || '—'}</td>
+                  <td className="px-3 py-2 text-right font-mono text-gray-400">{b.HighHandicapGame || '—'}</td>
+                  <td className="px-3 py-2 text-right font-mono text-gray-400">{b.HighHandicapSeries || '—'}</td>
+                </tr>
+              )
+            })}
+            {active.length === 0 && (
+              <tr>
+                <td colSpan={9} className="text-center text-gray-600 py-4 text-sm">No games bowled yet</td>
+              </tr>
+            )}
+          </tbody>
+          {active.length > 0 && (
+            <tfoot>
+              <tr className="bg-alley-600 border-t border-white/[0.08]">
+                <td className="px-3 py-2 font-ui font-700 text-gray-400 text-xs uppercase tracking-wider">
+                  Team ({active.length} bowlers)
+                </td>
+                <td className="px-3 py-2 text-center font-mono text-gray-500 text-xs">
+                  {active.reduce((s, b) => s + b.TotalGames, 0)}
+                </td>
+                <td className="px-3 py-2 text-right font-mono text-pin-400 font-bold">{teamScratchAvg}</td>
+                <td className="px-3 py-2 text-right font-mono text-blue-400">{teamHcpAvg}</td>
+                <td className="px-3 py-2 text-right font-mono text-green-400 font-bold">{teamScratchAvg + teamHcpAvg}</td>
+                <td className="px-3 py-2 text-right font-mono text-gray-300">
+                  {Math.max(...active.map(b => b.HighScratchGame))}
+                </td>
+                <td className="px-3 py-2 text-right font-mono text-gray-300">
+                  {Math.max(...active.map(b => b.HighScratchSeries))}
+                </td>
+                <td className="px-3 py-2 text-right font-mono text-gray-400">
+                  {Math.max(...active.map(b => b.HighHandicapGame))}
+                </td>
+                <td className="px-3 py-2 text-right font-mono text-gray-400">
+                  {Math.max(...active.map(b => b.HighHandicapSeries))}
+                </td>
+              </tr>
+            </tfoot>
+          )}
+        </table>
       </div>
     </div>
   )
 }
 
-export default function TeamStandings({ weekData }) {
-  const [sortKey, setSortKey] = useState('teamAvg')
+export default function TeamStandings({ weekData, onTeamClick }) {
+  const [sort, setSort]           = useState({ key: 'place', dir: 'asc' })
+  const [expandedTeam, setExpanded] = useState(null)
 
   if (!weekData) return <p className="text-gray-500">No data.</p>
 
-  const teams = useMemo(() => computeTeams(weekData.bowlers), [weekData])
+  const standings = weekData.standings ?? []
+
+  const bowlerMap = useMemo(() => {
+    const m = {}
+    weekData.bowlers.forEach(b => {
+      if (!m[b.TeamName]) m[b.TeamName] = []
+      m[b.TeamName].push(b)
+    })
+    return m
+  }, [weekData])
 
   const sorted = useMemo(() => {
-    const opt = SORT_OPTS.find(o => o.key === sortKey) ?? SORT_OPTS[0]
-    return [...teams].sort((a, b) => {
-      const av = a[sortKey], bv = b[sortKey]
-      if (typeof av === 'string') return opt.dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av)
-      return opt.dir === 'desc' ? bv - av : av - bv
+    return [...standings].sort((a, b) => {
+      let av = a[sort.key], bv = b[sort.key]
+      if (av == null) av = sort.dir === 'asc' ? Infinity : -Infinity
+      if (bv == null) bv = sort.dir === 'asc' ? Infinity : -Infinity
+      if (typeof av === 'string') return sort.dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av)
+      return sort.dir === 'asc' ? av - bv : bv - av
     })
-  }, [teams, sortKey])
+  }, [standings, sort])
+
+  function toggleSort(col) {
+    setSort(s => ({
+      key: col.key,
+      dir: s.key === col.key ? (s.dir === 'asc' ? 'desc' : 'asc') : 'asc'
+    }))
+  }
+
+  if (standings.length === 0) {
+    return (
+      <div className="space-y-3 animate-slide-up">
+        <h2 className="font-display text-2xl text-pin-400">🏆 Team Standings</h2>
+        <div className="bg-alley-700 rounded-lg border border-white/[0.06] p-6 text-center">
+          <p className="text-gray-400 mb-2">Official standings not yet synced.</p>
+          <p className="text-gray-600 text-sm">
+            Run <code className="text-pin-400 bg-alley-600 px-1 rounded">node sync.js</code> to pull Points Won/Lost from LeagueSecretary.
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="space-y-4 animate-slide-up">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-2xl text-pin-400">Team Standings</h2>
-        <p className="text-xs text-gray-600 italic">Rankings by team avg (W/L from standings sheet)</p>
+    <div className="space-y-2 animate-slide-up">
+      <div className="flex flex-wrap items-end justify-between gap-2 mb-3">
+        <div>
+          <h2 className="font-display text-2xl text-pin-400">🏆 Team Standings</h2>
+          <p className="text-xs text-gray-500 mt-0.5">
+            Week {weekData.weekNum} · {weekData.dateBowled} · Lanes 1–16 · 8:00 PM
+            <span className="mx-2 text-gray-700">·</span>
+            <span className="text-gray-600">Click team name to expand roster</span>
+          </p>
+        </div>
+        <span className="badge badge-gold">{sorted.filter(t => t.teamNum !== 16).length} teams</span>
       </div>
 
-      {/* Sort controls */}
-      <div className="flex flex-wrap gap-2">
-        <span className="font-ui text-xs text-gray-500 uppercase tracking-wider self-center mr-1">Sort by:</span>
-        {SORT_OPTS.map(opt => (
-          <button
-            key={opt.key}
-            onClick={() => setSortKey(opt.key)}
-            className={`px-3 py-1.5 rounded text-xs font-ui font-700 uppercase tracking-wider transition-colors ${
-              sortKey === opt.key
-                ? 'bg-pin-500 text-alley-900'
-                : 'bg-alley-700 text-gray-400 hover:text-gray-200 border border-white/10'
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Summary table */}
       <div className="overflow-x-auto rounded-lg border border-white/[0.06]">
         <table className="data-table w-full">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Team</th>
-              <th>Bowlers</th>
-              <th>Team Avg</th>
-              <th>Hi Game</th>
-              <th>Hi Series</th>
-              <th>Hi Hcp Game</th>
-              <th>Hi Hcp Series</th>
-              <th>Total Pins</th>
+              {SORT_COLS.map(col => (
+                <th
+                  key={col.key}
+                  onClick={() => toggleSort(col)}
+                  className={sort.key === col.key ? 'sorted' : ''}
+                  style={{ textAlign: col.key === 'teamName' ? 'left' : 'right', paddingLeft: col.key === 'place' ? '12px' : undefined }}
+                >
+                  {col.label} <SortArrow colKey={col.key} sort={sort} />
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {sorted.map((t, i) => (
-              <tr key={t.TeamID} className={i % 2 === 0 ? 'bg-alley-800' : 'bg-alley-700'}>
-                <td className="text-center text-gray-600 text-xs">{i + 1}</td>
-                <td className="name-cell text-gray-100 font-bold">{t.TeamName}</td>
-                <td className="text-gray-400">{t.bowlers.filter(b => b.TotalGames > 0).length}</td>
-                <td className="text-pin-400 font-bold">{t.teamAvg}</td>
-                <td className="text-gray-200">{t.highGame || '—'}</td>
-                <td className="text-gray-200">{t.highSeries || '—'}</td>
-                <td className="text-gray-400">{t.highHcpGame || '—'}</td>
-                <td className="text-gray-400">{t.highHcpSeries || '—'}</td>
-                <td className="text-gray-500">{t.totalPins.toLocaleString()}</td>
-              </tr>
-            ))}
+            {sorted.map((t, i) => {
+              const isBye      = t.teamNum === 16
+              const isExpanded = expandedTeam === t.teamName
+              return (
+                <>
+                  <tr
+                    key={t.teamNum}
+                    className={`
+                      ${i % 2 === 0 ? 'bg-alley-800' : 'bg-alley-700'}
+                      ${isBye ? 'opacity-40' : ''}
+                      ${isExpanded ? 'border-l-2 border-l-pin-500' : ''}
+                    `}
+                  >
+                    {/* Place */}
+                    <td className="text-center"><PlaceBadge place={t.place} /></td>
+
+                    {/* # */}
+                    <td className="text-right font-mono text-gray-500">{t.teamNum}</td>
+
+                    {/* Team Name */}
+                    <td className="name-cell">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => !isBye && setExpanded(e => e === t.teamName ? null : t.teamName)}
+                          disabled={isBye}
+                          className={`font-ui font-700 text-left transition-colors ${
+                            isBye
+                              ? 'text-gray-600 cursor-default'
+                              : isExpanded
+                                ? 'text-pin-400'
+                                : 'text-gray-100 hover:text-pin-400'
+                          }`}
+                        >
+                          {isExpanded ? '▼ ' : '▶ '}{t.teamName}
+                        </button>
+                        {!isBye && (
+                          <button
+                            onClick={() => onTeamClick?.(t.teamName)}
+                            title="Bowler stats view"
+                            className="opacity-50 hover:opacity-100 text-xs transition-opacity"
+                          >📋</button>
+                        )}
+                      </div>
+                    </td>
+
+                    {/* % Won */}
+                    <td className="text-right">
+                      <span className={`font-mono text-sm font-bold ${
+                        t.pctWon >= 50 ? 'text-green-400' : t.pctWon > 0 ? 'text-red-400' : 'text-gray-600'
+                      }`}>
+                        {t.pctWon > 0 ? `${t.pctWon}%` : '—'}
+                      </span>
+                    </td>
+
+                    {/* Points Won */}
+                    <td className="text-right font-mono font-bold text-green-400">{t.pointsWon}</td>
+
+                    {/* Points Lost */}
+                    <td className="text-right font-mono text-red-400">{t.pointsLost}</td>
+
+                    {/* Unearned */}
+                    <td className="text-right font-mono">
+                      {t.unearnedPoints > 0
+                        ? <span className="text-yellow-400">{t.unearnedPoints}</span>
+                        : <span className="text-gray-700">—</span>}
+                    </td>
+
+                    {/* YTD Won/Lost */}
+                    <td className="text-right font-mono text-gray-300">{t.ytdWon}</td>
+                    <td className="text-right font-mono text-gray-500">{t.ytdLost}</td>
+
+                    {/* Games Won */}
+                    <td className="text-right font-mono text-gray-300 font-bold">{t.gamesWon}</td>
+
+                    {/* Scratch Pins */}
+                    <td className="text-right font-mono text-gray-400">
+                      {t.scratchPins > 0 ? t.scratchPins.toLocaleString() : '—'}
+                    </td>
+
+                    {/* HDCP Pins */}
+                    <td className="text-right font-mono text-gray-200">
+                      {t.hdcpPins > 0 ? t.hdcpPins.toLocaleString() : '—'}
+                    </td>
+                  </tr>
+
+                  {/* Expanded inline roster */}
+                  {isExpanded && !isBye && (
+                    <tr key={`${t.teamNum}-roster`}>
+                      <td colSpan={SORT_COLS.length} className="px-3 pb-2 bg-alley-800">
+                        <RosterPanel
+                          teamName={t.teamName}
+                          bowlers={bowlerMap[t.teamName] ?? []}
+                          onClose={() => setExpanded(null)}
+                          onFullStats={() => onTeamClick?.(t.teamName)}
+                        />
+                      </td>
+                    </tr>
+                  )}
+                </>
+              )
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
-        {sorted.map((t, i) => <TeamCard key={t.TeamID} team={t} rank={i + 1} />)}
-      </div>
+      <p className="text-xs text-gray-700 pt-1 italic">
+        ▶ Click team name to expand roster inline &nbsp;·&nbsp; 📋 jumps to full bowler stats view
+      </p>
     </div>
   )
 }

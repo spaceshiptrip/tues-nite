@@ -19,9 +19,9 @@ function SortArrow({ col, sort }) {
   return <span className="text-pin-400 ml-1">{sort.dir === 'asc' ? '↑' : '↓'}</span>
 }
 
-export default function BowlerTable({ weekData }) {
+export default function BowlerTable({ weekData, selectedTeam }) {
   const [search, setSearch] = useState('')
-  const [teamFilter, setTeamFilter] = useState('ALL')
+  const [teamFilter, setTeamFilter] = useState(selectedTeam ?? 'ALL')
   const [sort, setSort] = useState({ key: 'Average', dir: 'desc' })
   const [genderFilter, setGenderFilter] = useState('ALL')
 
@@ -95,6 +95,18 @@ export default function BowlerTable({ weekData }) {
         <h2 className="font-display text-2xl text-pin-400">Bowler Stats</h2>
         <span className="badge badge-gray">{filtered.length} bowlers</span>
       </div>
+
+      {selectedTeam && teamFilter === selectedTeam && (
+        <div className="flex items-center gap-3 bg-alley-700 border border-pin-500/20 rounded-lg px-4 py-2">
+          <span className="text-pin-400 font-ui font-700 text-sm">🏆 Filtered: {selectedTeam}</span>
+          <button
+            onClick={() => setTeamFilter('ALL')}
+            className="text-xs text-gray-500 hover:text-gray-300 border border-white/10 rounded px-2 py-0.5 transition-colors"
+          >
+            Show all bowlers
+          </button>
+        </div>
+      )}
 
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
