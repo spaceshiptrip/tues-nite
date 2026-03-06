@@ -1,13 +1,28 @@
 import { useState, useMemo } from 'react'
 
+// GB = Games Behind = ((leader.ptsWon - team.ptsWon) + (team.ptsLost - leader.ptsLost)) / 2
+function computeGB(standings) {
+  const active = standings.filter(t => t.teamNum !== 16)
+  if (!active.length) return {}
+  const leader = [...active].sort((a, b) => b.pointsWon - a.pointsWon)[0]
+  const map = {}
+  for (const t of standings) {
+    if (t.teamNum === 16) { map[t.teamNum] = null; continue }
+    const gb = ((leader.pointsWon - t.pointsWon) + (t.pointsLost - leader.pointsLost)) / 2
+    map[t.teamNum] = gb === 0 ? 0 : gb
+  }
+  return map
+}
+
 const SORT_COLS = [
   { key: 'place',          label: 'Place',       num: true  },
   { key: 'teamNum',        label: '#',            num: true  },
   { key: 'teamName',       label: 'Team Name',    num: false },
-  { key: 'pctWon',         label: '% Won',        num: true  },
   { key: 'pointsWon',      label: 'Pts Won',      num: true  },
   { key: 'pointsLost',     label: 'Pts Lost',     num: true  },
   { key: 'unearnedPoints', label: 'Unearned',     num: true  },
+  { key: '_gb',            label: 'GB',           num: true  },
+  { key: 'pctWon',         label: '% Won',        num: true  },
   { key: 'ytdWon',         label: 'YTD Won',      num: true  },
   { key: 'ytdLost',        label: 'YTD Lost',     num: true  },
   { key: 'gamesWon',       label: 'Games Won',    num: true  },
@@ -154,15 +169,22 @@ export default function TeamStandings({ weekData, onTeamClick }) {
     return m
   }, [weekData])
 
+  const gbMap = useMemo(() => computeGB(standings), [standings])
+
+  const enriched = useMemo(() =>
+    standings.map(t => ({ ...t, _gb: gbMap[t.teamNum] ?? null })),
+    [standings, gbMap]
+  )
+
   const sorted = useMemo(() => {
-    return [...standings].sort((a, b) => {
+    return [...enriched].sort((a, b) => {
       let av = a[sort.key], bv = b[sort.key]
       if (av == null) av = sort.dir === 'asc' ? Infinity : -Infinity
       if (bv == null) bv = sort.dir === 'asc' ? Infinity : -Infinity
       if (typeof av === 'string') return sort.dir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av)
       return sort.dir === 'asc' ? av - bv : bv - av
     })
-  }, [standings, sort])
+  }, [enriched, sort])
 
   function toggleSort(col) {
     setSort(s => ({
@@ -199,16 +221,21 @@ export default function TeamStandings({ weekData, onTeamClick }) {
         <span className="badge badge-gold">{sorted.filter(t => t.teamNum !== 16).length} teams</span>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-white/[0.06]">
+      {/* max-h + overflow-auto on one element makes sticky thead work across both axes */}
+      <div className="rounded-lg border border-white/[0.06] overflow-auto max-h-[72vh]">
         <table className="data-table w-full">
-          <thead>
+          <thead className="sticky top-0 z-10">
             <tr>
               {SORT_COLS.map(col => (
                 <th
                   key={col.key}
                   onClick={() => toggleSort(col)}
                   className={sort.key === col.key ? 'sorted' : ''}
-                  style={{ textAlign: col.key === 'teamName' ? 'left' : 'right', paddingLeft: col.key === 'place' ? '12px' : undefined }}
+                  style={{
+                    textAlign: col.key === 'teamName' ? 'left' : 'right',
+                    background: '#111116',
+                    boxShadow: '0 1px 0 rgba(245,158,11,0.3)',
+                  }}
                 >
                   {col.label} <SortArrow colKey={col.key} sort={sort} />
                 </th>
@@ -261,15 +288,6 @@ export default function TeamStandings({ weekData, onTeamClick }) {
                       </div>
                     </td>
 
-                    {/* % Won */}
-                    <td className="text-right">
-                      <span className={`font-mono text-sm font-bold ${
-                        t.pctWon >= 50 ? 'text-green-400' : t.pctWon > 0 ? 'text-red-400' : 'text-gray-600'
-                      }`}>
-                        {t.pctWon > 0 ? `${t.pctWon}%` : '—'}
-                      </span>
-                    </td>
-
                     {/* Points Won */}
                     <td className="text-right font-mono font-bold text-green-400">{t.pointsWon}</td>
 
@@ -281,6 +299,26 @@ export default function TeamStandings({ weekData, onTeamClick }) {
                       {t.unearnedPoints > 0
                         ? <span className="text-yellow-400">{t.unearnedPoints}</span>
                         : <span className="text-gray-700">—</span>}
+                    </td>
+
+                    {/* GB */}
+                    <td className="text-right font-mono">
+                      {isBye || t._gb === null ? (
+                        <span className="text-gray-700">—</span>
+                      ) : t._gb === 0 ? (
+                        <span className="text-pin-400 font-bold">—</span>
+                      ) : (
+                        <span className="text-gray-300">{t._gb % 1 === 0 ? t._gb : t._gb.toFixed(1)}</span>
+                      )}
+                    </td>
+
+                    {/* % Won */}
+                    <td className="text-right">
+                      <span className={`font-mono text-sm font-bold ${
+                        t.pctWon >= 50 ? 'text-green-400' : t.pctWon > 0 ? 'text-red-400' : 'text-gray-600'
+                      }`}>
+                        {t.pctWon > 0 ? `${t.pctWon}%` : '—'}
+                      </span>
                     </td>
 
                     {/* YTD Won/Lost */}
