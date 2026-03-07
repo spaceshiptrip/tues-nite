@@ -19,17 +19,29 @@
  * PDF support: npm install pdf-parse
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync, readdirSync, createReadStream } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { createInterface } from 'readline'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
+
+// Load .env if present (LS_EMAIL / LS_PASSWORD for API auth)
+const envPath = join(__dirname, '.env')
+if (existsSync(envPath)) {
+  for (const line of readFileSync(envPath, 'utf8').split('\n')) {
+    const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*)$/)
+    if (m) process.env[m[1]] ??= m[2].replace(/^["']|["']$/g, '')
+  }
+}
 const DATA_PATH = join(__dirname, 'public', 'data.json')
 
-const LEAGUE_ID = 147337
-const SLUG_BASE = 'https://www.leaguesecretary.com/bowling-centers/pinz-bowling-center/bowling-leagues/tuesday-nite-league/league'
-const PNG_URL   = `${SLUG_BASE}/standings-png/${LEAGUE_ID}`
-const API_URL   = 'https://www.leaguesecretary.com/League/InteractiveStandings_Read'
+const LEAGUE_ID  = 147337
+const SLUG_BASE  = 'https://www.leaguesecretary.com/bowling-centers/pinz-bowling-center/bowling-leagues/tuesday-nite-league/league'
+const PNG_URL    = `${SLUG_BASE}/standings-png/${LEAGUE_ID}`
+const API_URL    = 'https://www.leaguesecretary.com/League/InteractiveStandings_Read'
+const LOGIN_URL  = 'https://www.leaguesecretary.com/account/login'
+const BASE_URL   = 'https://www.leaguesecretary.com'
 
 // ── CLI args ──────────────────────────────────────────────────────────────────
 
@@ -38,54 +50,291 @@ const forceWeek     = args.includes('--week')           ? args[args.indexOf('--w
 const standingsOnly = args.includes('--standings-only') ? args[args.indexOf('--standings-only') + 1] : null
 const forcePdf      = args.includes('--pdf')            ? args[args.indexOf('--pdf')            + 1] : null
 
-// ── HTTP ──────────────────────────────────────────────────────────────────────
+// ── HTTP / Session ────────────────────────────────────────────────────────────
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36'
 
+// Module-level session cookie — populated by login(), used by all requests after
+let sessionCookie = ''
+
+/**
+ * Parse Set-Cookie headers into a single cookie string.
+ * Keeps only the name=value part of each cookie (strips path/expires/etc).
+ */
+function parseSetCookies(headers) {
+  const raw = headers.getSetCookie?.() ?? []
+  return raw.map(c => c.split(';')[0]).filter(Boolean).join('; ')
+}
+
+/**
+ * Prompt for a value on stdin. If `secret` is true, disables echo (password).
+ */
+async function prompt(question, secret = false) {
+  const rl = createInterface({ input: process.stdin, output: process.stdout })
+  return new Promise(resolve => {
+    if (secret) {
+      // Write question manually, suppress echo via raw mode
+      process.stdout.write(question)
+      process.stdin.setRawMode?.(true)
+      process.stdin.resume()
+      process.stdin.setEncoding('utf8')
+      let input = ''
+      const onData = ch => {
+        if (ch === '\n' || ch === '\r' || ch === '\u0003') {
+          process.stdin.setRawMode?.(false)
+          process.stdin.pause()
+          process.stdin.removeListener('data', onData)
+          process.stdout.write('\n')
+          rl.close()
+          resolve(input)
+        } else if (ch === '\u007f') {
+          input = input.slice(0, -1)  // backspace
+        } else {
+          input += ch
+        }
+      }
+      process.stdin.on('data', onData)
+    } else {
+      rl.question(question, answer => { rl.close(); resolve(answer.trim()) })
+    }
+  })
+}
+
+/**
+ * Log into LeagueSecretary using LS_EMAIL / LS_PASSWORD from .env.
+ * If either is missing, prompts interactively.
+ *
+ * LeagueSecretary uses Kendo Form (fields built by JS) so there is no
+ * __RequestVerificationToken hidden input in the HTML.  Instead ASP.NET Core
+ * sets an antiforgery cookie on the GET, and Kendo reads + sends it as the
+ * RequestVerificationToken request header on the POST.
+ */
+async function login() {
+  let email    = process.env.LS_EMAIL    ?? ''
+  let password = process.env.LS_PASSWORD ?? ''
+
+  if (!email)    email    = await prompt('  LeagueSecretary email: ')
+  if (!password) password = await prompt('  LeagueSecretary password: ', true)
+
+  // Write back so Playwright can read via process.env
+  process.env.LS_EMAIL    = email
+  process.env.LS_PASSWORD = password
+
+  // Step 1: GET login page — grab antiforgery cookie
+  console.log(`  🔐 Logging in as ${email}…`)
+  const getRes = await fetch(LOGIN_URL, {
+    headers: { 'User-Agent': UA, 'Accept': 'text/html' },
+    redirect: 'follow',
+  })
+  if (!getRes.ok) throw new Error(`Login GET failed: ${getRes.status}`)
+  const getCookies = parseSetCookies(getRes.headers)
+
+  // ASP.NET Core antiforgery cookie is named .AspNetCore.Antiforgery.XXXX
+  // Kendo sends its value as the RequestVerificationToken header
+  const antiforgeryMatch = getCookies.match(/\.AspNetCore\.Antiforgery\.[^=]+=([^;]+)/)
+  const antiforgeryToken = antiforgeryMatch ? antiforgeryMatch[1] : ''
+
+  if (!antiforgeryToken) {
+    // Some ASP.NET Core configs don't require it — try without
+    console.log('  ⚠️  No antiforgery cookie found — attempting login without token')
+  }
+
+  // Step 2: POST credentials
+  const body = new URLSearchParams({ Email: email, Password: password })
+  const postRes = await fetch(LOGIN_URL, {
+    method:   'POST',
+    headers:  {
+      'Content-Type':              'application/x-www-form-urlencoded',
+      'User-Agent':                UA,
+      'Accept':                    'text/html,application/xhtml+xml',
+      'Referer':                   LOGIN_URL,
+      'Cookie':                    getCookies,
+      ...(antiforgeryToken ? { 'RequestVerificationToken': antiforgeryToken } : {}),
+    },
+    body:     body.toString(),
+    redirect: 'manual',
+  })
+
+  const postCookies = parseSetCookies(postRes.headers)
+
+  // Merge GET + POST cookies; POST wins on duplicates
+  const merged = {}
+  for (const pair of `${getCookies}; ${postCookies}`.split(';')) {
+    const [k, ...v] = pair.trim().split('=')
+    if (k) merged[k.trim()] = v.join('=').trim()
+  }
+  sessionCookie = Object.entries(merged).map(([k, v]) => `${k}=${v}`).join('; ')
+
+  // Successful login → 302 redirect away from /account/login
+  // Failed login → 200 (re-renders the login page)
+  if (postRes.status === 302) {
+    const dest = postRes.headers.get('location') ?? ''
+    console.log(`  ✓ Logged in (→ ${dest})`)
+
+    // Follow the redirect — the server may set additional cookies (e.g.
+    // .LeagueSecretary.Session) on the redirect destination, not on the
+    // login POST response itself
+    const redirectUrl = dest.startsWith('http') ? dest : `${BASE_URL}${dest}`
+    const redirectRes = await fetch(redirectUrl, {
+      headers: {
+        'User-Agent': UA,
+        'Accept':     'text/html',
+        'Cookie':     sessionCookie,
+      },
+      redirect: 'manual',
+    })
+    const redirectCookies = parseSetCookies(redirectRes.headers)
+    if (redirectCookies) {
+      for (const pair of redirectCookies.split(';')) {
+        const [k, ...v] = pair.trim().split('=')
+        if (k) merged[k.trim()] = v.join('=').trim()
+      }
+      sessionCookie = Object.entries(merged).map(([k, v]) => `${k}=${v}`).join('; ')
+      const hasSession = sessionCookie.includes('.LeagueSecretary.Session')
+      console.log(`  ${hasSession ? '✓' : '⚠️ '} Session cookie${hasSession ? ' (.LeagueSecretary.Session ✓)' : ' — .LeagueSecretary.Session not found'}`)
+    }
+    return true
+  }
+  if (postRes.status === 200) {
+    throw new Error('Login returned 200 — credentials likely incorrect (wrong email/password)')
+  }
+  throw new Error(`Unexpected login response: ${postRes.status}`)
+}
+
 async function fetchHtml(url) {
   console.log(`  GET  ${url}`)
-  const res = await fetch(url, { headers: { 'User-Agent': UA, 'Accept': 'text/html' } })
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': UA,
+      'Accept':     'text/html',
+      ...(sessionCookie ? { 'Cookie': sessionCookie } : {}),
+    },
+  })
   if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`)
   return res.text()
 }
 
 async function fetchStandingsApi(year, season, weekNum) {
-  const body = new URLSearchParams({
-    sort: '', page: '1', pageSize: '50', skip: '0', take: '50',
-    leagueId: String(LEAGUE_ID), year: String(year), season: String(season), week: String(weekNum),
-  })
-  console.log(`  POST ${API_URL}  [wk=${weekNum} yr=${year} s=${season}]`)
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'User-Agent': UA, 'Accept': 'application/json',
-      'X-Requested-With': 'XMLHttpRequest',
-      'Referer': `${SLUG_BASE}/standings/${LEAGUE_ID}`,
-    },
-    body: body.toString(),
-  })
-  if (!res.ok) throw new Error(`API HTTP ${res.status} ${res.statusText}`)
-  const json = await res.json()
-  if (!json?.Data || !Array.isArray(json.Data))
-    throw new Error(`Unexpected API shape: ${JSON.stringify(json).slice(0, 120)}`)
-  return json.Data
+  let chromium
+  try {
+    chromium = (await import('playwright')).chromium
+  } catch {
+    console.log('  ⚠️  playwright not installed — run: npm install playwright && npx playwright install chromium')
+    return []
+  }
+
+  const email    = process.env.LS_EMAIL    ?? ''
+  const password = process.env.LS_PASSWORD ?? ''
+  if (!email || !password) { console.log('  ⚠️  LS_EMAIL/LS_PASSWORD not set'); return [] }
+
+  console.log(`  🌐 Launching browser for week ${weekNum}…`)
+  const browser = await chromium.launch({ headless: true })
+  const page    = await browser.newPage()
+
+  try {
+    // Intercept the standings AJAX response
+    let standingsData = null
+    page.on('response', async res => {
+      if (res.url().includes('InteractiveStandings_Read') && res.request().method() === 'POST') {
+        try {
+          const json = await res.json()
+          if (json?.Data?.length) standingsData = json.Data
+        } catch {}
+      }
+    })
+
+    // Step 1: login
+    console.log('  → Logging in…')
+    await page.goto('https://www.leaguesecretary.com/account/login')
+    await page.fill('input[name=Email]',    email)
+    await page.fill('input[name=Password]', password)
+    await Promise.all([
+      page.waitForNavigation(),
+      page.click('button[type=submit], input[type=submit]'),
+    ])
+    console.log(`  → Logged in, at: ${page.url()}`)
+
+    // Step 2: navigate to standings page — Kendo grid fires AJAX automatically
+    const url = `${SLUG_BASE}/standings/${LEAGUE_ID}/${year}/${season}/${weekNum}`
+    console.log(`  → Loading standings week ${weekNum}…`)
+    // waitUntil networkidle means all AJAX has completed — no manual setTimeout needed
+    await page.goto(url, { waitUntil: 'networkidle' })
+
+    if (standingsData?.length) {
+      console.log(`  ✓ Got ${standingsData.length} standings rows`)
+    } else {
+      console.log('  ⚠️  No standings data intercepted')
+    }
+    return standingsData ?? []
+  } finally {
+    await browser.close()
+  }
 }
 
 // ── Bowler / week parsers ─────────────────────────────────────────────────────
 
 function extractBowlers(html) {
-  const marker = '"dataSource":[{"TeamID"'
-  const start  = html.indexOf(marker)
-  if (start === -1) throw new Error('Bowler data marker not found')
-  const arrStart = html.indexOf('[', start + '"dataSource":'.length)
+  // standings-png page: bowler JSON embedded directly → unescaped quotes
+  const directMarker = '"dataSource":[{"TeamID"'
+  const directStart  = html.indexOf(directMarker)
+  if (directStart !== -1) {
+    const arrStart = html.indexOf('[', directStart + '"dataSource":'.length)
+    let depth = 0, i = arrStart
+    while (i < html.length) {
+      if (html[i] === '[') depth++
+      else if (html[i] === ']') { depth--; if (depth === 0) break }
+      i++
+    }
+    return JSON.parse(html.slice(arrStart, i + 1))
+  }
+
+  // standings page: bowler JSON is inside a Kendo dialog "content" JSON string,
+  // so all internal quotes are escaped as \"  →  look for the escaped marker
+  const escapedMarker = '\\"dataSource\\":[{\\"TeamID\\"'
+  const escapedStart  = html.indexOf(escapedMarker)
+  if (escapedStart === -1) throw new Error('Bowler data marker not found')
+
+  const arrStart = html.indexOf('[', escapedStart + '\\"dataSource\\":'.length)
+
+  // Walk to the matching ] — skip over \" (escaped quotes won't be [ or ])
+  // but bare [ and ] are real structure characters at this nesting level
   let depth = 0, i = arrStart
   while (i < html.length) {
+    if (html[i] === '\\' && html[i + 1] === '"') { i += 2; continue } // skip \"
     if (html[i] === '[') depth++
     else if (html[i] === ']') { depth--; if (depth === 0) break }
     i++
   }
-  return JSON.parse(html.slice(arrStart, i + 1))
+
+  // Unescape \" → " and \\ → \ then parse
+  const escaped   = html.slice(arrStart, i + 1)
+  const unescaped = escaped.replace(/\\"/g, '"').replace(/\\\\/g, '\\')
+  return JSON.parse(unescaped)
+}
+
+/**
+ * Fetch bowler JSON for the current week.
+ * Primary: standings-png page (direct JSON embed, worked historically).
+ * Fallback: /standings/LEAGUE_ID (no week suffix = current week, double-encoded JSON).
+ */
+async function fetchCurrentWeekBowlers(year, seasonCode, weekNum) {
+  const pngUrl      = `${PNG_URL}`
+  const standingsUrl = `${SLUG_BASE}/standings/${LEAGUE_ID}` // no week suffix — always current
+
+  for (const [label, url] of [['standings-png', pngUrl], ['standings', standingsUrl]]) {
+    try {
+      const html    = await fetchHtml(url)
+      const bowlers = extractBowlers(html)
+      const active  = bowlers.filter(b => b.BowlerStatus === 'R')
+      if (active.length > 0) {
+        console.log(`  ✓ Week ${weekNum}: ${active.length} active bowlers (from ${label})`)
+        return { active }
+      }
+    } catch (err) {
+      console.log(`  ✗ ${label} bowler fetch: ${err.message}`)
+    }
+  }
+  throw new Error(`Could not extract bowlers from any source for week ${weekNum}`)
 }
 
 function extractWeeks(html) {
@@ -295,39 +544,69 @@ async function buildStandings(year, season, weekNum, bowlers) {
   try {
     apiRows = await fetchStandingsApi(year, season, weekNum)
     if (!apiRows.length) {
-      console.log('  API returned 0 rows (likely requires auth session)')
+      console.log('  API returned 0 rows — will try PDF if available')
       apiRows = null
     }
   } catch (err) {
     console.log(`  API failed: ${err.message}`)
   }
 
-  if (!apiRows) return null   // nothing to work with
+  // Step 2: if API worked, enrich + return
+  if (apiRows) {
+    let standings = mapApiStandings(apiRows)
+    const { standings: enriched } = enrichStandings(standings, bowlers, parseInt(weekNum))
+    standings = enriched
 
-  // Step 2: map + compute
-  let standings    = mapApiStandings(apiRows)
-  const { standings: enriched, ptsPerWeek } = enrichStandings(standings, bowlers, parseInt(weekNum))
-  standings = enriched
+    const warnings = detectUnearnedMismatches(standings)
+    if (warnings.length) {
+      console.log(`  ℹ️  Unearned points computed for ${warnings.length} team(s):`)
+      warnings.forEach(w => console.log(w))
+    }
 
-  // Step 3: report any computed unearned points (informational)
-  const warnings = detectUnearnedMismatches(standings)
-  if (warnings.length) {
-    console.log(`  ℹ️  Unearned points computed for ${warnings.length} team(s):`)
-    warnings.forEach(w => console.log(w))
+    // PDF can still patch gamesWon if present
+    const pdfPath = findLocalPdf()
+    if (pdfPath) {
+      const pdfMap = await parsePdfStandings(pdfPath)
+      if (pdfMap) {
+        standings = patchWithPdf(standings, pdfMap)
+        console.log(`  ✓ Patched gamesWon from PDF`)
+        return { standings, source: 'api+computed+pdf' }
+      }
+    }
+    return { standings, source: 'api+computed' }
   }
 
-  // Step 4: PDF patch (only needed for gamesWon now — everything else is computed)
+  // Step 3: API failed — try PDF as primary source
   const pdfPath = findLocalPdf()
   if (pdfPath) {
     const pdfMap = await parsePdfStandings(pdfPath)
     if (pdfMap) {
-      standings = patchWithPdf(standings, pdfMap)
-      console.log(`  ✓ Patched gamesWon + ytdLost from PDF`)
-      return { standings, source: 'api+computed+pdf' }
+      const hdcpMap = computeHdcpPins(bowlers)
+      const standings = Object.values(pdfMap).map(r => ({
+        place:             r.place,
+        teamNum:           r.teamNum,
+        teamName:          r.teamName,
+        pctWon:            r.pctWon,
+        pointsWon:         r.pointsWon,
+        pointsLost:        r.pointsLost,
+        unearnedPoints:    r.unearnedPoints,
+        ytdWon:            r.ytdWon,
+        ytdLost:           r.ytdLost,
+        gamesWon:          r.gamesWon,
+        teamAverage:       0,           // not in PDF
+        scratchPins:       r.scratchPins,
+        hdcpPins:          hdcpMap[r.teamName]
+                             ? Math.round(hdcpMap[r.teamName])
+                             : r.hdcpPins,
+        highScratchGame:   0,           // not in PDF
+        highScratchSeries: 0,           // not in PDF
+      })).sort((a, b) => a.place - b.place)
+      console.log(`  ✓ Standings built from PDF (${standings.length} teams)`)
+      return { standings, source: 'pdf' }
     }
   }
 
-  return { standings, source: 'api+computed' }
+  return null  // nothing worked
 }
 
 // ── Data helpers ──────────────────────────────────────────────────────────────
@@ -351,6 +630,40 @@ function loadExisting() {
 async function main() {
   console.log('\n🎳  Pinz Bowling League Sync\n')
   const db = loadExisting()
+
+  // Log in to get a session cookie for the standings API
+  try {
+    await login()
+    // Quick verify — a logged-in page shows the user's name, not "Sign In"
+    const verifyHtml = await fetchHtml(`${BASE_URL}/account/myleagues`)
+    if (verifyHtml.includes('Sign In') && !verifyHtml.includes('Sign Out')) {
+      console.log('  ⚠️  Session check failed — API standings may not work')
+    } else {
+      console.log('  ✓ Session verified')
+    }
+
+    // Hit the bowler leagues AJAX endpoint — this populates the myleagues grid in
+    // the browser and likely establishes server-side league access context.
+    const leaguesApiUrl = `${BASE_URL}/Account/AccountBowlerLeagues_Read`
+    console.log(`  GET  ${leaguesApiUrl}`)
+    const leaguesRes = await fetch(leaguesApiUrl, {
+      headers: {
+        'User-Agent':       UA,
+        'Accept':           'application/json, text/javascript, */*; q=0.01',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer':          `${BASE_URL}/account/myleagues`,
+        'Cookie':           sessionCookie,
+      },
+    })
+    if (leaguesRes.ok) {
+      const leaguesJson = await leaguesRes.json().catch(() => null)
+      const myLeague = leaguesJson?.Data?.find(l => l.LeagueID === LEAGUE_ID)
+      if (myLeague) {
+        console.log(`  ✓ League context set (BowlerID=${myLeague.BowlerID}, UserPermissionID=${myLeague.UserPermissionID})`)
+      }
+    }
+    console.log()
+  } catch (err) { console.log(`  ⚠️  Login failed: ${err.message}\n`) }
 
   console.log('Fetching standings page to discover weeks…')
   const latestHtml     = await fetchHtml(PNG_URL)
@@ -390,9 +703,12 @@ async function main() {
       let active = db.weeks[key]?.bowlers ?? []
       if (!standingsOnlyMode) {
         if (isCurrentWeek) {
-          const bowlers = extractBowlers(latestHtml)   // reuse — already fetched
-          active = bowlers.filter(b => b.BowlerStatus === 'R')
-          console.log(`  ✓ Week ${weekNum}: ${active.length} active bowlers`)
+          try {
+            const result = await fetchCurrentWeekBowlers(year, seasonCode, weekNum)
+            active = result.active
+          } catch (err) {
+            console.log(`  ✗ Week ${weekNum}: ${err.message}`)
+          }
         } else if (forceThis) {
           try {
             const html    = await fetchHtml(weekPngUrl)
@@ -417,7 +733,7 @@ async function main() {
 
       if (!standings.length) {
         console.log(`  ⚠️  No standings for week ${weekNum}`)
-        console.log(`     API may require auth — drop standings.pdf and re-run: node sync.js --standings-only ${weekNum}`)
+        console.log(`     Download standings PDF from LeagueSecretary → save as standings.pdf → re-run: node sync.js --standings-only ${weekNum}`)
       }
 
       db.weeks[key] = {
