@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 
 // GB = Games Behind = ((leader.ptsWon - team.ptsWon) + (team.ptsLost - leader.ptsLost)) / 2
 function computeGB(standings) {
@@ -247,9 +247,8 @@ export default function TeamStandings({ weekData, onTeamClick }) {
               const isBye      = t.teamNum === 16
               const isExpanded = expandedTeam === t.teamName
               return (
-                <>
+                <React.Fragment key={t.teamNum}>
                   <tr
-                    key={t.teamNum}
                     className={`
                       ${i % 2 === 0 ? 'bg-alley-800' : 'bg-alley-700'}
                       ${isBye ? 'opacity-40' : ''}
@@ -341,7 +340,7 @@ export default function TeamStandings({ weekData, onTeamClick }) {
 
                   {/* Expanded inline roster */}
                   {isExpanded && !isBye && (
-                    <tr key={`${t.teamNum}-roster`}>
+                    <tr>
                       <td colSpan={SORT_COLS.length} className="px-3 pb-2 bg-alley-800">
                         <RosterPanel
                           teamName={t.teamName}
@@ -352,7 +351,7 @@ export default function TeamStandings({ weekData, onTeamClick }) {
                       </td>
                     </tr>
                   )}
-                </>
+                </React.Fragment>
               )
             })}
           </tbody>
