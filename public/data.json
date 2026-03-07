@@ -5,11 +5,35 @@
     "center": "Pinz Bowling Center",
     "centerAddress": "12655 Ventura Blvd, Studio City, CA",
     "phone": "818-769-7600",
-    "lastSynced": "2026-02-27",
+    "lastSynced": "2026-03-07",
     "currentWeek": 4,
     "season": "Spring 2026"
   },
   "weeks": {
+    "1": {
+      "weekNum": 1,
+      "dateBowled": "2026-02-03",
+      "description": "Spring 2026 Week 1 02/03/2026",
+      "bowlers": [],
+      "standings": [],
+      "standingsSrc": "none"
+    },
+    "2": {
+      "weekNum": 2,
+      "dateBowled": "2026-02-10",
+      "description": "Spring 2026 Week 2 02/10/2026",
+      "bowlers": [],
+      "standings": [],
+      "standingsSrc": "none"
+    },
+    "3": {
+      "weekNum": 3,
+      "dateBowled": "2026-02-17",
+      "description": "Spring 2026 Week 3 02/17/2026",
+      "bowlers": [],
+      "standings": [],
+      "standingsSrc": "none"
+    },
     "4": {
       "weekNum": 4,
       "dateBowled": "2026-02-24",

@@ -334,15 +334,16 @@ async function main() {
 
   console.log(`Found ${availableWeeks.length} week(s): ${availableWeeks.map(w => w.SelectedDesc).join(' | ')}\n`)
 
-  for (const wk of availableWeeks) {
-    const key        = String(wk.WeekNum)
-    const cached     = !!db.weeks[key]
-    const forceThis  = forceWeek === key
-    const soThis     = standingsOnly === key
+  for (const [idx, wk] of availableWeeks.entries()) {
+    const key             = String(wk.WeekNum)
+    const isCurrentWeek   = idx === 0   // availableWeeks[0] is always the latest
+    const cached          = !!db.weeks[key]
+    const forceThis       = forceWeek === key
+    const soThis          = standingsOnly === key
     const missingStandings = !db.weeks[key]?.standings?.length
+    const missingBowlers   = !db.weeks[key]?.bowlers?.length
 
-    // Determine what to do
-    const skipAll       = cached && !forceThis && !soThis && !missingStandings
+    const skipAll = cached && !forceThis && !soThis && !missingStandings && !missingBowlers
     const standingsOnlyMode = soThis && !forceThis
 
     if (skipAll) {
@@ -360,13 +361,36 @@ async function main() {
     const weekPngUrl = `${PNG_URL}/${year}/${seasonCode}/${weekNum}`
 
     try {
-      // ── Bowlers (skip if standings-only mode) ──
+      // ── Bowlers ──────────────────────────────────────────────────────────────
+      // Bowler JSON is only embedded on the current-week (main) page.
+      // Per-week sub-URLs serve images only — no JSON. So:
+      //   • Current week  → extract from latestHtml (already fetched, free)
+      //   • Past weeks    → keep cached bowlers; skip re-fetch
+      //   • force --week  → only re-fetches bowlers if it's the current week
       let active = db.weeks[key]?.bowlers ?? []
-      if (!standingsOnlyMode) {
-        const html = await fetchHtml(weekPngUrl)
-        const bowlers = extractBowlers(html)
-        active = bowlers.filter(b => b.BowlerStatus === 'R')
-        console.log(`  ✓ Week ${weekNum}: ${active.length} active bowlers`)
+      if (!standingsOnlyMode && (isCurrentWeek || forceThis)) {
+        if (isCurrentWeek) {
+          // Reuse the page we already fetched — no extra HTTP request
+          const bowlers = extractBowlers(latestHtml)
+          active = bowlers.filter(b => b.BowlerStatus === 'R')
+          console.log(`  ✓ Week ${weekNum}: ${active.length} active bowlers (current week)`)
+        } else {
+          // forceThis on a past week — attempt but warn
+          try {
+            const html    = await fetchHtml(weekPngUrl)
+            const bowlers = extractBowlers(html)
+            active = bowlers.filter(b => b.BowlerStatus === 'R')
+            console.log(`  ✓ Week ${weekNum}: ${active.length} active bowlers`)
+          } catch {
+            console.log(`  ℹ️  Week ${weekNum}: bowler JSON unavailable for past weeks — keeping cached`)
+          }
+        }
+      } else if (!standingsOnlyMode && !isCurrentWeek) {
+        if (active.length > 0) {
+          console.log(`  ✓ Week ${weekNum}: ${active.length} bowlers (cached)`)
+        } else {
+          console.log(`  ℹ️  Week ${weekNum}: no bowler snapshot for past weeks (normal — standings only)`)
+        }
       }
 
       // ── Standings ──
