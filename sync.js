@@ -790,37 +790,6 @@ function buildBowlerNameIndex(existingBowlers) {
   return index;
 }
 
-function parsePdfBowlersFromText(rawText, existingBowlers = []) {
-  const lines = extractBowlerSection(rawText);
-  const nameIndex = buildBowlerNameIndex(existingBowlers);
-
-  const out = [];
-  const seen = new Set();
-
-  for (const line of lines) {
-    for (const [key, bowler] of nameIndex.entries()) {
-      const parts = key.split(" ");
-      if (parts.length < 2) continue;
-
-      // crude but safe: match by normalized full name appearing in OCR line
-      if (normalizePersonNameForMatch(line).includes(key)) {
-        const id = bowler.BowlerID ?? bowler.BowlerName;
-        if (seen.has(id)) continue;
-        seen.add(id);
-
-        out.push({
-          ...bowler,
-          _source: "pdf-ocr-name-match",
-        });
-      }
-    }
-  }
-
-  console.log(`  ℹ️  Bowler OCR matched ${out.length} bowlers`);
-
-  return out;
-}
-
 async function parsePdfBowlers(pdfPath, existingBowlers = []) {
   const PDFParse = await tryLoadPdfParse();
 
@@ -872,6 +841,237 @@ async function parsePdfBowlers(pdfPath, existingBowlers = []) {
       await parser?.destroy?.();
     } catch {}
   }
+}
+
+function extractTeamRostersSection(rawText) {
+  const lines = rawText
+    .replace(/\r/g, "\n")
+    .replace(/\u00A0/g, " ")
+    .split("\n")
+    .map((l) => normalizeOcrLine(l))
+    .filter(Boolean);
+
+  const startIdx = lines.findIndex((l) => /^Team Rosters$/i.test(l));
+  if (startIdx === -1) return [];
+
+  return lines.slice(startIdx + 1);
+}
+
+function cleanupOcrScoreToken(token) {
+  const s = String(token ?? "")
+    .replace(/[vV]/g, "1")
+    .replace(/[oO]/g, "0")
+    .replace(/[^0-9]/g, "");
+  return s ? parseInt(s, 10) : null;
+}
+
+function normalizeBowlerNameFromPdf(name) {
+  return String(name ?? "")
+    .replace(/\bbk\d+\b/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function inferGenderFromName(name, existingBowlers = []) {
+  const norm = normalizePersonNameForMatch(name);
+  for (const b of existingBowlers) {
+    const full = normalizePersonNameForMatch(b.BowlerName);
+    if (full.includes(norm) || norm.includes(full)) return b.Gender ?? "";
+    if (String(b.BowlerName).includes(",")) {
+      const [last, first] = String(b.BowlerName)
+        .split(",")
+        .map((s) => s.trim());
+      const alt = normalizePersonNameForMatch(`${first} ${last}`);
+      if (alt.includes(norm) || norm.includes(alt)) return b.Gender ?? "";
+    }
+  }
+  return "";
+}
+
+function toLastFirstName(name) {
+  const cleaned = String(name ?? "")
+    .replace(/\s+/g, " ")
+    .trim();
+  const parts = cleaned.split(" ");
+  if (parts.length < 2) return cleaned;
+
+  const last = parts.pop();
+  const first = parts.join(" ");
+  return `${last}, ${first}`;
+}
+
+function findExistingBowlerCanonical(existingBowlers = [], bowlerId, pdfName) {
+  // 1) Best match: same BowlerID
+  const byId = existingBowlers.find(
+    (b) => Number(b.BowlerID) === Number(bowlerId),
+  );
+  if (byId) return byId;
+
+  // 2) Fallback: compare normalized names in both "Last, First" and "First Last"
+  const pdfNorm = normalizePersonNameForMatch(pdfName);
+  const pdfLastFirstNorm = normalizePersonNameForMatch(
+    toLastFirstName(pdfName),
+  );
+
+  for (const b of existingBowlers) {
+    const existingNorm = normalizePersonNameForMatch(b.BowlerName);
+    if (existingNorm === pdfNorm || existingNorm === pdfLastFirstNorm) {
+      return b;
+    }
+
+    if (String(b.BowlerName).includes(",")) {
+      const [last, first] = String(b.BowlerName)
+        .split(",")
+        .map((s) => s.trim());
+      const alt = normalizePersonNameForMatch(`${first} ${last}`);
+      if (alt === pdfNorm || alt === pdfLastFirstNorm) {
+        return b;
+      }
+    }
+  }
+
+  return null;
+}
+
+function parseRosterHeaderTeam(line) {
+  const m = line.match(/^(\d+)\s*-\s*(.+)$/);
+  if (!m) return null;
+  return {
+    teamNum: parseInt(m[1], 10),
+    teamName: m[2].trim(),
+  };
+}
+
+function parseRosterBowlerLine(line, currentTeam, existingBowlers = []) {
+  if (!currentTeam) return null;
+
+  // Example:
+  // 1 Jay Torres bk170 45 150 1 454 449 150 v150 v150 450 495
+  // 21 Cameron Doran 215 4 645 3 651 644 219 214 212 645 657
+
+  const m = line.match(
+    /^(\d+)\s+(.+?)\s+((?:bk)?\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(.+)$/i,
+  );
+  if (!m) return null;
+
+  const bowlerId = parseInt(m[1], 10);
+  const nameRaw = normalizeBowlerNameFromPdf(m[2]);
+  const avgToken = m[3];
+  const hdcp = parseInt(m[4], 10) || 0;
+  const pins = parseInt(m[5], 10) || 0;
+  const gms = parseInt(m[6], 10) || 0;
+  const raiseTo = parseInt(m[7], 10) || 0;
+  const dropTo = parseInt(m[8], 10) || 0;
+  const tail = m[9].trim().split(/\s+/);
+
+  if (!nameRaw || !bowlerId) return null;
+
+  const avg = parseInt(String(avgToken).replace(/^bk/i, ""), 10) || 0;
+  const enteringAverage = /^bk/i.test(avgToken) ? avg : 0;
+
+  // tail should look like:
+  // game1 game2 game3 total hdcpTotal
+  // but OCR may mangle, so read from right
+  const nums = tail.map(cleanupOcrScoreToken).filter((n) => n !== null);
+
+  const handicapSeries = nums.length >= 1 ? nums[nums.length - 1] : 0;
+  const scratchSeries = nums.length >= 2 ? nums[nums.length - 2] : pins;
+
+  const recentGames = nums.slice(0, Math.max(0, nums.length - 2));
+  const gameScores = recentGames.slice(-3);
+
+  const highScratchGame = gameScores.length ? Math.max(...gameScores) : 0;
+  const highScratchSeries = scratchSeries;
+  const highHandicapGame = gameScores.length
+    ? Math.max(...gameScores) + hdcp
+    : 0;
+  const highHandicapSeries = handicapSeries;
+
+  const canonical = findExistingBowlerCanonical(
+    existingBowlers,
+    bowlerId,
+    nameRaw,
+  );
+
+  const canonicalName = canonical?.BowlerName ?? toLastFirstName(nameRaw);
+  const canonicalUrlName =
+    canonical?.BowlerNameURLFormated ??
+    canonicalName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+
+  return {
+    TeamID: canonical?.TeamID ?? currentTeam.teamNum,
+    TeamName: canonical?.TeamName ?? currentTeam.teamName,
+    TeamNameURLFormated:
+      canonical?.TeamNameURLFormated ??
+      currentTeam.teamName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, ""),
+    BowlerID: canonical?.BowlerID ?? bowlerId,
+    BowlerName: canonicalName,
+    BowlerNameURLFormated: canonicalUrlName,
+    Gender: canonical?.Gender ?? inferGenderFromName(nameRaw, existingBowlers),
+    TotalPins: pins,
+    TotalGames: gms,
+    Average: avg,
+    ScratchHandicapFlag: true,
+    HandicapAfterBowling: hdcp,
+    HighHandicapGame: highHandicapGame,
+    HighHandicapSeries: highHandicapSeries,
+    HighScratchGame: highScratchGame,
+    HighScratchSeries: highScratchSeries,
+    MostImproved: 0,
+    BowlerPosition: 0,
+    BowlerStatus: "R",
+    TeamNum: currentTeam.teamNum,
+    EnteringAverage: enteringAverage,
+    PointsWonDec: 0,
+    _source: "pdf-roster-ocr",
+    _raiseToAvgPlus1: raiseTo,
+    _dropToAvgMinus1: dropTo,
+    _games: gameScores,
+    _scratchSeries: scratchSeries,
+    _handicapSeries: handicapSeries,
+  };
+}
+
+function parsePdfBowlersFromText(rawText, existingBowlers = []) {
+  const lines = extractTeamRostersSection(rawText);
+
+  console.log("  --- BOWLER OCR SAMPLE START ---");
+  console.log(lines.slice(0, 120).join("\n"));
+  console.log("  --- BOWLER OCR SAMPLE END ---");
+
+  if (!lines.length) {
+    console.log("  ℹ️  Bowler OCR matched 0 bowlers");
+    return [];
+  }
+
+  const out = [];
+  let currentTeam = null;
+
+  for (const line of lines) {
+    if (/^BLS-\d|^--\s*\d+\s+of\s+\d+\s*--$/i.test(line)) continue;
+    if (/^Tuesday Nite League/i.test(line)) continue;
+    if (/^Bowling To Raise To Drop HDCP$/i.test(line)) continue;
+    if (/^ID # Hand Name Avg HDCP Pins Gms Avg \+1 Avg -1/i.test(line))
+      continue;
+
+    const team = parseRosterHeaderTeam(line);
+    if (team) {
+      currentTeam = team;
+      continue;
+    }
+
+    const bowler = parseRosterBowlerLine(line, currentTeam, existingBowlers);
+    if (bowler) out.push(bowler);
+  }
+
+  console.log(`  ℹ️  Bowler OCR matched ${out.length} bowlers`);
+  return out;
 }
 
 function parseStandingsRowsFromText(rawText) {
@@ -1262,11 +1462,43 @@ function loadExisting() {
   };
 }
 
+function buildCanonicalBowlerList(db) {
+  const byId = new Map();
+
+  const weekKeys = Object.keys(db.weeks).sort((a, b) => Number(b) - Number(a)); // newest first
+
+  for (const key of weekKeys) {
+    const bowlers = db.weeks[key]?.bowlers ?? [];
+    for (const b of bowlers) {
+      if (!b?.BowlerID) continue;
+
+      const existing = byId.get(Number(b.BowlerID));
+
+      // Prefer names already in "Last, First" form
+      const looksCanonical = String(b.BowlerName ?? "").includes(",");
+
+      if (!existing) {
+        byId.set(Number(b.BowlerID), b);
+        continue;
+      }
+
+      const existingCanonical = String(existing.BowlerName ?? "").includes(",");
+
+      if (!existingCanonical && looksCanonical) {
+        byId.set(Number(b.BowlerID), b);
+      }
+    }
+  }
+
+  return Array.from(byId.values());
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
   console.log(`\n🎳  Pinz Bowling League Sync  ${SYNC_VERSION}\n`);
   const db = loadExisting();
+  const canonicalBowlers = buildCanonicalBowlerList(db);
 
   // Log in to get a session cookie for the standings API
   try {
@@ -1376,9 +1608,10 @@ async function main() {
           if (localPdf) {
             const pdfBowlers = await parsePdfBowlers(
               localPdf,
-              db.weeks[key]?.bowlers ?? [],
+              canonicalBowlers,
             );
-            if (pdfBowlers?.length) {
+
+            if (pdfBowlers?.length >= 40) {
               active = pdfBowlers;
               console.log(
                 `  ✓ Week ${weekNum}: ${active.length} bowlers (from PDF/OCR)`,
