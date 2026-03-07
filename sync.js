@@ -19,7 +19,7 @@
  * PDF support: npm install pdf-parse
  */
 
-const SYNC_VERSION = "v0.29.0";
+const SYNC_VERSION = "v0.30.0";
 
 import {
   readFileSync,
@@ -669,16 +669,22 @@ function rasterizePdfToPng(pdfPath, outBase) {
     } else {
       console.warn(`  ⚠️  pdftoppm failed: ${res.error.message}`);
     }
-    return null;
+    return [];
   }
 
   if (res.status !== 0) {
     console.warn(`  ⚠️  pdftoppm exited with status ${res.status}`);
     if (res.stderr?.trim()) console.warn(`     ${res.stderr.trim()}`);
-    return null;
+    return [];
   }
 
-  return `${outBase}-1.png`;
+  // collect generated PNG pages
+  const pages = readdirSync(__dirname)
+    .filter((f) => f.startsWith(outBase.split("/").pop()) && f.endsWith(".png"))
+    .map((f) => join(__dirname, f))
+    .sort();
+
+  return pages;
 }
 
 function extractTextFromImage(imagePath) {
@@ -724,6 +730,10 @@ function extractTeamStandingsSection(rawText) {
     .map((l) => normalizeOcrLine(l))
     .filter(Boolean);
 
+  console.log("  --- BOWLER OCR SAMPLE START ---");
+  console.log(lines.slice(0, 120).join("\n"));
+  console.log("  --- BOWLER OCR SAMPLE END ---");
+
   const startIdx = lines.findIndex((l) => /Team Standings/i.test(l));
   if (startIdx === -1) return [];
 
@@ -735,78 +745,213 @@ function extractTeamStandingsSection(rawText) {
   return section;
 }
 
+function extractBowlerSection(rawText) {
+  const lines = rawText
+    .replace(/\r/g, "\n")
+    .replace(/\u00A0/g, " ")
+    .split("\n")
+    .map((l) => normalizeOcrLine(l))
+    .filter(Boolean);
+
+  const startIdx = lines.findIndex((l) =>
+    /Men Scratch Game|Scratch Series|Handicap Game|Handicap Series/i.test(l),
+  );
+
+  // We really want the individual standings/stat table before the awards section.
+  // For now, return all OCR text so we can match names against cached bowlers.
+  return lines.slice(0, startIdx === -1 ? lines.length : startIdx);
+}
+
+function normalizePersonNameForMatch(name) {
+  return String(name ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function buildBowlerNameIndex(existingBowlers) {
+  const index = new Map();
+
+  for (const b of existingBowlers) {
+    const full = normalizePersonNameForMatch(b.BowlerName);
+    if (full) index.set(full, b);
+
+    // "Last, First" -> also index "first last"
+    if (String(b.BowlerName).includes(",")) {
+      const [last, first] = String(b.BowlerName)
+        .split(",")
+        .map((s) => s.trim());
+      const alt = normalizePersonNameForMatch(`${first} ${last}`);
+      if (alt) index.set(alt, b);
+    }
+  }
+
+  return index;
+}
+
+function parsePdfBowlersFromText(rawText, existingBowlers = []) {
+  const lines = extractBowlerSection(rawText);
+  const nameIndex = buildBowlerNameIndex(existingBowlers);
+
+  const out = [];
+  const seen = new Set();
+
+  for (const line of lines) {
+    for (const [key, bowler] of nameIndex.entries()) {
+      const parts = key.split(" ");
+      if (parts.length < 2) continue;
+
+      // crude but safe: match by normalized full name appearing in OCR line
+      if (normalizePersonNameForMatch(line).includes(key)) {
+        const id = bowler.BowlerID ?? bowler.BowlerName;
+        if (seen.has(id)) continue;
+        seen.add(id);
+
+        out.push({
+          ...bowler,
+          _source: "pdf-ocr-name-match",
+        });
+      }
+    }
+  }
+
+  console.log(`  ℹ️  Bowler OCR matched ${out.length} bowlers`);
+
+  return out;
+}
+
+async function parsePdfBowlers(pdfPath, existingBowlers = []) {
+  const PDFParse = await tryLoadPdfParse();
+
+  let parser = null;
+  let rawText = "";
+
+  try {
+    if (PDFParse) {
+      parser = new PDFParse({ data: readFileSync(pdfPath) });
+      const result = await parser.getText();
+      rawText = result?.text ?? "";
+    }
+
+    if (!rawText.trim() || looksLikeOnlyPageMarkers(rawText)) {
+      console.log(
+        "  ℹ️  pdf-parse returned no useful bowler text — trying OCR fallback…",
+      );
+
+      const pngBase = join(__dirname, "_ocr_bowlers");
+
+      const pngPages = rasterizePdfToPng(pdfPath, pngBase);
+
+      if (!pngPages.length) {
+        console.warn("  ⚠️  OCR fallback could not create PNG from PDF");
+        return [];
+      }
+      rawText = "";
+
+      for (const pngPath of pngPages) {
+        rawText += extractTextFromImage(pngPath) + "\n";
+        try {
+          unlinkSync(pngPath);
+        } catch {}
+      }
+    }
+
+    if (typeof rawText !== "string" || !rawText.trim()) {
+      console.warn("  ⚠️  PDF bowler parse returned no text");
+      return [];
+    }
+
+    const bowlers = parsePdfBowlersFromText(rawText, existingBowlers);
+    return bowlers;
+  } catch (err) {
+    console.warn(`  ⚠️  PDF bowler parse error: ${err.message}`);
+    return [];
+  } finally {
+    try {
+      await parser?.destroy?.();
+    } catch {}
+  }
+}
 
 function parseStandingsRowsFromText(rawText) {
-  const sectionLines = extractTeamStandingsSection(rawText)
+  const sectionLines = extractTeamStandingsSection(rawText);
 
   if (!sectionLines.length) {
-    console.warn('  ⚠️  Could not find Team Standings section in OCR text')
-    return null
+    console.warn("  ⚠️  Could not find Team Standings section in OCR text");
+    return null;
   }
 
-  const candidateRows = sectionLines.filter(l => /^\d{1,2}\s+\S+/.test(l))
+  const candidateRows = sectionLines.filter((l) => /^\d{1,2}\s+\S+/.test(l));
 
   if (candidateRows.length < 4) {
-    console.warn(`  ⚠️  OCR: only ${candidateRows.length} candidate standings rows found`)
-    console.log('  --- OCR SECTION START ---')
-    console.log(sectionLines.join('\n'))
-    console.log('  --- OCR SECTION END ---')
-    return null
+    console.warn(
+      `  ⚠️  OCR: only ${candidateRows.length} candidate standings rows found`,
+    );
+    console.log("  --- OCR SECTION START ---");
+    console.log(sectionLines.join("\n"));
+    console.log("  --- OCR SECTION END ---");
+    return null;
   }
 
-  const map = {}
+  const map = {};
 
   for (const row of candidateRows) {
-    const tokens = row.split(' ')
-    if (tokens.length < 5) continue
+    const tokens = row.split(" ");
+    if (tokens.length < 5) continue;
 
-    const place = parseInt(tokens[0], 10)
-    if (Number.isNaN(place) || place < 1 || place > 20) continue
+    const place = parseInt(tokens[0], 10);
+    if (Number.isNaN(place) || place < 1 || place > 20) continue;
 
     // First numeric token after place is usually team number
-    let teamNum = null
-    let idx = 1
-    if (/^\d+$/.test(tokens[idx] ?? '')) {
-      teamNum = parseInt(tokens[idx], 10)
-      idx++
+    let teamNum = null;
+    let idx = 1;
+    if (/^\d+$/.test(tokens[idx] ?? "")) {
+      teamNum = parseInt(tokens[idx], 10);
+      idx++;
     }
 
     // Collect trailing numeric tokens from the right
-    const trailing = []
+    const trailing = [];
     for (let i = tokens.length - 1; i >= idx; i--) {
-      const cleaned = tokens[i].replace(/[^0-9.]/g, '')
-      if (!cleaned) continue
+      const cleaned = tokens[i].replace(/[^0-9.]/g, "");
+      if (!cleaned) continue;
       if (/^\d+(\.\d+)?$/.test(cleaned)) {
-        trailing.unshift(cleaned)
+        trailing.unshift(cleaned);
       } else {
-        break
+        break;
       }
     }
 
     // Need at least gamesWon + scratchPins + hdcpPins
-    if (trailing.length < 3) continue
+    if (trailing.length < 3) continue;
 
-    const bodyEnd = tokens.length - trailing.length
-    const teamName = tokens.slice(idx, bodyEnd).join(' ').trim()
-    if (!teamName) continue
+    const bodyEnd = tokens.length - trailing.length;
+    const teamName = tokens.slice(idx, bodyEnd).join(" ").trim();
+    if (!teamName) continue;
 
     // Rightmost values are the most reliable in OCR
-    const hdcpPins    = parseInt(trailing[trailing.length - 1], 10) || 0
-    const scratchPins = parseInt(trailing[trailing.length - 2], 10) || 0
-    const gamesWon    = parseInt(trailing[trailing.length - 3], 10) || 0
+    const hdcpPins = parseInt(trailing[trailing.length - 1], 10) || 0;
+    const scratchPins = parseInt(trailing[trailing.length - 2], 10) || 0;
+    const gamesWon = parseInt(trailing[trailing.length - 3], 10) || 0;
 
     // Optional earlier values if present
-    let ytdLost = 0
-    let ytdWon = 0
-    let pointsLost = 0
-    let pointsWon = 0
-    let pctWon = 0
+    let ytdLost = 0;
+    let ytdWon = 0;
+    let pointsLost = 0;
+    let pointsWon = 0;
+    let pctWon = 0;
 
-    if (trailing.length >= 4) ytdLost = parseFloat(trailing[trailing.length - 4]) || 0
-    if (trailing.length >= 5) ytdWon = parseFloat(trailing[trailing.length - 5]) || 0
-    if (trailing.length >= 6) pointsLost = parseFloat(trailing[trailing.length - 6]) || 0
-    if (trailing.length >= 7) pointsWon = parseFloat(trailing[trailing.length - 7]) || 0
-    if (trailing.length >= 8) pctWon = parseFloat(trailing[trailing.length - 8]) || 0
+    if (trailing.length >= 4)
+      ytdLost = parseFloat(trailing[trailing.length - 4]) || 0;
+    if (trailing.length >= 5)
+      ytdWon = parseFloat(trailing[trailing.length - 5]) || 0;
+    if (trailing.length >= 6)
+      pointsLost = parseFloat(trailing[trailing.length - 6]) || 0;
+    if (trailing.length >= 7)
+      pointsWon = parseFloat(trailing[trailing.length - 7]) || 0;
+    if (trailing.length >= 8)
+      pctWon = parseFloat(trailing[trailing.length - 8]) || 0;
 
     map[teamNum ?? place] = {
       place,
@@ -821,20 +966,20 @@ function parseStandingsRowsFromText(rawText) {
       gamesWon,
       scratchPins,
       hdcpPins,
-    }
+    };
   }
 
-  const count = Object.keys(map).length
+  const count = Object.keys(map).length;
   if (count < 4) {
-    console.warn(`  ⚠️  OCR parsed but only ${count} valid standings rows`)
-    console.log('  --- OCR ROWS START ---')
-    console.log(candidateRows.join('\n'))
-    console.log('  --- OCR ROWS END ---')
-    return null
+    console.warn(`  ⚠️  OCR parsed but only ${count} valid standings rows`);
+    console.log("  --- OCR ROWS START ---");
+    console.log(candidateRows.join("\n"));
+    console.log("  --- OCR ROWS END ---");
+    return null;
   }
 
-  console.log(`  ✓ OCR/PDF parsed (${count} teams)`)
-  return map
+  console.log(`  ✓ OCR/PDF parsed (${count} teams)`);
+  return map;
 }
 
 async function parsePdfStandings(pdfPath) {
@@ -856,18 +1001,20 @@ async function parsePdfStandings(pdfPath) {
       );
 
       const pngBase = join(__dirname, "_ocr_standings");
-      const pngPath = rasterizePdfToPng(pdfPath, pngBase);
+      const pngPages = rasterizePdfToPng(pdfPath, pngBase);
 
-      if (!pngPath || !existsSync(pngPath)) {
+      if (!pngPages.length) {
         console.warn("  ⚠️  OCR fallback could not create PNG from PDF");
         return null;
       }
 
-      rawText = extractTextFromImage(pngPath);
-
-      try {
-        unlinkSync(pngPath);
-      } catch {}
+      rawText = "";
+      for (const pngPath of pngPages) {
+        rawText += extractTextFromImage(pngPath) + "\n";
+        try {
+          unlinkSync(pngPath);
+        } catch {}
+      }
     }
 
     if (typeof rawText !== "string" || !rawText.trim()) {
@@ -944,16 +1091,22 @@ async function fetchPdfForWeek(year, seasonCode, weekNum, dateBowled) {
  * unearnedPoints is fully computed from PTS_PER_WEEK math.
  */
 function patchWithPdf(standings, pdfMap) {
-  return standings.map(t => {
-    const pdf = pdfMap[t.teamNum]
-    if (!pdf) return t
+  return standings.map((t) => {
+    const pdf = pdfMap[t.teamNum];
+    if (!pdf) return t;
 
     return {
       ...t,
-      gamesWon: Number.isFinite(pdf.gamesWon) && pdf.gamesWon >= 0 ? pdf.gamesWon : t.gamesWon,
-      ytdLost: Number.isFinite(pdf.ytdLost) && pdf.ytdLost >= 0 ? pdf.ytdLost : t.ytdLost,
-    }
-  })
+      gamesWon:
+        Number.isFinite(pdf.gamesWon) && pdf.gamesWon >= 0
+          ? pdf.gamesWon
+          : t.gamesWon,
+      ytdLost:
+        Number.isFinite(pdf.ytdLost) && pdf.ytdLost >= 0
+          ? pdf.ytdLost
+          : t.ytdLost,
+    };
+  });
 }
 
 // ── Standings orchestrator ────────────────────────────────────────────────────
@@ -1038,7 +1191,9 @@ async function buildStandings(
       const pdfMap = await parsePdfStandings(pdfPath);
       if (pdfMap) {
         standings = patchWithPdf(standings, pdfMap);
-        console.log(`  ✓ Patched gamesWon from PDF/OCR for ${Object.keys(pdfMap).length} team(s)`)
+        console.log(
+          `  ✓ Patched gamesWon from PDF/OCR for ${Object.keys(pdfMap).length} team(s)`,
+        );
         return { standings, source: "api+computed+pdf" };
       }
     }
@@ -1215,31 +1370,55 @@ async function main() {
           } catch (err) {
             console.log(`  ✗ Week ${weekNum}: ${err.message}`);
           }
-        } else if (forceThis) {
-          try {
-            const html = await fetchHtml(weekPngUrl);
-            const bowlers = extractBowlers(html);
-            active = bowlers.filter((b) => b.BowlerStatus === "R");
-            console.log(`  ✓ Week ${weekNum}: ${active.length} active bowlers`);
-          } catch {
+        } else {
+          const localPdf = findLocalPdf();
+
+          if (localPdf) {
+            const pdfBowlers = await parsePdfBowlers(
+              localPdf,
+              db.weeks[key]?.bowlers ?? [],
+            );
+            if (pdfBowlers?.length) {
+              active = pdfBowlers;
+              console.log(
+                `  ✓ Week ${weekNum}: ${active.length} bowlers (from PDF/OCR)`,
+              );
+            } else {
+              console.log(
+                `  ⚠️  Week ${weekNum}: PDF/OCR bowler parse failed — falling back`,
+              );
+            }
+          }
+
+          if (!active.length && forceThis) {
+            try {
+              const html = await fetchHtml(weekPngUrl);
+              const bowlers = extractBowlers(html);
+              active = bowlers.filter((b) => b.BowlerStatus === "R");
+              console.log(
+                `  ✓ Week ${weekNum}: ${active.length} active bowlers`,
+              );
+            } catch {
+              console.log(
+                `  ℹ️  Week ${weekNum}: past-week bowler JSON unavailable — keeping cached`,
+              );
+            }
+          } else if (!active.length && missingBowlers) {
+            const fetched = await fetchPastWeekBowlersViaPlaywright(
+              year,
+              seasonCode,
+              weekNum,
+            );
+            if (fetched.length) active = fetched;
+            else
+              console.log(
+                `  ℹ️  Week ${weekNum}: no bowler data available for past week`,
+              );
+          } else if (!active.length) {
             console.log(
-              `  ℹ️  Week ${weekNum}: past-week bowler JSON unavailable — keeping cached`,
+              `  ✓ Week ${weekNum}: ${active.length} bowlers (cached)`,
             );
           }
-        } else if (missingBowlers) {
-          // Past week with no bowlers — try Playwright to get them
-          const fetched = await fetchPastWeekBowlersViaPlaywright(
-            year,
-            seasonCode,
-            weekNum,
-          );
-          if (fetched.length) active = fetched;
-          else
-            console.log(
-              `  ℹ️  Week ${weekNum}: no bowler data available for past week`,
-            );
-        } else {
-          console.log(`  ✓ Week ${weekNum}: ${active.length} bowlers (cached)`);
         }
       }
 
