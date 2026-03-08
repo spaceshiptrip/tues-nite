@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { computeTeams } from '../utils/dataUtils.js'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts'
 
@@ -21,9 +21,13 @@ function StatRow({ label, aVal, bVal, higherIsBetter = true }) {
   )
 }
 
-export default function HeadToHead({ weekData }) {
-  const [teamA, setTeamA] = useState('')
-  const [teamB, setTeamB] = useState('')
+export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB = '' }) {
+  const [teamA, setTeamA] = useState(initialTeamA)
+  const [teamB, setTeamB] = useState(initialTeamB)
+
+  // Sync when pre-selected teams arrive from Schedule view
+  useEffect(() => { if (initialTeamA) setTeamA(initialTeamA) }, [initialTeamA])
+  useEffect(() => { if (initialTeamB) setTeamB(initialTeamB) }, [initialTeamB])
 
   if (!weekData) return <p className="text-gray-500">No data.</p>
 
@@ -136,14 +140,20 @@ export default function HeadToHead({ weekData }) {
             {[{ team: tA, color: 'text-amber-400', bgBorder: 'border-amber-700/30' },
               { team: tB, color: 'text-blue-400',  bgBorder: 'border-blue-700/30'  }].map(({ team, color, bgBorder }) => (
               <div key={team.TeamID} className={`bg-alley-700 rounded-lg border ${bgBorder} p-4`}>
-                <h4 className={`font-ui font-800 ${color} uppercase tracking-wider text-sm mb-3`}>{team.TeamName} Roster</h4>
+                <h4 className={`font-ui font-800 ${color} uppercase tracking-wider text-sm mb-2`}>{team.TeamName} Roster</h4>
+                <div className="grid grid-cols-3 text-xs text-zinc-600 uppercase tracking-wider pb-1 border-b border-white/[0.06] mb-1 gap-2">
+                  <span>Name</span>
+                  <span className="text-center">Avg</span>
+                  <span className="text-right">Hcp</span>
+                </div>
                 {[...team.bowlers]
                   .filter(b => b.TotalGames > 0)
                   .sort((a, b) => b.Average - a.Average)
                   .map(b => (
-                    <div key={b.BowlerID} className="flex justify-between py-1 border-b border-white/[0.04] last:border-0 text-xs">
-                      <span className="font-ui text-gray-300">{b.BowlerName}</span>
-                      <span className="font-mono text-gray-400">{b.Average} avg</span>
+                    <div key={b.BowlerID} className="grid grid-cols-3 items-center py-1.5 border-b border-white/[0.04] last:border-0 text-xs gap-2">
+                      <span className="font-ui text-gray-300 truncate col-span-1">{b.BowlerName.includes(',') ? b.BowlerName.split(', ').reverse().join(' ') : b.BowlerName}</span>
+                      <span className="font-mono text-center text-gray-300 font-bold">{b.Average}</span>
+                      <span className="font-mono text-right text-zinc-500">+{b.HandicapAfterBowling} hcp</span>
                     </div>
                   ))}
               </div>
