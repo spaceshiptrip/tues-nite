@@ -88,6 +88,8 @@ const forcePdf = args.includes("--pdf")
   ? args[args.indexOf("--pdf") + 1]
   : null;
 
+const forceSchedule = args.includes("--refresh-schedule");
+
 // ── HTTP / Session ────────────────────────────────────────────────────────────
 
 const UA =
@@ -1493,6 +1495,232 @@ function buildCanonicalBowlerList(db) {
   return Array.from(byId.values());
 }
 
+
+/**
+ * Build the schedule PDF URL for a given week.
+ * Same pattern as standings but "schdle00" instead of "standg00".
+ *
+ * From page source:
+ *   https://pdf.leaguesecretary.com/uploads/2026/s/5/14733703032026s202605schdle00.pdf
+ */
+function buildSchedulePdfUrl(year, seasonCode, weekNum, dateBowled) {
+  const [y, m, d] = dateBowled.split("-");
+  const ddmmyyyy = `${d}${m}${y}`;
+  const ww = String(weekNum).padStart(2, "0");
+  const filename = `${LEAGUE_ID}${ddmmyyyy}s${year}${ww}schdle00.pdf`;
+  return `${PDF_BASE}/${year}/${seasonCode}/${weekNum}/${filename}`;
+}
+
+/**
+ * Parse schedule OCR/text into a structured array.
+ *
+ * Expected line formats:
+ *   Wk01 02/03  1- 2  3- 4  5- 6  7- 8  9-10 11-12 13-14 15-16
+ *   Wk20 06/16  Position Round- Start Lane - 1
+ *   Wk21 06/23  Fun Night!- Start Lane - 1  No points
+ *
+ * Returns array of:
+ *   { week, date, matchups: [[t1,t2], ...] | null, special?: string }
+ */
+function parseScheduleText(rawText) {
+  const lines = rawText
+    .replace(/\r/g, "\n")
+    .split("\n")
+    .map((l) => l.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+
+  const schedule = [];
+
+  for (const line of lines) {
+    // Match week lines: Wk01, Wk 01, WK01, etc.
+    const weekMatch = line.match(/^Wk\s*(\d{1,2})\s+(\d{2}\/\d{2})(.*)/i);
+    if (!weekMatch) continue;
+
+    const weekNum = parseInt(weekMatch[1], 10);
+    const rawDate = weekMatch[2]; // "02/03"
+    const rest = weekMatch[3].trim();
+
+    // Convert MM/DD to YYYY-MM-DD (assume 2026)
+    const [mm, dd] = rawDate.split("/");
+    const date = `2026-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+
+    // Check for special weeks (no matchup pairs)
+    const lowerRest = rest.toLowerCase();
+    if (
+      lowerRest.includes("position") ||
+      lowerRest.includes("fun night") ||
+      lowerRest.includes("no points")
+    ) {
+      // Clean up the special description
+      const special = rest
+        .replace(/[-–]\s*Start Lane\s*[-–]?\s*\d+/i, "— Start Lane 1")
+        .replace(/\s+/g, " ")
+        .replace(/!?-\s*/g, "! ")
+        .trim();
+      schedule.push({ week: weekNum, date, matchups: null, special });
+      continue;
+    }
+
+    // Extract matchup pairs: patterns like "1- 2", "13-12", "9-10", "1 -16"
+    // All team numbers are 1-16
+    const pairPattern = /(\d{1,2})\s*[-–]\s*(\d{1,2})/g;
+    const matchups = [];
+    let m;
+    while ((m = pairPattern.exec(rest)) !== null) {
+      const t1 = parseInt(m[1], 10);
+      const t2 = parseInt(m[2], 10);
+      // Sanity check: valid team numbers
+      if (t1 >= 1 && t1 <= 16 && t2 >= 1 && t2 <= 16 && t1 !== t2) {
+        matchups.push([t1, t2]);
+      }
+    }
+
+    if (matchups.length === 8) {
+      schedule.push({ week: weekNum, date, matchups });
+    } else if (matchups.length > 0) {
+      // Partial parse — include what we have, flag it
+      schedule.push({
+        week: weekNum,
+        date,
+        matchups: matchups.length === 8 ? matchups : null,
+        note: `Only parsed ${matchups.length}/8 lane pairs — verify manually`,
+        _partial: matchups,
+      });
+    }
+  }
+
+  return schedule.sort((a, b) => a.week - b.week);
+}
+
+/**
+ * Fetch the schedule PDF from the public CDN and parse it via OCR.
+ * Returns parsed schedule array, or null on failure.
+ *
+ * No auth required — same public CDN as standings PDFs.
+ */
+async function fetchAndParseSchedulePdf(year, seasonCode, weekNum, dateBowled) {
+  const url = buildSchedulePdfUrl(year, seasonCode, weekNum, dateBowled);
+  const tmpPath = join(__dirname, `_schedule.pdf`);
+
+  console.log(`  GET  ${url}`);
+  const res = await fetch(url, { headers: { "User-Agent": UA } });
+  if (!res.ok) {
+    console.log(`  ⚠️  Schedule PDF fetch failed: HTTP ${res.status}`);
+    return null;
+  }
+
+  const buf = Buffer.from(await res.arrayBuffer());
+  writeFileSync(tmpPath, buf);
+
+  try {
+    // Try pdf-parse first (image-based PDFs will return empty)
+    const PDFParse = await tryLoadPdfParse();
+    let rawText = "";
+
+    if (PDFParse) {
+      const parser = new PDFParse({ data: buf });
+      try {
+        const result = await parser.getText();
+        rawText = result?.text ?? "";
+        await parser.destroy?.();
+      } catch {}
+    }
+
+    // Fall back to OCR (schedule PDFs are image-based like standings)
+    if (!rawText.trim() || looksLikeOnlyPageMarkers(rawText)) {
+      console.log("  ℹ️  Schedule PDF is image-based — running OCR…");
+      const pngBase = join(__dirname, "_ocr_schedule");
+      const pngPages = rasterizePdfToPng(tmpPath, pngBase);
+
+      if (!pngPages.length) {
+        console.warn("  ⚠️  Could not rasterize schedule PDF");
+        return null;
+      }
+
+      rawText = "";
+      for (const pngPath of pngPages) {
+        rawText += extractTextFromImage(pngPath) + "\n";
+        try { unlinkSync(pngPath); } catch {}
+      }
+    }
+
+    if (!rawText.trim()) {
+      console.warn("  ⚠️  Schedule PDF produced no text");
+      return null;
+    }
+
+    const schedule = parseScheduleText(rawText);
+
+    if (schedule.length < 10) {
+      console.warn(
+        `  ⚠️  Schedule parse returned only ${schedule.length} weeks — something may be wrong`
+      );
+      console.log("  --- SCHEDULE OCR SAMPLE ---");
+      console.log(rawText.slice(0, 800));
+      console.log("  ---");
+    } else {
+      console.log(`  ✓ Schedule parsed (${schedule.length} weeks)`);
+    }
+
+    return schedule.length ? schedule : null;
+  } finally {
+    try { unlinkSync(tmpPath); } catch {}
+  }
+}
+
+/**
+ * Fetch and store the season schedule in db.meta.schedule.
+ * Runs once per season — skips if already populated.
+ * Force refresh with: node sync.js --refresh-schedule
+ */
+async function fetchAndStoreSchedule(db, year, seasonCode, weekNum, dateBowled) {
+  const forceSchedule = args.includes("--refresh-schedule");
+
+  if (db.meta.schedule?.length && !forceSchedule) {
+    console.log(
+      `  ✓ Schedule already cached (${db.meta.schedule.length} weeks) — skipping`
+    );
+    return;
+  }
+
+  console.log("\nFetching season schedule…");
+  const schedule = await fetchAndParseSchedulePdf(
+    year,
+    seasonCode,
+    weekNum,
+    dateBowled
+  );
+
+  if (schedule) {
+    db.meta.schedule = schedule;
+    console.log(`  ✓ Stored ${schedule.length} weeks in meta.schedule`);
+  } else {
+    console.log("  ⚠️  Schedule fetch failed — keeping existing data");
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HOW TO INTEGRATE INTO main()
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// In main(), after the login + week discovery section, add this call
+// BEFORE the per-week loop (you have the first week's data at that point):
+//
+//   const firstWk = availableWeeks[availableWeeks.length - 1]; // oldest week
+//   const [fwNum, fwYear, fwSeason] = firstWk.SelectedID.split("|");
+//   const fwDate = firstWk.DateBowled?.split("T")[0] ?? null;
+//   if (fwDate) {
+//     await fetchAndStoreSchedule(db, fwYear, fwSeason, fwNum, fwDate);
+//   }
+//
+// Also add "--refresh-schedule" to the CLI args section at top:
+//   const forceSchedule = args.includes("--refresh-schedule");
+//
+// ─────────────────────────────────────────────────────────────────────────────
+// NEW CLI FLAG:
+//   node sync.js --refresh-schedule    re-fetch even if already cached
+// ─────────────────────────────────────────────────────────────────────────────
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -1558,6 +1786,15 @@ async function main() {
   console.log(
     `Found ${availableWeeks.length} week(s): ${availableWeeks.map((w) => w.SelectedDesc).join(" | ")}\n`,
   );
+
+
+  //------- get Schedule ---------
+  const firstWk = availableWeeks[availableWeeks.length - 1];
+  const [fwNum, fwYear, fwSeason] = firstWk.SelectedID.split("|");
+  const fwDate = firstWk.DateBowled?.split("T")[0] ?? null;
+  if (fwDate) {
+    await fetchAndStoreSchedule(db, fwYear, fwSeason, fwNum, fwDate);
+  }
 
   for (const [idx, wk] of availableWeeks.entries()) {
     const key = String(wk.WeekNum);
