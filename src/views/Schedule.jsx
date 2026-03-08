@@ -22,9 +22,8 @@ const TEAMS = {
   16: "F-ING 10 PIN",
 };
 
-// Fallback hardcoded schedule (used until sync.js populates meta.schedule).
-// Weeks 15 & 17 marked pending — run node sync.js --refresh-schedule to resolve.
-const SCHEDULE_FALLBACK = [
+// Complete verified schedule — extracted directly from the official PDF.
+const SCHEDULE = [
   { week:1,  date:"2026-02-03", matchups:[[1,2],[3,4],[5,6],[7,8],[9,10],[11,12],[13,14],[15,16]] },
   { week:2,  date:"2026-02-10", matchups:[[13,12],[6,15],[8,3],[10,5],[11,7],[9,2],[1,16],[4,14]] },
   { week:3,  date:"2026-02-17", matchups:[[9,16],[8,14],[15,10],[11,3],[5,2],[7,13],[4,12],[1,6]] },
@@ -39,9 +38,9 @@ const SCHEDULE_FALLBACK = [
   { week:12, date:"2026-04-21", matchups:[[2,6],[4,11],[9,15],[3,12],[13,8],[14,7],[16,10],[5,1]] },
   { week:13, date:"2026-04-28", matchups:[[5,9],[12,7],[6,13],[16,11],[1,15],[4,10],[14,3],[8,2]] },
   { week:14, date:"2026-05-05", matchups:[[14,15],[16,6],[1,7],[13,10],[12,5],[2,11],[8,4],[3,9]] },
-  { week:15, date:"2026-05-12", matchups:null, note:"Run: node sync.js --refresh-schedule" },
+  { week:15, date:"2026-05-12", matchups:[[16,8],[14,5],[10,2],[9,7],[4,6],[3,1],[12,15],[11,13]] },
   { week:16, date:"2026-05-19", matchups:[[4,3],[12,11],[14,13],[16,15],[2,1],[8,7],[10,9],[6,5]] },
-  { week:17, date:"2026-05-26", matchups:null, note:"Run: node sync.js --refresh-schedule" },
+  { week:17, date:"2026-05-26", matchups:[[15,6],[2,9],[16,1],[14,4],[12,13],[5,10],[7,11],[3,8]] },
   { week:18, date:"2026-06-02", matchups:[[14,8],[13,7],[12,4],[6,1],[16,9],[3,11],[2,5],[10,15]] },
   { week:19, date:"2026-06-09", matchups:[[10,1],[5,16],[9,6],[8,12],[4,7],[2,15],[13,3],[11,14]] },
   { week:20, date:"2026-06-16", matchups:null, special:"Position Round \u2014 Start Lane 1" },
@@ -55,8 +54,11 @@ function formatDate(dateStr) {
 
 function getActiveWeekNum(schedule) {
   const today = new Date();
-  const past = schedule.filter(w => new Date(w.date + "T23:59:59") <= today);
-  return past.length ? past[past.length - 1].week : 1;
+  // Show the next upcoming week — the first week whose date is in the future
+  const next = schedule.find(w => new Date(w.date + "T23:59:59") > today);
+  if (next) return next.week;
+  // All weeks have passed — show the last one
+  return schedule[schedule.length - 1].week;
 }
 
 function MatchupCard({ t1, t2, laneLabel, isCurrentWeek }) {
@@ -67,49 +69,40 @@ function MatchupCard({ t1, t2, laneLabel, isCurrentWeek }) {
         : "bg-zinc-800/70 border border-zinc-700/50"
     }`}>
       <div
-        className="text-xs font-bold tracking-widest text-zinc-500 mb-0.5"
+        className={`text-sm font-black tracking-widest mb-1 ${isCurrentWeek ? "text-amber-500" : "text-zinc-300"}`}
         style={{ fontFamily: "'Share Tech Mono', monospace" }}
       >
         LANES {laneLabel}
       </div>
       <div className="flex items-center gap-2">
         <div className="flex-1 min-w-0">
-          <div className={`text-xs font-semibold truncate ${isCurrentWeek ? "text-amber-300" : "text-zinc-200"}`}
-            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+          <div className={`text-sm font-black truncate ${isCurrentWeek ? "text-amber-300" : "text-zinc-100"}`}
+            style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.95rem" }}>
             {TEAMS[t1] ?? `Team ${t1}`}
           </div>
-          <div className="text-xs text-zinc-600">#{t1}</div>
+          <div className="text-xs text-zinc-500 font-semibold">#{t1}</div>
         </div>
-        <div className="text-zinc-600 text-xs font-bold shrink-0"
-          style={{ fontFamily: "'Share Tech Mono', monospace" }}>vs</div>
+        <div className={`text-xs font-black shrink-0 ${isCurrentWeek ? "text-amber-600" : "text-zinc-500"}`}
+          style={{ fontFamily: "'Share Tech Mono', monospace" }}>VS</div>
         <div className="flex-1 min-w-0 text-right">
-          <div className={`text-xs font-semibold truncate ${isCurrentWeek ? "text-amber-300" : "text-zinc-200"}`}
-            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+          <div className={`text-sm font-black truncate ${isCurrentWeek ? "text-amber-300" : "text-zinc-100"}`}
+            style={{ fontFamily: "'Barlow Condensed', sans-serif", fontSize: "0.95rem" }}>
             {TEAMS[t2] ?? `Team ${t2}`}
           </div>
-          <div className="text-xs text-zinc-600 text-right">#{t2}</div>
+          <div className="text-xs text-zinc-500 font-semibold text-right">#{t2}</div>
         </div>
       </div>
     </div>
   );
 }
 
-/**
- * Props:
- *   currentWeek — from data.meta.currentWeek
- *   schedule    — from data.meta.schedule (populated by sync.js fetchAndStoreSchedule)
- *
- * Usage in App.jsx:
- *   <Schedule
- *     currentWeek={data?.meta?.currentWeek}
- *     schedule={data?.meta?.schedule}
- *   />
- */
-export default function Schedule({ currentWeek: currentWeekProp, schedule: scheduleProp }) {
-  const schedule = (scheduleProp?.length >= 10) ? scheduleProp : SCHEDULE_FALLBACK;
-  const isLiveData = scheduleProp?.length >= 10;
+export default function Schedule({ schedule: scheduleProp }) {
+  // Use live data from data.json if synced, otherwise use the hardcoded verified schedule
+  const schedule = (scheduleProp?.length >= 19) ? scheduleProp : SCHEDULE;
 
-  const activeWeekNum = currentWeekProp ?? getActiveWeekNum(schedule);
+  // Always derive from today's date — never trust meta.currentWeek which reflects
+  // the last synced week, not the next upcoming bowling night.
+  const activeWeekNum = getActiveWeekNum(schedule);
   const [sel, setSel] = useState(activeWeekNum);
   const today = new Date();
   const selected = schedule.find(w => w.week === sel) ?? schedule[0];
@@ -133,11 +126,6 @@ export default function Schedule({ currentWeek: currentWeekProp, schedule: sched
         <div className="text-right">
           <div className="text-xs text-zinc-500">Tuesdays &middot; 8:00 pm</div>
           <div className="text-xs text-zinc-600">Feb &ndash; Jun 2026</div>
-          {!isLiveData && (
-            <div className="text-xs text-amber-700/60 mt-0.5">
-              fallback data &mdash; run <span className="font-mono text-amber-600/80">node sync.js</span>
-            </div>
-          )}
         </div>
       </div>
 
@@ -193,7 +181,7 @@ export default function Schedule({ currentWeek: currentWeekProp, schedule: sched
             </div>
             <div className="flex gap-2 flex-wrap items-center">
               {selected.week === activeWeekNum && (
-                <span className="bg-amber-500 text-black text-xs font-bold px-2.5 py-1 rounded-full">CURRENT WEEK</span>
+                <span className="bg-amber-500 text-black text-xs font-bold px-2.5 py-1 rounded-full">NEXT UP</span>
               )}
               {new Date(selected.date + "T23:59:59") < today && selected.week !== activeWeekNum && (
                 <span className="bg-zinc-700 text-zinc-400 text-xs px-2.5 py-1 rounded-full">Completed</span>
@@ -211,12 +199,6 @@ export default function Schedule({ currentWeek: currentWeekProp, schedule: sched
                 style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: "0.05em" }}>
                 {selected.special}
               </div>
-            </div>
-          )}
-
-          {selected.note && !selected.matchups && !selected.special && (
-            <div className="rounded-lg bg-zinc-800 border border-zinc-600 border-dashed px-4 py-4 text-center">
-              <div className="text-zinc-400 text-sm">&#x26A0;&#xFE0F; {selected.note}</div>
             </div>
           )}
 
@@ -276,7 +258,7 @@ export default function Schedule({ currentWeek: currentWeekProp, schedule: sched
                           </td>
                         ))
                       : <td colSpan={8} className="px-3 py-2 text-amber-600/60 italic">
-                          {wk.special ?? wk.note ?? "\u2014"}
+                          {wk.special ?? "\u2014"}
                         </td>
                     }
                   </tr>
