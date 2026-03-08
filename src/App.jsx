@@ -45,7 +45,7 @@ export default function App() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [currentView, setCurrentView] = useState("teams");
+  const [currentView, setCurrentView] = useState("schedule");
   const [selectedWeek, setSelectedWeek] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
