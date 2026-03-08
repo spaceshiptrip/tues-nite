@@ -46,6 +46,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentView, setCurrentView] = useState("schedule");
+  const [h2hTeams, setH2hTeams] = useState({ a: "", b: "" });
   const [selectedWeek, setSelectedWeek] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
 
@@ -171,11 +172,20 @@ export default function App() {
         {currentView === "bowlers" && <BowlerTable {...viewProps} />}
         {currentView === "improved" && <MostImproved {...viewProps} />}
         {currentView === "trends" && <WeekTrends {...viewProps} />}
-        {currentView === "h2h" && <HeadToHead {...viewProps} />}
+        {currentView === "h2h" && (
+          <HeadToHead
+            {...viewProps}
+            initialTeamA={h2hTeams.a}
+            initialTeamB={h2hTeams.b}
+          />
+        )}
         {currentView === "schedule" && (
           <Schedule
-            currentWeek={data?.meta?.currentWeek}
             schedule={data?.meta?.schedule}
+            onMatchupClick={(a, b) => {
+              setH2hTeams({ a, b });
+              setCurrentView("h2h");
+            }}
           />
         )}
       </main>

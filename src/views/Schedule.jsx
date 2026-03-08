@@ -61,18 +61,25 @@ function getActiveWeekNum(schedule) {
   return schedule[schedule.length - 1].week;
 }
 
-function MatchupCard({ t1, t2, laneLabel, isCurrentWeek }) {
+function MatchupCard({ t1, t2, laneLabel, isCurrentWeek, onClick }) {
   return (
-    <div className={`flex flex-col gap-1 rounded-lg px-3 py-2.5 ${
-      isCurrentWeek
-        ? "bg-amber-500/10 border border-amber-500/30"
-        : "bg-zinc-800/70 border border-zinc-700/50"
-    }`}>
-      <div
-        className={`text-sm font-black tracking-widest mb-1 ${isCurrentWeek ? "text-amber-500" : "text-zinc-300"}`}
-        style={{ fontFamily: "'Share Tech Mono', monospace" }}
-      >
-        LANES {laneLabel}
+    <div
+      onClick={onClick}
+      title="View Head-to-Head"
+      className={`flex flex-col gap-1 rounded-lg px-3 py-2.5 cursor-pointer transition-all ${
+        isCurrentWeek
+          ? "bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 hover:border-amber-400 hover:shadow-lg hover:shadow-amber-500/10"
+          : "bg-zinc-800/70 border border-zinc-700/50 hover:bg-zinc-700/60 hover:border-zinc-500"
+      }`}
+    >
+      <div className="flex items-center justify-between mb-1">
+        <div
+          className={`text-sm font-black tracking-widest ${isCurrentWeek ? "text-amber-500" : "text-zinc-300"}`}
+          style={{ fontFamily: "'Share Tech Mono', monospace" }}
+        >
+          LANES {laneLabel}
+        </div>
+        <div className="text-xs text-zinc-600 group-hover:text-zinc-400">⚔️</div>
       </div>
       <div className="flex items-center gap-2">
         <div className="flex-1 min-w-0">
@@ -96,7 +103,7 @@ function MatchupCard({ t1, t2, laneLabel, isCurrentWeek }) {
   );
 }
 
-export default function Schedule({ schedule: scheduleProp }) {
+export default function Schedule({ schedule: scheduleProp, onMatchupClick }) {
   // Use live data from data.json if synced, otherwise use the hardcoded verified schedule
   const schedule = (scheduleProp?.length >= 19) ? scheduleProp : SCHEDULE;
 
@@ -203,11 +210,21 @@ export default function Schedule({ schedule: scheduleProp }) {
           )}
 
           {selected.matchups && (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {selected.matchups.map(([t1, t2], i) => (
-                <MatchupCard key={i} t1={t1} t2={t2} laneLabel={LANE_PAIRS[i]} isCurrentWeek={selected.week === activeWeekNum} />
-              ))}
-            </div>
+            <>
+              <p className="text-xs text-zinc-600 text-right -mb-1">tap a matchup to compare ⚔️</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {selected.matchups.map(([t1, t2], i) => (
+                  <MatchupCard
+                    key={i}
+                    t1={t1}
+                    t2={t2}
+                    laneLabel={LANE_PAIRS[i]}
+                    isCurrentWeek={selected.week === activeWeekNum}
+                    onClick={() => onMatchupClick(TEAMS[t1] ?? `Team ${t1}`, TEAMS[t2] ?? `Team ${t2}`)}
+                  />
+                ))}
+              </div>
+            </>
           )}
         </div>
       )}
