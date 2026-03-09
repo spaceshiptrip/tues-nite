@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { computeTeams } from '../utils/dataUtils.js'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts'
 
@@ -48,6 +48,8 @@ export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB =
   const stA = useMemo(() => weekData.standings?.find(s => s.teamName === teamA) ?? null, [weekData, teamA])
   const stB = useMemo(() => weekData.standings?.find(s => s.teamName === teamB) ?? null, [weekData, teamB])
 
+  const rosterRef = useRef(null)
+
   // Normalize stats 0-100 for radar
   const radarData = useMemo(() => {
     if (!tA || !tB) return []
@@ -60,7 +62,10 @@ export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB =
       { stat: 'Ser Scratch', ...normVal(stA?.scratchPins,                         stB?.scratchPins) },
       { stat: 'Ser Hcp',     ...normVal(stA?.hdcpPins,                            stB?.hdcpPins) },
       { stat: 'Hi Series',   ...normVal(stA?.highScratchSeries ?? tA.highSeries,  stB?.highScratchSeries ?? tB.highSeries) },
-      { stat: 'Hi Ser Hcp',  ...normVal(tA.highHcpSeries,                         tB.highHcpSeries) },
+      { stat: 'Hi Ser Hcp',  ...normVal(
+          stA?.highScratchSeries != null ? stA.highScratchSeries + tA.gameHcp * 3 : null,
+          stB?.highScratchSeries != null ? stB.highScratchSeries + tB.gameHcp * 3 : null
+        ) },
       { stat: 'Game Hcp',    ...normVal(tA.gameHcp,                               tB.gameHcp) },
     ]
   }, [tA, tB, stA, stB])
@@ -103,20 +108,29 @@ export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB =
           {/* Header */}
           <div className="grid grid-cols-3 items-center bg-alley-700 rounded-lg border border-white/[0.06] overflow-hidden">
             <div className="p-4 text-center bg-amber-900/20 border-r border-white/[0.06]">
-              <div className="font-display text-2xl text-amber-400">{tA.TeamName}</div>
+              {stA?.place && <div className="font-ui text-xs text-zinc-500 uppercase tracking-widest mb-0.5">#{stA.place} in standings</div>}
+              <button onClick={() => rosterRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                className="font-display text-2xl text-amber-400 hover:text-amber-300 transition-colors cursor-pointer">
+                {tA.TeamName}
+              </button>
               <div className="font-ui text-xs text-gray-500">{tA.bowlers.filter(b=>b.TotalGames>0).length} active bowlers</div>
             </div>
             <div className="p-4 text-center">
               <div className="font-display text-4xl text-gray-600">VS</div>
             </div>
             <div className="p-4 text-center bg-blue-900/20 border-l border-white/[0.06]">
-              <div className="font-display text-2xl text-blue-400">{tB.TeamName}</div>
+              {stB?.place && <div className="font-ui text-xs text-zinc-500 uppercase tracking-widest mb-0.5">#{stB.place} in standings</div>}
+              <button onClick={() => rosterRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                className="font-display text-2xl text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">
+                {tB.TeamName}
+              </button>
               <div className="font-ui text-xs text-gray-500">{tB.bowlers.filter(b=>b.TotalGames>0).length} active bowlers</div>
             </div>
           </div>
 
           {/* Stat comparison */}
           <div className="bg-alley-700 rounded-lg border border-white/[0.06] p-4">
+            <StatRow label="Standings Place" aVal={stA?.place ?? null} bVal={stB?.place ?? null} higherIsBetter={false} />
             <StatRow label="Points Won"          aVal={stA?.pointsWon}    bVal={stB?.pointsWon} />
             <StatRow label="Points Lost"         aVal={stA?.pointsLost}   bVal={stB?.pointsLost}   higherIsBetter={false} />
             <StatRow label="Game Hcp"            aVal={tA.gameHcp}        bVal={tB.gameHcp} />
@@ -128,33 +142,14 @@ export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB =
             <StatRow label="Series Avg w/ Hcp"   aVal={stA ? Math.round(stA.teamAverage * 3 + tA.gameHcp * 3) : null}
                                                  bVal={stB ? Math.round(stB.teamAverage * 3 + tB.gameHcp * 3) : null} />
             <StatRow label="Hi Series Scratch"   aVal={stA?.highScratchSeries ?? tA.highSeries}   bVal={stB?.highScratchSeries ?? tB.highSeries} />
-            <StatRow label="Hi Series w/ Hcp"    aVal={tA.highHcpSeries}  bVal={tB.highHcpSeries} />
+            <StatRow label="Hi Series w/ Hcp"    aVal={stA?.highScratchSeries != null ? stA.highScratchSeries + tA.gameHcp * 3 : tA.highSeries != null ? tA.highSeries + tA.gameHcp * 3 : null}
+                                                 bVal={stB?.highScratchSeries != null ? stB.highScratchSeries + tB.gameHcp * 3 : tB.highSeries != null ? tB.highSeries + tB.gameHcp * 3 : null} />
             <StatRow label="Total Pins Scratch"  aVal={stA?.scratchPins ?? tA.totalPins}   bVal={stB?.scratchPins ?? tB.totalPins} />
             <StatRow label="Total Pins w/ Hcp"   aVal={stA?.hdcpPins}     bVal={stB?.hdcpPins} />
           </div>
 
-          {/* Radar chart */}
-          <div className="bg-alley-700 rounded-lg border border-white/[0.06] p-4">
-            <h3 className="font-ui font-700 text-gray-300 mb-3 text-sm">Stat Comparison (normalized)</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <RadarChart data={radarData}>
-                <PolarGrid stroke="#ffffff15" />
-                <PolarAngleAxis dataKey="stat" tick={{ fill: '#9ca3af', fontSize: 12 }} />
-                <Radar name={tA.TeamName} dataKey="a" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.2} strokeWidth={2} />
-                <Radar name={tB.TeamName} dataKey="b" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.2} strokeWidth={2} />
-                <Tooltip contentStyle={{ background: '#1a1a20', border: '1px solid #f59e0b33', borderRadius: 6 }} />
-              </RadarChart>
-            </ResponsiveContainer>
-            <div className="flex gap-6 justify-center mt-2">
-              <div className="flex items-center gap-2"><span className="w-4 h-1 rounded bg-amber-400 inline-block"/>
-                <span className="font-ui text-xs text-gray-400">{tA.TeamName}</span></div>
-              <div className="flex items-center gap-2"><span className="w-4 h-1 rounded bg-blue-500 inline-block"/>
-                <span className="font-ui text-xs text-gray-400">{tB.TeamName}</span></div>
-            </div>
-          </div>
-
           {/* Roster comparison */}
-          <div className="grid grid-cols-2 gap-4">
+          <div ref={rosterRef} className="grid grid-cols-2 gap-4">
             {[{ team: tA, color: 'text-amber-400', bgBorder: 'border-amber-700/30' },
               { team: tB, color: 'text-blue-400',  bgBorder: 'border-blue-700/30'  }].map(({ team, color, bgBorder }) => (
               <div key={team.TeamID} className={`bg-alley-700 rounded-lg border ${bgBorder} p-4`}>
@@ -192,6 +187,26 @@ export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB =
                 })()}
               </div>
             ))}
+          </div>
+
+                    {/* Radar chart */}
+          <div className="bg-alley-700 rounded-lg border border-white/[0.06] p-4">
+            <h3 className="font-ui font-700 text-gray-300 mb-3 text-sm">Stat Comparison (normalized)</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <RadarChart data={radarData}>
+                <PolarGrid stroke="#ffffff15" />
+                <PolarAngleAxis dataKey="stat" tick={{ fill: '#9ca3af', fontSize: 12 }} />
+                <Radar name={tA.TeamName} dataKey="a" stroke="#f59e0b" fill="#f59e0b" fillOpacity={0.2} strokeWidth={2} />
+                <Radar name={tB.TeamName} dataKey="b" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.2} strokeWidth={2} />
+                <Tooltip contentStyle={{ background: '#1a1a20', border: '1px solid #f59e0b33', borderRadius: 6 }} />
+              </RadarChart>
+            </ResponsiveContainer>
+            <div className="flex gap-6 justify-center mt-2">
+              <div className="flex items-center gap-2"><span className="w-4 h-1 rounded bg-amber-400 inline-block"/>
+                <span className="font-ui text-xs text-gray-400">{tA.TeamName}</span></div>
+              <div className="flex items-center gap-2"><span className="w-4 h-1 rounded bg-blue-500 inline-block"/>
+                <span className="font-ui text-xs text-gray-400">{tB.TeamName}</span></div>
+            </div>
           </div>
         </>
       )}
