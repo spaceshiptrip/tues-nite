@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { computeTeams } from '../utils/dataUtils.js'
+import { computeTeams, isRosterBowler, isSubBowler } from '../utils/dataUtils.js'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts'
 
 function StatRow({ label, aVal, bVal, higherIsBetter = true }) {
@@ -21,36 +21,126 @@ function StatRow({ label, aVal, bVal, higherIsBetter = true }) {
   )
 }
 
+function GenderBadge({ gender }) {
+  if (!gender) return null
+  return (
+    <span className={`text-[10px] font-bold ${gender === 'W' ? 'text-pink-400' : 'text-sky-400'}`}>
+      {gender}
+    </span>
+  )
+}
+
+function SubBadge() {
+  return (
+    <span
+      title="Substitute — not counted in team totals"
+      className="px-1 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-orange-900/50 text-orange-400 border border-orange-700/40"
+    >
+      SUB
+    </span>
+  )
+}
+
+function RosterCard({ team, color, bgBorder }) {
+  // roster sorted by position (computeTeams already does this, but re-sort here for safety)
+  const bowlers = [...team.bowlers].sort((a, b) => {
+    const pa = Number(a.BowlerPosition ?? 99)
+    const pb = Number(b.BowlerPosition ?? 99)
+    if (pa === 0 && pb !== 0) return 1
+    if (pb === 0 && pa !== 0) return -1
+    return pa - pb
+  })
+
+  const active       = bowlers.filter(b => b.TotalGames > 0)
+  const rosterActive = active.filter(b => isRosterBowler(b))
+  const subsActive   = active.filter(b => isSubBowler(b))
+
+  const sumAvg    = rosterActive.reduce((s, b) => s + (b.Average ?? 0), 0)
+  const sumHcp    = rosterActive.reduce((s, b) => s + (b.HandicapAfterBowling ?? 0), 0)
+  const sumAvgHcp = rosterActive.reduce((s, b) => s + (b.Average ?? 0) + (b.HandicapAfterBowling ?? 0), 0)
+
+  return (
+    <div className={`bg-alley-700 rounded-lg border ${bgBorder} p-4`}>
+      <h4 className={`font-ui font-800 ${color} uppercase tracking-wider text-sm mb-2`}>{team.TeamName} Roster</h4>
+
+      {/* Column headers */}
+      <div className="grid grid-cols-[1.5rem_1fr_3rem_3rem_4rem] text-xs text-zinc-600 uppercase tracking-wider pb-1 border-b border-white/[0.06] mb-1 gap-1">
+        <span>#</span>
+        <span>Name</span>
+        <span className="text-center">Avg</span>
+        <span className="text-center">Hcp</span>
+        <span className="text-right">Avg+Hcp</span>
+      </div>
+
+      {/* Roster bowlers */}
+      {active.map(b => {
+        const isSub = isSubBowler(b)
+        return (
+          <div
+            key={b.BowlerID}
+            className={`grid grid-cols-[1.5rem_1fr_3rem_3rem_4rem] items-center py-1.5 border-b border-white/[0.04] last:border-0 text-xs gap-1 ${isSub ? 'opacity-70' : ''}`}
+          >
+            <span className={`font-mono text-center ${isSub ? 'text-orange-500/60' : 'text-zinc-600'}`}>
+              {isSub ? '—' : b.BowlerPosition}
+            </span>
+            <span className="flex items-center gap-1 min-w-0">
+              <span className="font-ui text-gray-300 truncate">
+                {b.BowlerName.includes(',') ? b.BowlerName.split(', ').reverse().join(' ') : b.BowlerName}
+              </span>
+              <GenderBadge gender={b.Gender} />
+              {isSub && <SubBadge />}
+            </span>
+            <span className={`font-mono text-center font-bold ${isSub ? 'text-gray-500' : 'text-gray-300'}`}>
+              {b.Average}
+            </span>
+            <span className={`font-mono text-center ${isSub ? 'text-gray-600' : 'text-blue-400'}`}>
+              +{b.HandicapAfterBowling}
+            </span>
+            <span className={`font-mono text-right ${isSub ? 'text-gray-600' : 'text-zinc-300'}`}>
+              {isSub ? '—' : b.Average + (b.HandicapAfterBowling ?? 0)}
+            </span>
+          </div>
+        )
+      })}
+
+      {/* Team total (roster only) */}
+      {rosterActive.length > 0 && (
+        <div className="mt-2 pt-2 border-t border-white/[0.06] grid grid-cols-[1.5rem_1fr_3rem_3rem_4rem] text-xs gap-1">
+          <span />
+          <span className="text-zinc-500 uppercase tracking-wider">
+            Total
+            {subsActive.length > 0 && <span className="ml-1 text-orange-500/60">(roster only)</span>}
+          </span>
+          <span className="font-mono text-center text-gray-400">{sumAvg}</span>
+          <span className="font-mono text-center text-blue-400">+{sumHcp}</span>
+          <span className="font-mono text-right text-zinc-300">{sumAvgHcp}</span>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB = '' }) {
   const [teamA, setTeamA] = useState(initialTeamA)
   const [teamB, setTeamB] = useState(initialTeamB)
 
-  // Sync when pre-selected teams arrive from Schedule view
   useEffect(() => { if (initialTeamA) setTeamA(initialTeamA) }, [initialTeamA])
   useEffect(() => { if (initialTeamB) setTeamB(initialTeamB) }, [initialTeamB])
 
   if (!weekData) return <p className="text-gray-500">No data.</p>
 
-  const teams = useMemo(() => {
-    const raw = computeTeams(weekData.bowlers)
-    // gameHcp = sum of active bowlers' per-game handicap
-    return raw.map(t => ({
-      ...t,
-      gameHcp: t.bowlers.filter(b => b.TotalGames > 0).reduce((sum, b) => sum + (b.HandicapAfterBowling ?? 0), 0)
-    }))
-  }, [weekData])
+  // computeTeams now handles pos-aware grouping, gameHcp from roster only
+  const teams = useMemo(() => computeTeams(weekData.bowlers), [weekData])
   const teamNames = teams.map(t => t.TeamName).sort()
 
   const tA = teams.find(t => t.TeamName === teamA)
   const tB = teams.find(t => t.TeamName === teamB)
 
-  // Pull standings rows for each team
   const stA = useMemo(() => weekData.standings?.find(s => s.teamName === teamA) ?? null, [weekData, teamA])
   const stB = useMemo(() => weekData.standings?.find(s => s.teamName === teamB) ?? null, [weekData, teamB])
 
   const rosterRef = useRef(null)
 
-  // Normalize stats 0-100 for radar
   const radarData = useMemo(() => {
     if (!tA || !tB) return []
     const normVal = (a, b) => {
@@ -58,15 +148,15 @@ export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB =
       return { a: Math.round(((a ?? 0) / max) * 100), b: Math.round(((b ?? 0) / max) * 100) }
     }
     return [
-      { stat: 'Pts Won',     ...normVal(stA?.pointsWon,                          stB?.pointsWon) },
-      { stat: 'Ser Scratch', ...normVal(stA?.scratchPins,                         stB?.scratchPins) },
-      { stat: 'Ser Hcp',     ...normVal(stA?.hdcpPins,                            stB?.hdcpPins) },
-      { stat: 'Hi Series',   ...normVal(stA?.highScratchSeries ?? tA.highSeries,  stB?.highScratchSeries ?? tB.highSeries) },
+      { stat: 'Pts Won',     ...normVal(stA?.pointsWon,                                   stB?.pointsWon) },
+      { stat: 'Ser Scratch', ...normVal(stA?.scratchPins,                                  stB?.scratchPins) },
+      { stat: 'Ser Hcp',     ...normVal(stA?.hdcpPins,                                     stB?.hdcpPins) },
+      { stat: 'Hi Series',   ...normVal(stA?.highScratchSeries ?? tA.highSeries,           stB?.highScratchSeries ?? tB.highSeries) },
       { stat: 'Hi Ser Hcp',  ...normVal(
           stA?.highScratchSeries != null ? stA.highScratchSeries + tA.gameHcp * 3 : null,
           stB?.highScratchSeries != null ? stB.highScratchSeries + tB.gameHcp * 3 : null
         ) },
-      { stat: 'Game Hcp',    ...normVal(tA.gameHcp,                               tB.gameHcp) },
+      { stat: 'Game Hcp',    ...normVal(tA.gameHcp, tB.gameHcp) },
     ]
   }, [tA, tB, stA, stB])
 
@@ -105,91 +195,77 @@ export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB =
 
       {tA && tB && (
         <>
-          {/* Header */}
+          {/* VS header */}
           <div className="grid grid-cols-3 items-center bg-alley-700 rounded-lg border border-white/[0.06] overflow-hidden">
             <div className="p-4 text-center bg-amber-900/20 border-r border-white/[0.06]">
               {stA?.place && <div className="font-ui text-xs text-zinc-500 uppercase tracking-widest mb-0.5">#{stA.place} in standings</div>}
-              <button onClick={() => rosterRef.current?.scrollIntoView({ behavior: 'smooth' })}
-                className="font-display text-2xl text-amber-400 hover:text-amber-300 transition-colors cursor-pointer">
+              <button
+                onClick={() => rosterRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                className="font-display text-2xl text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+              >
                 {tA.TeamName}
               </button>
-              <div className="font-ui text-xs text-gray-500">{tA.bowlers.filter(b=>b.TotalGames>0).length} active bowlers</div>
+              <div className="font-ui text-xs text-gray-500">
+                {tA.bowlers.filter(b => isRosterBowler(b) && b.TotalGames > 0).length} active roster bowlers
+              </div>
             </div>
             <div className="p-4 text-center">
               <div className="font-display text-4xl text-gray-600">VS</div>
             </div>
             <div className="p-4 text-center bg-blue-900/20 border-l border-white/[0.06]">
               {stB?.place && <div className="font-ui text-xs text-zinc-500 uppercase tracking-widest mb-0.5">#{stB.place} in standings</div>}
-              <button onClick={() => rosterRef.current?.scrollIntoView({ behavior: 'smooth' })}
-                className="font-display text-2xl text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">
+              <button
+                onClick={() => rosterRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                className="font-display text-2xl text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+              >
                 {tB.TeamName}
               </button>
-              <div className="font-ui text-xs text-gray-500">{tB.bowlers.filter(b=>b.TotalGames>0).length} active bowlers</div>
+              <div className="font-ui text-xs text-gray-500">
+                {tB.bowlers.filter(b => isRosterBowler(b) && b.TotalGames > 0).length} active roster bowlers
+              </div>
             </div>
           </div>
 
           {/* Stat comparison */}
           <div className="bg-alley-700 rounded-lg border border-white/[0.06] p-4">
-            <StatRow label="Standings Place" aVal={stA?.place ?? null} bVal={stB?.place ?? null} higherIsBetter={false} />
-            <StatRow label="Points Won"          aVal={stA?.pointsWon}    bVal={stB?.pointsWon} />
-            <StatRow label="Points Lost"         aVal={stA?.pointsLost}   bVal={stB?.pointsLost}   higherIsBetter={false} />
-            <StatRow label="Game Hcp"            aVal={tA.gameHcp}        bVal={tB.gameHcp} />
-            <StatRow label="Game Avg Scratch"    aVal={stA?.teamAverage ?? null}   bVal={stB?.teamAverage ?? null} />
-            <StatRow label="Game Avg w/ Hcp"     aVal={stA ? Math.round(stA.teamAverage + tA.gameHcp) : null}
-                                                 bVal={stB ? Math.round(stB.teamAverage + tB.gameHcp) : null} />
-            <StatRow label="Series Avg Scratch"  aVal={stA ? Math.round(stA.teamAverage * 3) : null}
-                                                 bVal={stB ? Math.round(stB.teamAverage * 3) : null} />
-            <StatRow label="Series Avg w/ Hcp"   aVal={stA ? Math.round(stA.teamAverage * 3 + tA.gameHcp * 3) : null}
-                                                 bVal={stB ? Math.round(stB.teamAverage * 3 + tB.gameHcp * 3) : null} />
-            <StatRow label="Hi Series Scratch"   aVal={stA?.highScratchSeries ?? tA.highSeries}   bVal={stB?.highScratchSeries ?? tB.highSeries} />
-            <StatRow label="Hi Series w/ Hcp"    aVal={stA?.highScratchSeries != null ? stA.highScratchSeries + tA.gameHcp * 3 : tA.highSeries != null ? tA.highSeries + tA.gameHcp * 3 : null}
-                                                 bVal={stB?.highScratchSeries != null ? stB.highScratchSeries + tB.gameHcp * 3 : tB.highSeries != null ? tB.highSeries + tB.gameHcp * 3 : null} />
-            <StatRow label="Total Pins Scratch"  aVal={stA?.scratchPins ?? tA.totalPins}   bVal={stB?.scratchPins ?? tB.totalPins} />
-            <StatRow label="Total Pins w/ Hcp"   aVal={stA?.hdcpPins}     bVal={stB?.hdcpPins} />
+            <StatRow label="Standings Place"    aVal={stA?.place ?? null}   bVal={stB?.place ?? null} higherIsBetter={false} />
+            <StatRow label="Points Won"         aVal={stA?.pointsWon}       bVal={stB?.pointsWon} />
+            <StatRow label="Points Lost"        aVal={stA?.pointsLost}      bVal={stB?.pointsLost}  higherIsBetter={false} />
+            <StatRow label="Game Hcp (roster)"  aVal={tA.gameHcp}           bVal={tB.gameHcp} />
+            <StatRow label="Game Avg Scratch"   aVal={stA?.teamAverage ?? null} bVal={stB?.teamAverage ?? null} />
+            <StatRow label="Game Avg w/ Hcp"
+              aVal={stA ? Math.round(stA.teamAverage + tA.gameHcp) : null}
+              bVal={stB ? Math.round(stB.teamAverage + tB.gameHcp) : null}
+            />
+            <StatRow label="Series Avg Scratch"
+              aVal={stA ? Math.round(stA.teamAverage * 3) : null}
+              bVal={stB ? Math.round(stB.teamAverage * 3) : null}
+            />
+            <StatRow label="Series Avg w/ Hcp"
+              aVal={stA ? Math.round(stA.teamAverage * 3 + tA.gameHcp * 3) : null}
+              bVal={stB ? Math.round(stB.teamAverage * 3 + tB.gameHcp * 3) : null}
+            />
+            <StatRow label="Hi Series Scratch"
+              aVal={stA?.highScratchSeries ?? tA.highSeries}
+              bVal={stB?.highScratchSeries ?? tB.highSeries}
+            />
+            <StatRow label="Hi Series w/ Hcp"
+              aVal={stA?.highScratchSeries != null ? stA.highScratchSeries + tA.gameHcp * 3
+                    : tA.highSeries != null ? tA.highSeries + tA.gameHcp * 3 : null}
+              bVal={stB?.highScratchSeries != null ? stB.highScratchSeries + tB.gameHcp * 3
+                    : tB.highSeries != null ? tB.highSeries + tB.gameHcp * 3 : null}
+            />
+            <StatRow label="Total Pins Scratch" aVal={stA?.scratchPins ?? tA.totalPins} bVal={stB?.scratchPins ?? tB.totalPins} />
+            <StatRow label="Total Pins w/ Hcp"  aVal={stA?.hdcpPins}    bVal={stB?.hdcpPins} />
           </div>
 
-          {/* Roster comparison */}
+          {/* Roster cards */}
           <div ref={rosterRef} className="grid grid-cols-2 gap-4">
-            {[{ team: tA, color: 'text-amber-400', bgBorder: 'border-amber-700/30' },
-              { team: tB, color: 'text-blue-400',  bgBorder: 'border-blue-700/30'  }].map(({ team, color, bgBorder }) => (
-              <div key={team.TeamID} className={`bg-alley-700 rounded-lg border ${bgBorder} p-4`}>
-                <h4 className={`font-ui font-800 ${color} uppercase tracking-wider text-sm mb-2`}>{team.TeamName} Roster</h4>
-                <div className="grid grid-cols-5 text-xs text-zinc-600 uppercase tracking-wider pb-1 border-b border-white/[0.06] mb-1 gap-1">
-                  <span className="col-span-2">Name</span>
-                  <span className="text-center">Avg</span>
-                  <span className="text-center">Hcp</span>
-                  <span className="text-right">Avg+Hcp</span>
-                </div>
-                {[...team.bowlers]
-                  .filter(b => b.TotalGames > 0)
-                  .sort((a, b) => b.Average - a.Average)
-                  .map(b => (
-                    <div key={b.BowlerID} className="grid grid-cols-5 items-center py-1.5 border-b border-white/[0.04] last:border-0 text-xs gap-1">
-                      <span className="font-ui text-gray-300 truncate col-span-2">{b.BowlerName.includes(',') ? b.BowlerName.split(', ').reverse().join(' ') : b.BowlerName}</span>
-                      <span className="font-mono text-center text-gray-300 font-bold">{b.Average}</span>
-                      <span className="font-mono text-center text-blue-400">+{b.HandicapAfterBowling}</span>
-                      <span className="font-mono text-right text-zinc-300">{b.Average + (b.HandicapAfterBowling ?? 0)}</span>
-                    </div>
-                  ))}
-                {(() => {
-                  const active = team.bowlers.filter(b => b.TotalGames > 0)
-                  const sumAvg = active.reduce((s, b) => s + (b.Average ?? 0), 0)
-                  const sumAvgHcp = active.reduce((s, b) => s + (b.Average ?? 0) + (b.HandicapAfterBowling ?? 0), 0)
-                  const sumHcp = active.reduce((s, b) => s + (b.HandicapAfterBowling ?? 0), 0)
-                  return (
-                    <div className="mt-2 pt-2 border-t border-white/[0.06] grid grid-cols-5 text-xs gap-1">
-                      <span className="col-span-2 text-zinc-500 uppercase tracking-wider">Team Total</span>
-                      <span className="font-mono text-center text-gray-400">{sumAvg}</span>
-                      <span className="font-mono text-center text-blue-400">+{sumHcp}</span>
-                      <span className="font-mono text-right text-zinc-300">{sumAvgHcp}</span>
-                    </div>
-                  )
-                })()}
-              </div>
-            ))}
+            <RosterCard team={tA} color="text-amber-400" bgBorder="border-amber-700/30" />
+            <RosterCard team={tB} color="text-blue-400"  bgBorder="border-blue-700/30" />
           </div>
 
-                    {/* Radar chart */}
+          {/* Radar chart */}
           <div className="bg-alley-700 rounded-lg border border-white/[0.06] p-4">
             <h3 className="font-ui font-700 text-gray-300 mb-3 text-sm">Stat Comparison (normalized)</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -202,10 +278,14 @@ export default function HeadToHead({ weekData, initialTeamA = '', initialTeamB =
               </RadarChart>
             </ResponsiveContainer>
             <div className="flex gap-6 justify-center mt-2">
-              <div className="flex items-center gap-2"><span className="w-4 h-1 rounded bg-amber-400 inline-block"/>
-                <span className="font-ui text-xs text-gray-400">{tA.TeamName}</span></div>
-              <div className="flex items-center gap-2"><span className="w-4 h-1 rounded bg-blue-500 inline-block"/>
-                <span className="font-ui text-xs text-gray-400">{tB.TeamName}</span></div>
+              <div className="flex items-center gap-2">
+                <span className="w-4 h-1 rounded bg-amber-400 inline-block"/>
+                <span className="font-ui text-xs text-gray-400">{tA.TeamName}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-4 h-1 rounded bg-blue-500 inline-block"/>
+                <span className="font-ui text-xs text-gray-400">{tB.TeamName}</span>
+              </div>
             </div>
           </div>
         </>
