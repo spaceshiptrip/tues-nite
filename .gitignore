@@ -6,3 +6,4 @@ dist/
 _ocr_*
 *.png
 .venv/
+pdfs/
