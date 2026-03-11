@@ -8457,8 +8457,21 @@
           "BowlerPosition": 3,
           "BowlerStatus": "R",
           "TeamNum": 16,
-          "EnteringAverage": 0,
-          "PointsWonDec": 0
+          "EnteringAverage": 192,
+          "PointsWonDec": 0,
+          "_games": [
+            132,
+            null,
+            73
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 205,
+          "_recapMatched": true,
+          "_recapName": "Edwin Chacon"
         },
         {
           "TeamID": 13,
@@ -8867,8 +8880,21 @@
           "BowlerPosition": 3,
           "BowlerStatus": "R",
           "TeamNum": 4,
-          "EnteringAverage": 149,
-          "PointsWonDec": 0
+          "EnteringAverage": 116,
+          "PointsWonDec": 0,
+          "_games": [
+            103,
+            null,
+            145
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 248,
+          "_recapMatched": true,
+          "_recapName": "Heather Fishman"
         },
         {
           "TeamID": 6,
@@ -9371,8 +9397,21 @@
           "BowlerPosition": 4,
           "BowlerStatus": "R",
           "TeamNum": 2,
-          "EnteringAverage": 0,
-          "PointsWonDec": 0
+          "EnteringAverage": 153,
+          "PointsWonDec": 0,
+          "_games": [
+            164,
+            161,
+            null
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 325,
+          "_recapMatched": true,
+          "_recapName": "David Pauli"
         },
         {
           "TeamID": 12,
@@ -9947,8 +9986,21 @@
           "BowlerPosition": 1,
           "BowlerStatus": "R",
           "TeamNum": 14,
-          "EnteringAverage": 200,
-          "PointsWonDec": 0
+          "EnteringAverage": 185,
+          "PointsWonDec": 0,
+          "_games": [
+            212,
+            74,
+            136
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 422,
+          "_recapMatched": true,
+          "_recapName": "Alexander Wiener"
         },
         {
           "BowlerID": null,
@@ -9981,6 +10033,216 @@
             false
           ],
           "_scratchSeries": 99,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Proger",
+          "TeamID": 2,
+          "TeamName": "Team 2",
+          "TeamNum": 2,
+          "Gender": "",
+          "TotalPins": 299,
+          "TotalGames": 2,
+          "Average": 150,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 88,
+          "HandicapAfterBowling": 162,
+          "HighScratchGame": 169,
+          "HighScratchSeries": 299,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            null,
+            130,
+            169
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 299,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Chay, Andrew",
+          "TeamID": 2,
+          "TeamName": "Team 2",
+          "TeamNum": 2,
+          "Gender": "",
+          "TotalPins": 374,
+          "TotalGames": 2,
+          "Average": 187,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 195,
+          "HandicapAfterBowling": 22,
+          "HighScratchGame": 195,
+          "HighScratchSeries": 374,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            179,
+            null,
+            195
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 374,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Fleet, Chiristine Yan",
+          "TeamID": 14,
+          "TeamName": "Team 14",
+          "TeamNum": 14,
+          "Gender": "",
+          "TotalPins": 301,
+          "TotalGames": 2,
+          "Average": 151,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 119,
+          "HandicapAfterBowling": 90,
+          "HighScratchGame": 151,
+          "HighScratchSeries": 301,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            151,
+            null,
+            150
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 301,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Albert",
+          "TeamID": 16,
+          "TeamName": "F-ING 10 PIN",
+          "TeamNum": 16,
+          "Gender": "",
+          "TotalPins": 196,
+          "TotalGames": 2,
+          "Average": 98,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 86,
+          "HandicapAfterBowling": 116,
+          "HighScratchGame": 103,
+          "HighScratchSeries": 196,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            93,
+            103,
+            null
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 196,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Andrew",
+          "TeamID": 16,
+          "TeamName": "F-ING 10 PIN",
+          "TeamNum": 16,
+          "Gender": "",
+          "TotalPins": 379,
+          "TotalGames": 3,
+          "Average": 126,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 61,
+          "HandicapAfterBowling": 161,
+          "HighScratchGame": 179,
+          "HighScratchSeries": 379,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            53,
+            179,
+            147
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 379,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Bugayong, Ben",
+          "TeamID": 12,
+          "TeamName": "Mostly Moser",
+          "TeamNum": 12,
+          "Gender": "",
+          "TotalPins": 458,
+          "TotalGames": 2,
+          "Average": 229,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 165,
+          "HandicapAfterBowling": 49,
+          "HighScratchGame": 292,
+          "HighScratchSeries": 458,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            null,
+            292,
+            166
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 458,
           "_recapMatched": true,
           "_recapOnly": true,
           "_source": "recap-pdf"

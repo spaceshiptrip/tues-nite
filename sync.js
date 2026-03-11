@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * sync.js — Pinz Bowling League data sync  v0.41.0
+ * sync.js — Pinz Bowling League data sync  v0.45.0
  *
- * What's new in v0.41.0:
+ * What's new in v0.45.0:
  *   - Recap PDF parser: OCR via pdftoppm + tesseract
  *   - Patches per-game scores, absent flags, entering averages from recap
  *   - Adds missing bowlers (e.g. Bernard Badion / Team 15)
@@ -11,7 +11,7 @@
  * Requires: brew install poppler tesseract  (python3 -m pip install Pillow)
  */
 
-const SYNC_VERSION = 'v0.41.0'
+const SYNC_VERSION = 'v0.45.0'
 const DEBUG_OCR = process.argv.includes('--debug-ocr')
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync, mkdirSync, rmSync } from 'fs'
@@ -609,7 +609,7 @@ function parseScoreToken(token) {
  * Parse one narrow column of OCR text into an array of lane sections.
  * Each column should contain exactly one lane's worth of data.
  */
-let _unknownLaneCounter = 100
+// _unknownLaneCounter removed v0.45.0 — bad lane headers are skipped, not fabricated
 function parseRecapColumn(text) {
   const lines    = text.split('\n').map(l => l.trim()).filter(Boolean)
   const sections = []; let current = null
@@ -617,25 +617,41 @@ function parseRecapColumn(text) {
 
   for (const line of lines) {
     // Lane header — original strict pattern works on narrow single columns
-    // Lane header — tolerant of OCR garbles:
-    //   "Lane 1 #- FillDonahwe Week 5"   (clean)
-    //   "Laned 2- Teani2? WeekS 3/3;"    (Lane→Laned, Week5→WeekS)
-    //   "Lane S 713-Teami? WeekS 3,"     (lane# S→5)
-    //   "Lane? TS: TeamiTs WeekS 3,"     (Lane?→Lane, lane# TS)
-    const laneHdr = line.match(/Lane[a-z*?]?\s+([0-9A-Za-z*?]{1,3})\s+(.*?)\s+Week[A-Za-z0-9]?\s*([0-9S]{1,2})/i)
-    if (laneHdr) {
-      if (current?.bowlers.length) sections.push(current)
-      const laneNum = cleanInt(laneHdr[1])
-      const weekNum  = cleanInt(laneHdr[3])
-      current = {
-        laneNum:        Number.isFinite(laneNum) && laneNum > 0 ? laneNum : ++_unknownLaneCounter,
-        rawTeamName:    laneHdr[2].trim(),
-        weekNum:        parseInt(laneHdr[3], 10),
-        bowlers:        [],
-        pointsWon:      [null, null, null],
-        totalPointsWon: null,
+    // Lane header — two-step detection tolerates heavy OCR garbling:
+    //   "Lane 1 #@- FilDonahwe Week 5 3/3/2026"   (clean)
+    //   "Lane d 2: Teari2? WeekS 3/3/2026"         (spurious 'd', ':' sep)
+    //   "Lane4 12-Mosty Moser Week 5 3/3/2026"     (fused Lane+num)
+    //   "Lane? 5- Team WeekS 3/4/2026"             (Lane?, WeekS)
+    //   "Lane S 73-TeamName WeekS 3/3/2026"        (lane# as letter S)
+    // Lane header — use LAST digit sequence before '-'/':' as lane# (avoids
+    // grabbing fused digits like '4' in "Lane4 12-Team"). Validate 1-16.
+    // Bad headers skipped, never fabricated.
+    const isLaneLine = /Lane/i.test(line) && /Week/i.test(line)
+    if (isLaneLine) {
+      const sepIdx    = Math.max(line.indexOf('-'), line.indexOf(':'))
+      const beforeSep = sepIdx >= 0 ? line.slice(0, sepIdx) : line
+      const laneCandidates = [...beforeSep.matchAll(/(\d{1,2})/g)]
+      const laneToken = laneCandidates.length
+        ? laneCandidates[laneCandidates.length - 1][1] : null
+
+      const teamM = line.match(/[-:]\s*(.+?)\s+Week/i)
+      const weekM = line.match(/Week\D{0,2}([0-9A-Za-z]{1,2})/i)
+
+      const rawLaneNum = laneToken ? cleanInt(laneToken) : NaN
+      const laneNum = Number.isFinite(rawLaneNum) && rawLaneNum >= 1 && rawLaneNum <= 16
+        ? rawLaneNum : null
+
+      const rawWeekNum = weekM ? cleanInt(weekM[1]) : NaN
+      const weekNum = Number.isFinite(rawWeekNum) && rawWeekNum >= 1 && rawWeekNum <= 99
+        ? rawWeekNum : null
+
+      if (laneNum && teamM) {
+        if (current?.bowlers.length) sections.push(current)
+        current = { laneNum, rawTeamName: teamM[1].trim(), weekNum,
+          bowlers: [], pointsWon: [null, null, null], totalPointsWon: null }
+        continue
       }
-      continue
+      // laneNum out of range or no team found — skip
     }
     if (!current) continue
 
@@ -767,18 +783,23 @@ async function parseRecapPdf(pdfPath) {
 
 // Team name OCR garble variants — add to this as new errors are discovered
 const TEAM_OCR_ALIASES = {
+  // Named teams — specific garbles only
   'Fill Donahue':       ['FilDonahwe', 'Fil Donahue', 'Fill Donahwe', 'FilDonahue'],
   'Chips Gutter Crew':  ['ChipsGutter', 'Chips Gutter'],
   'Lumber Liquidators': ['Lumber Liq'],
-  'Mostly Moser':       ['MostlyMoser', 'Mosity Moser'],
-  'Social Butterflies': ['Socia/ Butterflies', 'Socia Butterflies', 'Social! Butterflies'],
-  'F-ING 10 PIN':       ['F-INGTOPIN', 'FING TOPIN', 'F-ING10PIN', 'F-ING10 PIN'],
-  'Team Won':           ['TeamWon', 'Team Won'],
-  'Team 2':             ['Team?', 'TeamF'],
+  'Mostly Moser':       ['MostlyMoser', 'Mosity Moser', 'Mosty Moser'],
+  'Social Butterflies': ['Socia/ Butterflies', 'Socia Butterflies', 'Social! Butterflies', 'Socia!/ Butterflies'],
+  'F-ING 10 PIN':       ['F-INGTOPIN', 'FING TOPIN', 'F-ING10PIN', 'F-ING10 PIN', 'F-ING TOPIN'],
+  // Numbered teams — removed 'Team' and 'Team?' which stole matches via includes()
+  'Team Won':           ['TeamWon'],
+  'Team 2':             ['Teari2?', 'Teari2', 'TeamF'],
+  'Team 3':             ['TeamS3', 'Teams3', 'Teami3'],
   'Team 5':             ['TeamS', 'Teams'],
-  'Team 7':             ['TeamiT?', 'TeamiT', 'Teamit'],
-  'Team 14':            ['Teamid4', 'Teamid'],
-  'Team 15':            ['TeamiS5'],
+  'Team 7':             ['TeamiT?', 'TeamiT', 'Teamit', 'Teami?'],
+  'Team 9':             ['Teami9'],
+  'Team 13':            ['Teami13'],
+  'Team 14':            ['Teamid4', 'Teamid', 'Teami4'],
+  'Team 15':            ['TeamiS5', 'Teami5'],
 }
 
 function recapNameToDataJson(name) {
@@ -808,20 +829,37 @@ function nameMatchScore(recapName, dataName) {
 }
 
 
+function normalizeTeamText(s) {
+  return String(s ?? '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
 function matchRecapTeam(rawName, dbTeams) {
-  const raw = rawName.toLowerCase().trim()
+  const raw = normalizeTeamText(rawName)
+
+  // 1) Exact team name
   for (const team of dbTeams) {
-    if (team.TeamName.toLowerCase() === raw) return team
-    if ((TEAM_OCR_ALIASES[team.TeamName] ?? []).some(a => a.toLowerCase() === raw || raw.includes(a.toLowerCase()))) return team
+    if (normalizeTeamText(team.TeamName) === raw) return team
   }
+
+  // 2) Exact alias — NO substring/includes (was stealing matches)
+  for (const team of dbTeams) {
+    for (const alias of (TEAM_OCR_ALIASES[team.TeamName] ?? [])) {
+      if (normalizeTeamText(alias) === raw) return team
+    }
+  }
+
+  // 3) Token overlap fallback — high threshold (0.75) to avoid false positives
   let best = null, bestScore = 0
   for (const team of dbTeams) {
-    const rawT = raw.split(/\s+/); const dbT = team.TeamName.toLowerCase().split(/\s+/)
-    const score = rawT.filter(t => dbT.includes(t)).length / Math.max(rawT.length, dbT.length)
+    const rawT = raw.split(/\s+/).filter(Boolean)
+    const dbT  = normalizeTeamText(team.TeamName).split(/\s+/).filter(Boolean)
+    const score = rawT.filter(t => dbT.includes(t)).length / Math.max(rawT.length, dbT.length, 1)
     if (score > bestScore) { bestScore = score; best = team }
   }
-  if (bestScore >= 0.5) return best
-  console.warn(`    ⚠️  Could not match recap team "${rawName}"`); return null
+  if (bestScore >= 0.75) return best
+
+  console.warn(`    ⚠️  Could not match recap team "${rawName}" (best: ${best?.TeamName ?? 'none'} @ ${bestScore.toFixed(2)})`)
+  return null
 }
 
 /**
