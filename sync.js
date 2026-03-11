@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 /**
- * sync.js — Pinz Bowling League data sync  v0.32.0
+ * sync.js — Pinz Bowling League data sync  v0.41.0
  *
- * What's new in v0.32.0:
+ * What's new in v0.41.0:
  *   - Recap PDF parser: OCR via pdftoppm + tesseract
  *   - Patches per-game scores, absent flags, entering averages from recap
  *   - Adds missing bowlers (e.g. Bernard Badion / Team 15)
  *   - Put recap PDFs in: pdfs/wk05-2026-03-03-recap.pdf
  *
- * Requires: brew install poppler tesseract
+ * Requires: brew install poppler tesseract  (python3 -m pip install Pillow)
  */
 
-const SYNC_VERSION = 'v0.32.0'
+const SYNC_VERSION = 'v0.41.0'
+const DEBUG_OCR = process.argv.includes('--debug-ocr')
 
 import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync, mkdirSync, rmSync } from 'fs'
 import { join, dirname } from 'path'
@@ -471,25 +472,73 @@ function findRecapPdf(weekNum) {
 }
 
 /**
- * OCR a recap PDF. Renders each page at 300dpi and runs tesseract on the
- * full page image. Column splitting is done in post-processing by
- * splitTwoColumns(), not at the image level.
+ * OCR a recap PDF into 4 vertical columns via Python/Pillow + tesseract.
  *
- * Returns an array of raw OCR text strings, one per page.
- * Requires: brew install poppler tesseract
+ * The recap sheet has 4 narrow columns of lane sections. Feeding the full
+ * page (or even a half-page) to tesseract causes it to merge two columns
+ * onto each line, which garbles lane headers and bowler rows.
+ *
+ * Strategy: use pdftoppm to render each page, then a tiny Python script to
+ * quarter the image, then tesseract each quarter independently.
+ *
+ * Returns [{ columns: [text, text, text, text] }] — one entry per page.
+ * Requires: brew install poppler tesseract  (python3 -m pip install Pillow)  (python3 + Pillow already on macOS)
  */
+// Use the project-local venv python (has Pillow) if available, else fall back
+const PYTHON_BIN = existsSync(join(process.cwd(), '.venv/bin/python'))
+  ? join(process.cwd(), '.venv/bin/python')
+  : 'python3'
+
 async function ocrRecapPdf(pdfPath) {
   const tmpDir = join(os.tmpdir(), `bowling-recap-${Date.now()}`)
   mkdirSync(tmpDir, { recursive: true })
+
+  // Tiny Python script: quarter the image, optionally sharpen, save PNGs
+  const splitScript = join(tmpDir, 'split.py')
+  writeFileSync(splitScript, [
+    'from PIL import Image, ImageEnhance',
+    'import sys',
+    'img = Image.open(sys.argv[1]).convert("RGB")',
+    'img = ImageEnhance.Sharpness(img).enhance(1.8)',
+    'w, h = img.size',
+    '# 2-col split: left half and right half — each half is one page column',
+    '# (4-col split incorrectly separated names from scores within each column)',
+    'cuts = [0, w//2, w]',
+    'for i in range(2):',
+    '    img.crop((cuts[i], 0, cuts[i+1], h)).save(sys.argv[2 + i])',
+  ].join('\n'))
+
   const pages = []
   try {
     execSync(`pdftoppm -r 300 "${pdfPath}" "${join(tmpDir, 'page')}"`, { stdio: 'pipe' })
     const pageFiles = readdirSync(tmpDir).filter(f => f.startsWith('page') && f.endsWith('.ppm')).sort()
     if (!pageFiles.length) throw new Error('pdftoppm produced no images — is poppler installed? (brew install poppler)')
+
     for (const pf of pageFiles) {
-      const base = join(tmpDir, pf.replace('.ppm', '_out'))
-      execSync(`tesseract "${join(tmpDir, pf)}" "${base}" --psm 6 -l eng 2>/dev/null`, { stdio: 'pipe' })
-      pages.push(readFileSync(`${base}.txt`, 'utf8'))
+      const imgPath = join(tmpDir, pf)
+      const cols    = [0, 1].map(i => join(tmpDir, `${pf}_col${i}.png`))
+      try {
+        execSync(`"${PYTHON_BIN}" "${splitScript}" "${imgPath}" ${cols.map(c => `"${c}"`).join(' ')}`, { stdio: 'pipe' })
+      } catch (pyErr) {
+        throw new Error(`Python/Pillow split failed: ${pyErr.stderr?.toString().trim() || pyErr.message}\n  PYTHON_BIN=${PYTHON_BIN}`)
+      }
+
+      function ocr(png) {
+        const base = png.replace('.png', '_out')
+        try {
+          execSync(`tesseract "${png}" "${base}" --psm 6 -l eng 2>/dev/null`, { stdio: 'pipe' })
+          return readFileSync(`${base}.txt`, 'utf8')
+        } catch { return '' }
+      }
+
+      const colTexts = cols.map(ocr)
+      if (DEBUG_OCR) {
+        colTexts.forEach((t, i) => {
+          console.log(`\n  ── DEBUG col ${i} (${pf}) ──`)
+          console.log(t.slice(0, 800) || '  (empty)')
+        })
+      }
+      pages.push({ columns: colTexts })
     }
   } finally {
     try { rmSync(tmpDir, { recursive: true, force: true }) } catch {}
@@ -497,93 +546,99 @@ async function ocrRecapPdf(pdfPath) {
   return pages
 }
 
+// ── OCR token normalizers ──────────────────────────────────────────────────
+
 /**
- * The recap sheet is a 2-column layout. Tesseract reads across the full
- * width, merging both columns onto each line:
- *   "Lane 1 #- FilDonahue Week 5 3/3/2026  Lane? 5-TeamS WeekS 3/3/2026"
- *   "Dakota Fine 158 ... 610  Freddy Reynoso 139 ... 423"
- *
- * This function detects the column split position by finding lines where
- * "Lane" appears twice, then splits every line at that character position.
- * Returns { left, right } strings suitable for parseRecapColumn().
+ * Substitute common OCR letter→digit confusables, strip non-numeric noise.
+ * Returns an integer or NaN.
  */
-function splitTwoColumns(pageText) {
-  const lines = pageText.split('\n')
-
-  // Find split position from lines containing two lane headers
-  const splitPositions = []
-  for (const line of lines) {
-    const matches = [...line.matchAll(/Lane/gi)]
-    if (matches.length >= 2) splitPositions.push(matches[1].index)
-  }
-
-  if (splitPositions.length === 0) {
-    // Single-column page (or no lane headers found) — treat as left only
-    return { left: pageText, right: '' }
-  }
-
-  // Use median to avoid outliers
-  splitPositions.sort((a, b) => a - b)
-  const splitCol = splitPositions[Math.floor(splitPositions.length / 2)]
-
-  const leftLines = [], rightLines = []
-  for (const line of lines) {
-    leftLines.push(line.slice(0, splitCol))
-    rightLines.push(line.slice(splitCol))
-  }
-  return { left: leftLines.join('\n'), right: rightLines.join('\n') }
+function cleanInt(token) {
+  if (token == null) return NaN
+  const s = String(token).trim()
+    .replace(/[OoQqDd]/g, '0')
+    .replace(/[Il|!]/g,   '1')
+    .replace(/[Ss$]/g,    '5')
+    .replace(/[Bb]/g,     '8')
+    .replace(/[Gg]/g,     '6')
+    .replace(/[^0-9]/g,   '')
+  return s ? parseInt(s, 10) : NaN
 }
 
+/**
+ * Like cleanInt but preserves a leading 'a' (absent marker).
+ */
+function cleanScoreToken(token) {
+  if (token == null) return ''
+  return String(token).trim()
+    .replace(/[OoQqDd]/g, '0')
+    .replace(/[Il|!]/g,   '1')
+    .replace(/[Ss$]/g,    '5')
+    .replace(/[Bb]/g,     '8')
+    .replace(/[Gg]/g,     '6')
+    .replace(/[^aA0-9]/g, '')
+    .toLowerCase()
+}
 
 /**
- * Parse a single game score token from OCR output.
+ * Return true if this (possibly noisy) token looks like a bowling score.
+ * Cleans before testing so #197, $137, «99 all pass.
+ */
+function looksLikeScore(token) {
+  const t = cleanScoreToken(token)
+  return /^a?\d{2,3}$/.test(t) || /^[83]\d{3}$/.test(t)
+}
+
+/**
+ * Parse a single game score token, tolerating OCR noise.
  *   "197"  → { score: 197, absent: false }
- *   "a120" → { score: 120, absent: true  }  (absent — bowled average)
+ *   "a120" → { score: 120, absent: true  }
  *   "8100" → { score: 100, absent: true  }  (OCR misread 'a' as '8')
+ *   "al20" → { score: 120, absent: true  }  (OCR 'l' → '1')
  */
 function parseScoreToken(token) {
   if (!token) return null
-  const t = token.toLowerCase().replace(/[^a0-9]/g, '')
+  const t = cleanScoreToken(token)
+
   if (/^a\d{2,3}$/.test(t))  { const s = parseInt(t.slice(1), 10); return s >= 50 && s <= 300 ? { score: s, absent: true  } : null }
-  if (/^\d{2,3}$/.test(t))   { const s = parseInt(t, 10);          return s >= 50 && s <= 300 ? { score: s, absent: false } : null }
-  if (/^[83]\d{3}$/.test(t)) { const s = parseInt(t.slice(1), 10); return s >= 50 && s <= 300 ? { score: s, absent: true  } : null }
+  if (/^\d{2,3}$/.test(t))   { const s = parseInt(t,           10); return s >= 50 && s <= 300 ? { score: s, absent: false } : null }
+  if (/^[83]\d{3}$/.test(t)) { const s = parseInt(t.slice(1),  10); return s >= 50 && s <= 300 ? { score: s, absent: true  } : null }
   return null
 }
 
 /**
- * Parse one column of OCR'd recap text into an array of lane sections.
+ * Parse one narrow column of OCR text into an array of lane sections.
+ * Each column should contain exactly one lane's worth of data.
  */
-let _unknownLaneCounter = 100  // for garbled lane numbers — stays unique across calls
-
-/**
- * Clean an OCR token for numeric testing.
- * OCR introduces noise chars like #, $, «, §, ©, O (capital O) before digits.
- * Strip everything except 'a' (absent marker) and digits.
- */
-function cleanToken(t) { return t.toLowerCase().replace(/[^a0-9]/g, '') }
-function looksLikeScore(token) {
-  const t = cleanToken(token)
-  return /^a?\d{2,3}$/.test(t) || /^[83]\d{3}$/.test(t)
-}
-function cleanInt(token) { return parseInt(cleanToken(token).replace(/^a/, ''), 10) }
-
+let _unknownLaneCounter = 100
 function parseRecapColumn(text) {
   const lines    = text.split('\n').map(l => l.trim()).filter(Boolean)
   const sections = []; let current = null
   const SKIP_RE  = /^(Name|Old|Avg|Avq|HDCP|HDGP|Scratch|Handicap|^Total$|Pinz|Tuesday|Reprint|BLS|Page\s|\d{4}\/)/i
 
   for (const line of lines) {
-    const laneHdr = line.match(/^Lane\s*(\S+)\s+(.+?)\s+Week/i)
+    // Lane header — original strict pattern works on narrow single columns
+    // Lane header — tolerant of OCR garbles:
+    //   "Lane 1 #- FillDonahwe Week 5"   (clean)
+    //   "Laned 2- Teani2? WeekS 3/3;"    (Lane→Laned, Week5→WeekS)
+    //   "Lane S 713-Teami? WeekS 3,"     (lane# S→5)
+    //   "Lane? TS: TeamiTs WeekS 3,"     (Lane?→Lane, lane# TS)
+    const laneHdr = line.match(/Lane[a-z*?]?\s+([0-9A-Za-z*?]{1,3})\s+(.*?)\s+Week[A-Za-z0-9]?\s*([0-9S]{1,2})/i)
     if (laneHdr) {
       if (current?.bowlers.length) sections.push(current)
-      const parsedLane = parseInt(laneHdr[1], 10)
-      const laneNum = Number.isFinite(parsedLane) ? parsedLane : ++_unknownLaneCounter
-      // Strip leading garbled team-number prefix like "7-", "#-", "73-", "T4-"
-      const rawTeamName = laneHdr[2].replace(/^[^a-z]+[-:]\s*/i, '').trim()
-      current = { laneNum, rawTeamName, weekNum: null, bowlers: [], pointsWon: [null, null, null], totalPointsWon: null }
+      const laneNum = cleanInt(laneHdr[1])
+      const weekNum  = cleanInt(laneHdr[3])
+      current = {
+        laneNum:        Number.isFinite(laneNum) && laneNum > 0 ? laneNum : ++_unknownLaneCounter,
+        rawTeamName:    laneHdr[2].trim(),
+        weekNum:        parseInt(laneHdr[3], 10),
+        bowlers:        [],
+        pointsWon:      [null, null, null],
+        totalPointsWon: null,
+      }
       continue
     }
     if (!current) continue
+
     if (/Team\s+Points/i.test(line)) {
       const nums = [...line.matchAll(/[\d.]+/g)].map(m => parseFloat(m[0]))
       if (nums.length >= 4) { current.pointsWon = [nums[0], nums[1], nums[2]]; current.totalPointsWon = nums[nums.length - 1] }
@@ -591,54 +646,114 @@ function parseRecapColumn(text) {
     }
     if (SKIP_RE.test(line)) continue
 
-    // Use looksLikeScore() which cleans tokens first — handles #197, $137, «99, O02, etc.
     const tokens = line.split(/\s+/).filter(Boolean)
     if (tokens.length < 5) continue
+
+    // Find where the numeric tail starts (need ≥5 score-like tokens)
     let numStart = -1
     for (let i = tokens.length - 1; i >= 1; i--) {
       if (looksLikeScore(tokens[i]) && tokens.slice(i).filter(t => looksLikeScore(t)).length >= 5) {
-        numStart = i; while (numStart > 1 && looksLikeScore(tokens[numStart - 1])) numStart--; break
+        numStart = i
+        while (numStart > 1 && looksLikeScore(tokens[numStart - 1])) numStart--
+        break
       }
     }
     if (numStart < 1) continue
 
-    const rawName = tokens.slice(0, numStart).join(' ')
+    const rawName  = tokens.slice(0, numStart).join(' ')
     const numParts = tokens.slice(numStart)
-    if (numParts.length < 7 || !rawName || rawName.length < 3) continue
+    if (numParts.length < 6 || !rawName || rawName.length < 3) continue
 
-    // Clean oldAvg and oldHdcp — OCR noise like «130, #72 etc.
     const oldAvg  = cleanInt(numParts[0])
     const oldHdcp = cleanInt(numParts[1])
-    if (isNaN(oldAvg) || oldAvg < 50 || oldAvg > 300 || isNaN(oldHdcp) || oldHdcp < 0 || oldHdcp > 200) continue
+    if (isNaN(oldAvg)  || oldAvg  <  50 || oldAvg  > 300) continue
+    if (isNaN(oldHdcp) || oldHdcp <   0 || oldHdcp > 200) continue
 
     const games = [], absent = []
-    for (let gi = 2; gi <= 4; gi++) { const p = parseScoreToken(numParts[gi]); games.push(p?.score ?? null); absent.push(p?.absent ?? false) }
+    for (let gi = 2; gi <= 4; gi++) {
+      const p = parseScoreToken(numParts[gi])
+      games.push(p?.score ?? null)
+      absent.push(p?.absent ?? false)
+    }
     if (games.filter(s => s !== null).length < 2) continue
 
-    current.bowlers.push({ rawName, oldAvg, oldHdcp, games, absent,
-      scratchTotal: cleanInt(numParts[5]) || null,
-      hdcpTotal:    cleanInt(numParts[6]) || null })
+    current.bowlers.push({
+      rawName, oldAvg, oldHdcp, games, absent,
+      scratchTotal: numParts[5] != null ? cleanInt(numParts[5]) || null : null,
+      hdcpTotal:    numParts[6] != null ? cleanInt(numParts[6]) || null : null,
+    })
   }
   if (current?.bowlers.length) sections.push(current)
   return sections
 }
+
+/**
+ * Text-level 2-column fallback split for when Pillow is unavailable.
+ * Detects lines with two "Lane" headers and splits at the median position.
+ */
+function splitTwoColumns(pageText) {
+  const lines = pageText.split('\n')
+  const splitPositions = []
+  for (const line of lines) {
+    const matches = [...line.matchAll(/Lane/gi)]
+    if (matches.length >= 2) splitPositions.push(matches[1].index)
+  }
+  if (!splitPositions.length) return [pageText]
+  splitPositions.sort((a, b) => a - b)
+  const splitCol = splitPositions[Math.floor(splitPositions.length / 2)]
+  const left = [], right = []
+  for (const line of lines) { left.push(line.slice(0, splitCol)); right.push(line.slice(splitCol)) }
+  return [left.join('\n'), right.join('\n')]
+}
+
 /**
  * OCR + parse a recap PDF. Returns sorted array of lane sections.
+ * Primary path: pdftoppm → Pillow 4-col image split → tesseract per column.
+ * Fallback path: pdftoppm → full-page tesseract → text-level 2-col split.
  */
 async function parseRecapPdf(pdfPath) {
-  console.log(`  🔍 OCR-ing recap PDF (takes ~10s)…`)
-  let pages
-  try { pages = await ocrRecapPdf(pdfPath) }
-  catch (err) {
-    console.warn(`  ⚠️  Recap OCR failed: ${err.message}`)
-    console.warn(`       brew install poppler tesseract`)
-    return []
-  }
+  console.log(`  🔍 OCR-ing recap PDF (takes ~15s)…`)
   const seen = new Set(); const all = []
-  for (const pageText of pages) {
-    const { left, right } = splitTwoColumns(pageText)
-    for (const s of [...parseRecapColumn(left), ...parseRecapColumn(right)]) {
-      if (seen.has(s.laneNum)) continue; seen.add(s.laneNum); all.push(s)
+
+  let pages = null
+  try {
+    pages = await ocrRecapPdf(pdfPath)
+    console.log(`  ✓ Using 4-column Pillow split (${pages.length} page(s))`)
+  } catch (err) {
+    console.warn(`  ⚠️  4-col Pillow OCR failed: ${err.message}`)
+    console.warn(`       Falling back to full-page OCR + text 2-col split`)
+    console.warn(`       (For better results: cd bowling-app && python3 -m venv .venv && source .venv/bin/activate && pip install pillow)`)
+
+    // Fallback: full-page tesseract then split text
+    const tmpDir = join(os.tmpdir(), `bowling-recap-fallback-${Date.now()}`)
+    mkdirSync(tmpDir, { recursive: true })
+    try {
+      execSync(`pdftoppm -r 300 "${pdfPath}" "${join(tmpDir, 'page')}"`, { stdio: 'pipe' })
+      const pageFiles = readdirSync(tmpDir).filter(f => f.startsWith('page') && f.endsWith('.ppm')).sort()
+      pages = []
+      for (const pf of pageFiles) {
+        const base = join(tmpDir, pf.replace('.ppm', '_out'))
+        try {
+          execSync(`tesseract "${join(tmpDir, pf)}" "${base}" --psm 6 -l eng 2>/dev/null`, { stdio: 'pipe' })
+          const text = readFileSync(`${base}.txt`, 'utf8')
+          pages.push({ columns: splitTwoColumns(text) })
+        } catch { pages.push({ columns: [] }) }
+      }
+    } catch (fbErr) {
+      console.warn(`  ⚠️  Fallback OCR also failed: ${fbErr.message}`)
+      console.warn(`       brew install poppler tesseract`)
+      return []
+    } finally {
+      try { rmSync(tmpDir, { recursive: true, force: true }) } catch {}
+    }
+  }
+
+  for (const page of pages) {
+    for (const colText of page.columns) {
+      for (const s of parseRecapColumn(colText)) {
+        const key = `${s.laneNum}:${s.rawTeamName}`
+        if (seen.has(key)) continue; seen.add(key); all.push(s)
+      }
     }
   }
   all.sort((a, b) => a.laneNum - b.laneNum)
@@ -652,19 +767,18 @@ async function parseRecapPdf(pdfPath) {
 
 // Team name OCR garble variants — add to this as new errors are discovered
 const TEAM_OCR_ALIASES = {
-  'Fill Donahue':       ['FilDonahwe', 'Fil Donahue', 'Fill Donahwe'],
+  'Fill Donahue':       ['FilDonahwe', 'Fil Donahue', 'Fill Donahwe', 'FilDonahue'],
   'Chips Gutter Crew':  ['ChipsGutter', 'Chips Gutter'],
   'Lumber Liquidators': ['Lumber Liq'],
   'Mostly Moser':       ['MostlyMoser', 'Mosity Moser'],
-  'Social Butterflies': ['Socia/ Butterflies', 'Socia Butterflies'],
-  'F-ING 10 PIN':       ['F-INGTOPIN', 'FING TOPIN', 'F-ING10PIN'],
-  'Team Won':           ['TeamWon'],
+  'Social Butterflies': ['Socia/ Butterflies', 'Socia Butterflies', 'Social! Butterflies'],
+  'F-ING 10 PIN':       ['F-INGTOPIN', 'FING TOPIN', 'F-ING10PIN', 'F-ING10 PIN'],
+  'Team Won':           ['TeamWon', 'Team Won'],
   'Team 2':             ['Team?', 'TeamF'],
   'Team 5':             ['TeamS', 'Teams'],
   'Team 7':             ['TeamiT?', 'TeamiT', 'Teamit'],
   'Team 14':            ['Teamid4', 'Teamid'],
-  'Team 15':            ['TeamiS5', 'Team15'],
-  'Social Butterflies': ['Socia/ Butterflies', 'Socia Butterflies', 'Social! Butterflies'],
+  'Team 15':            ['TeamiS5'],
 }
 
 function recapNameToDataJson(name) {
@@ -672,13 +786,27 @@ function recapNameToDataJson(name) {
   return p.length < 2 ? name : `${p[p.length - 1]}, ${p.slice(0, -1).join(' ')}`
 }
 
+function normalizePersonName(name) {
+  return String(name).toLowerCase().replace(/[^a-z\s,]/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
 function nameMatchScore(recapName, dataName) {
-  if (recapNameToDataJson(recapName).toLowerCase() === dataName.toLowerCase()) return 1.0
-  const [dl = '', df = ''] = dataName.toLowerCase().split(',').map(s => s.trim())
-  const rp = recapName.toLowerCase().split(/\s+/)
-  if (rp[rp.length - 1] === dl) return rp[0]?.[0] === df[0] ? 0.9 : 0.7
+  const recapNorm = normalizePersonName(recapNameToDataJson(recapName))
+  const dataNorm  = normalizePersonName(dataName)
+  if (recapNorm === dataNorm) return 1.0
+
+  const [dl = '', df = ''] = dataNorm.split(',').map(s => s.trim())
+  const rp = normalizePersonName(recapName).split(/\s+/)
+  const rf = rp[0]          ?? ''
+  const rl = rp[rp.length - 1] ?? ''
+
+  if (rl === dl && rf[0] && rf[0] === df[0]) return 0.95  // exact last + first initial
+  if (rl === dl)                              return 0.7   // exact last only
+  if (rf === df && rl[0] && rl[0] === dl[0]) return 0.75  // exact first + last initial
+  if (rf === df)                              return 0.6   // exact first only
   return 0
 }
+
 
 function matchRecapTeam(rawName, dbTeams) {
   const raw = rawName.toLowerCase().trim()

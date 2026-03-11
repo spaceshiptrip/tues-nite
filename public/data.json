@@ -3599,6 +3599,41 @@
         },
         {
           "BowlerID": null,
+          "BowlerName": "Kirty, 5854 of? Phil",
+          "TeamID": 1,
+          "TeamName": "Team Won",
+          "TeamNum": 1,
+          "Gender": "",
+          "TotalPins": 336,
+          "TotalGames": 3,
+          "Average": 112,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 93,
+          "HandicapAfterBowling": 109,
+          "HighScratchGame": 134,
+          "HighScratchSeries": 336,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            134,
+            96,
+            106
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 336,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
           "BowlerName": "Tokedo, 50 594 Michael",
           "TeamID": 12,
           "TeamName": "Mostly Moser",
@@ -3628,6 +3663,146 @@
             false
           ],
           "_scratchSeries": 225,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Huie, 213 S78 650 Newman",
+          "TeamID": 12,
+          "TeamName": "Mostly Moser",
+          "TeamNum": 12,
+          "Gender": "",
+          "TotalPins": 100,
+          "TotalGames": 2,
+          "Average": 50,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 140,
+          "HandicapAfterBowling": 150,
+          "HighScratchGame": 50,
+          "HighScratchSeries": 100,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            50,
+            50,
+            null
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 100,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Tsutsui, 1 «184 «6547 610 Kiyo",
+          "TeamID": 12,
+          "TeamName": "Mostly Moser",
+          "TeamNum": 12,
+          "Gender": "",
+          "TotalPins": 100,
+          "TotalGames": 2,
+          "Average": 50,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 150,
+          "HandicapAfterBowling": 150,
+          "HighScratchGame": 50,
+          "HighScratchSeries": 100,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            50,
+            50,
+            null
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 100,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "beKIS?, ? FIO Edurarda Bugayong",
+          "TeamID": 12,
+          "TeamName": "Mostly Moser",
+          "TeamNum": 12,
+          "Gender": "",
+          "TotalPins": 324,
+          "TotalGames": 2,
+          "Average": 162,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 56,
+          "HandicapAfterBowling": 137,
+          "HighScratchGame": 190,
+          "HighScratchSeries": 324,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            134,
+            190,
+            null
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 324,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Jr, 597 Bing Tuazon",
+          "TeamID": 12,
+          "TeamName": "Mostly Moser",
+          "TeamNum": 12,
+          "Gender": "",
+          "TotalPins": 533,
+          "TotalGames": 3,
+          "Average": 178,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 156,
+          "HandicapAfterBowling": 5,
+          "HighScratchGame": 187,
+          "HighScratchSeries": 533,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            180,
+            166,
+            187
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 533,
           "_recapMatched": true,
           "_recapOnly": true,
           "_source": "recap-pdf"
@@ -5461,8 +5636,21 @@
           "BowlerPosition": 3,
           "BowlerStatus": "R",
           "TeamNum": 10,
-          "EnteringAverage": 179,
-          "PointsWonDec": 0
+          "EnteringAverage": 160,
+          "PointsWonDec": 0,
+          "_games": [
+            161,
+            150,
+            173
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 484,
+          "_recapMatched": true,
+          "_recapName": "623 Cesar Villa"
         },
         {
           "TeamID": 13,
@@ -5559,6 +5747,76 @@
           "TeamNum": 14,
           "EnteringAverage": 200,
           "PointsWonDec": 0
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Tuazon, 562 6rd Jeremy",
+          "TeamID": 10,
+          "TeamName": "Chips Gutter Crew",
+          "TeamNum": 10,
+          "Gender": "",
+          "TotalPins": 488,
+          "TotalGames": 2,
+          "Average": 244,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 154,
+          "HandicapAfterBowling": 69,
+          "HighScratchGame": 274,
+          "HighScratchSeries": 488,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            214,
+            274,
+            null
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 488,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Mosher, 08 bes Gary",
+          "TeamID": 10,
+          "TeamName": "Chips Gutter Crew",
+          "TeamNum": 10,
+          "Gender": "",
+          "TotalPins": 274,
+          "TotalGames": 2,
+          "Average": 137,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 136,
+          "HandicapAfterBowling": 65,
+          "HighScratchGame": 139,
+          "HighScratchSeries": 274,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            null,
+            135,
+            139
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 274,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
         },
         {
           "BowlerID": null,
@@ -5995,8 +6253,21 @@
           "BowlerPosition": 4,
           "BowlerStatus": "R",
           "TeamNum": 1,
-          "EnteringAverage": 196,
-          "PointsWonDec": 0
+          "EnteringAverage": 161,
+          "PointsWonDec": 0,
+          "_games": [
+            159,
+            165,
+            167
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 491,
+          "_recapMatched": true,
+          "_recapName": "Ben Bugayong"
         },
         {
           "TeamID": 3,
@@ -6704,8 +6975,21 @@
           "BowlerPosition": 2,
           "BowlerStatus": "R",
           "TeamNum": 11,
-          "EnteringAverage": 166,
-          "PointsWonDec": 0
+          "EnteringAverage": 178,
+          "PointsWonDec": 0,
+          "_games": [
+            113,
+            125,
+            150
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 388,
+          "_recapMatched": true,
+          "_recapName": "9 4576 675 Jason Lee"
         },
         {
           "TeamID": 7,
@@ -6992,8 +7276,21 @@
           "BowlerPosition": 4,
           "BowlerStatus": "R",
           "TeamNum": 11,
-          "EnteringAverage": 210,
-          "PointsWonDec": 0
+          "EnteringAverage": 182,
+          "PointsWonDec": 0,
+          "_games": [
+            143,
+            null,
+            185
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 328,
+          "_recapMatched": true,
+          "_recapName": "¥ 124 344 614 Will Pisnieski"
         },
         {
           "TeamID": 9,
@@ -7064,8 +7361,21 @@
           "BowlerPosition": 3,
           "BowlerStatus": "R",
           "TeamNum": 1,
-          "EnteringAverage": 152,
-          "PointsWonDec": 0
+          "EnteringAverage": 125,
+          "PointsWonDec": 0,
+          "_games": [
+            162,
+            112,
+            143
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 417,
+          "_recapMatched": true,
+          "_recapName": "Trevor Reed"
         },
         {
           "TeamID": 5,
@@ -7557,6 +7867,147 @@
           "_recapMatched": true,
           "_recapOnly": true,
           "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Tuazon, Jeremy",
+          "TeamID": 2,
+          "TeamName": "Team 2",
+          "TeamNum": 2,
+          "Gender": "",
+          "TotalPins": 502,
+          "TotalGames": 3,
+          "Average": 167,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 186,
+          "HandicapAfterBowling": 30,
+          "HighScratchGame": 178,
+          "HighScratchSeries": 502,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            178,
+            166,
+            158
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 502,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Coyle, 339 400 Rose",
+          "TeamID": 11,
+          "TeamName": "Lumber Liquidators",
+          "TeamNum": 11,
+          "Gender": "",
+          "TotalPins": 335,
+          "TotalGames": 3,
+          "Average": 112,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 123,
+          "HandicapAfterBowling": 85,
+          "HighScratchGame": 123,
+          "HighScratchSeries": 335,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            127,
+            141,
+            134
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 402,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf",
+          "_recapName": "4 S78 708 Marshall Coyle"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Pauli, 323 626 David",
+          "TeamID": 11,
+          "TeamName": "Lumber Liquidators",
+          "TeamNum": 11,
+          "Gender": "",
+          "TotalPins": 329,
+          "TotalGames": 2,
+          "Average": 165,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 165,
+          "HandicapAfterBowling": 58,
+          "HighScratchGame": 181,
+          "HighScratchSeries": 329,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            181,
+            null,
+            148
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 329,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Fajardo, 02 492 Michael",
+          "TeamID": 11,
+          "TeamName": "Lumber Liquidators",
+          "TeamNum": 11,
+          "Gender": "",
+          "TotalPins": 337,
+          "TotalGames": 2,
+          "Average": 169,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 175,
+          "HandicapAfterBowling": 40,
+          "HighScratchGame": 175,
+          "HighScratchSeries": 337,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            175,
+            162,
+            null
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 337,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
         }
       ],
       "standings": [
@@ -8006,21 +8457,8 @@
           "BowlerPosition": 3,
           "BowlerStatus": "R",
           "TeamNum": 16,
-          "EnteringAverage": 192,
-          "PointsWonDec": 0,
-          "_games": [
-            132,
-            151,
-            null
-          ],
-          "_absent": [
-            false,
-            false,
-            false
-          ],
-          "_scratchSeries": 283,
-          "_recapMatched": true,
-          "_recapName": "57 «6189 :«6150 «4950 )6=6F60 Edwin Chacon"
+          "EnteringAverage": 0,
+          "PointsWonDec": 0
         },
         {
           "TeamID": 13,
@@ -8235,8 +8673,21 @@
           "BowlerPosition": 3,
           "BowlerStatus": "R",
           "TeamNum": 8,
-          "EnteringAverage": 161,
-          "PointsWonDec": 0
+          "EnteringAverage": 144,
+          "PointsWonDec": 0,
+          "_games": [
+            143,
+            142,
+            143
+          ],
+          "_absent": [
+            false,
+            false,
+            false
+          ],
+          "_scratchSeries": 428,
+          "_recapMatched": true,
+          "_recapName": "Ben Dean"
         },
         {
           "TeamID": 4,
@@ -8379,8 +8830,21 @@
           "BowlerPosition": 1,
           "BowlerStatus": "R",
           "TeamNum": 8,
-          "EnteringAverage": 157,
-          "PointsWonDec": 0
+          "EnteringAverage": 158,
+          "PointsWonDec": 0,
+          "_games": [
+            197,
+            null,
+            211
+          ],
+          "_absent": [
+            false,
+            false,
+            true
+          ],
+          "_scratchSeries": 197,
+          "_recapMatched": true,
+          "_recapName": "Dakota Fine"
         },
         {
           "TeamID": 4,
@@ -9485,6 +9949,41 @@
           "TeamNum": 14,
           "EnteringAverage": 200,
           "PointsWonDec": 0
+        },
+        {
+          "BowlerID": null,
+          "BowlerName": "Matt",
+          "TeamID": 8,
+          "TeamName": "Fill Donahue",
+          "TeamNum": 8,
+          "Gender": "",
+          "TotalPins": 99,
+          "TotalGames": 1,
+          "Average": 99,
+          "ScratchHandicapFlag": true,
+          "EnteringAverage": 50,
+          "HandicapAfterBowling": 110,
+          "HighScratchGame": 99,
+          "HighScratchSeries": 99,
+          "HighHandicapGame": 0,
+          "HighHandicapSeries": 0,
+          "MostImproved": 0,
+          "BowlerPosition": 0,
+          "BowlerStatus": "R",
+          "_games": [
+            99,
+            100,
+            null
+          ],
+          "_absent": [
+            false,
+            true,
+            false
+          ],
+          "_scratchSeries": 99,
+          "_recapMatched": true,
+          "_recapOnly": true,
+          "_source": "recap-pdf"
         }
       ],
       "standings": [
