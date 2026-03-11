@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import { isRosterBowler, isSubBowler } from '../utils/dataUtils.js'
 
 // GB = Games Behind = ((leader.ptsWon - team.ptsWon) + (team.ptsLost - leader.ptsLost)) / 2
 function computeGB(standings) {
@@ -42,16 +43,45 @@ function SortArrow({ colKey, sort }) {
   return <span className="text-pin-400 ml-1">{sort.dir === 'asc' ? '↑' : '↓'}</span>
 }
 
-function RosterPanel({ teamName, bowlers, onClose, onFullStats }) {
-  const active = [...bowlers]
-    .filter(b => b.TotalGames > 0)
-    .sort((a, b) => b.Average - a.Average)
+function GenderBadge({ gender }) {
+  if (!gender) return null
+  return (
+    <span className={`text-xs font-bold ml-1 ${gender === 'W' ? 'text-pink-400' : 'text-sky-400'}`}>
+      {gender}
+    </span>
+  )
+}
 
-  const teamScratchAvg = active.length
-    ? Math.round(active.reduce((s, b) => s + b.Average, 0) / active.length)
+function SubBadge() {
+  return (
+    <span
+      title="Substitute bowler — not counted in team averages"
+      className="ml-1.5 px-1 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-orange-900/50 text-orange-400 border border-orange-700/40"
+    >
+      SUB
+    </span>
+  )
+}
+
+function RosterPanel({ teamName, bowlers, onClose, onFullStats }) {
+  // Sort: roster pos 1–4 first, then subs, each sub-sorted by position
+  const sorted = [...bowlers].sort((a, b) => {
+    const pa = Number(a.BowlerPosition ?? 99)
+    const pb = Number(b.BowlerPosition ?? 99)
+    if (pa === 0 && pb !== 0) return 1
+    if (pb === 0 && pa !== 0) return -1
+    return pa - pb
+  })
+
+  const active = sorted.filter(b => b.TotalGames > 0)
+  const rosterActive = active.filter(b => isRosterBowler(b))
+  const subsActive   = active.filter(b => isSubBowler(b))
+
+  const teamScratchAvg = rosterActive.length
+    ? Math.round(rosterActive.reduce((s, b) => s + b.Average, 0) / rosterActive.length)
     : 0
-  const teamHcpAvg = active.length
-    ? Math.round(active.reduce((s, b) => s + b.HandicapAfterBowling, 0) / active.length)
+  const teamHcpAvg = rosterActive.length
+    ? Math.round(rosterActive.reduce((s, b) => s + b.HandicapAfterBowling, 0) / rosterActive.length)
     : 0
 
   return (
@@ -64,6 +94,9 @@ function RosterPanel({ teamName, bowlers, onClose, onFullStats }) {
           <span className="badge badge-gold text-xs">Scratch avg {teamScratchAvg}</span>
           <span className="badge badge-blue text-xs">Hcp avg {teamHcpAvg}</span>
           <span className="badge badge-gray text-xs">Combined {teamScratchAvg + teamHcpAvg}</span>
+          {subsActive.length > 0 && (
+            <span className="text-xs text-orange-400 font-ui">+{subsActive.length} sub{subsActive.length > 1 ? 's' : ''}</span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -80,6 +113,7 @@ function RosterPanel({ teamName, bowlers, onClose, onFullStats }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-alley-700">
+              <th className="text-left px-3 py-2 font-ui text-xs text-gray-500 uppercase tracking-wider w-6">#</th>
               <th className="text-left px-3 py-2 font-ui text-xs text-gray-500 uppercase tracking-wider">Bowler</th>
               <th className="text-center px-3 py-2 font-ui text-xs text-gray-500 uppercase tracking-wider">G</th>
               <th className="text-right px-3 py-2 font-ui text-xs text-pin-500 uppercase tracking-wider">Scratch Avg</th>
@@ -93,19 +127,33 @@ function RosterPanel({ teamName, bowlers, onClose, onFullStats }) {
           </thead>
           <tbody>
             {active.map((b, i) => {
-              const combined = b.Average + b.HandicapAfterBowling
+              const isSub    = isSubBowler(b)
+              const combined = b.Average + (b.HandicapAfterBowling ?? 0)
               return (
-                <tr key={b.BowlerID} className={`${i % 2 === 0 ? 'bg-alley-800' : 'bg-alley-700'} hover:bg-white/[0.03]`}>
+                <tr
+                  key={b.BowlerID}
+                  className={`${i % 2 === 0 ? 'bg-alley-800' : 'bg-alley-700'} hover:bg-white/[0.03] ${isSub ? 'opacity-75' : ''}`}
+                >
+                  <td className="px-3 py-2 text-center font-mono text-gray-600 text-xs">
+                    {isSub ? '—' : b.BowlerPosition}
+                  </td>
                   <td className="px-3 py-2">
-                    <span className="font-ui font-700 text-gray-200">{b.BowlerName}</span>
-                    <span className={`ml-2 text-xs ${b.Gender === 'W' ? 'text-blue-400' : 'text-gray-600'}`}>
-                      {b.Gender}
-                    </span>
+                    <div className="flex items-center gap-1 flex-wrap">
+                      <span className="font-ui font-700 text-gray-200">{b.BowlerName}</span>
+                      <GenderBadge gender={b.Gender} />
+                      {isSub && <SubBadge />}
+                    </div>
                   </td>
                   <td className="px-3 py-2 text-center font-mono text-gray-500">{b.TotalGames}</td>
-                  <td className="px-3 py-2 text-right font-mono text-pin-400 font-bold text-base">{b.Average}</td>
-                  <td className="px-3 py-2 text-right font-mono text-blue-400">{b.HandicapAfterBowling}</td>
-                  <td className="px-3 py-2 text-right font-mono text-green-400 font-bold">{combined}</td>
+                  <td className={`px-3 py-2 text-right font-mono font-bold text-base ${isSub ? 'text-gray-400' : 'text-pin-400'}`}>
+                    {b.Average}
+                  </td>
+                  <td className={`px-3 py-2 text-right font-mono ${isSub ? 'text-gray-500' : 'text-blue-400'}`}>
+                    {b.HandicapAfterBowling}
+                  </td>
+                  <td className={`px-3 py-2 text-right font-mono font-bold ${isSub ? 'text-gray-500' : 'text-green-400'}`}>
+                    {combined}
+                  </td>
                   <td className="px-3 py-2 text-right font-mono text-gray-300">{b.HighScratchGame || '—'}</td>
                   <td className="px-3 py-2 text-right font-mono text-gray-300">{b.HighScratchSeries || '—'}</td>
                   <td className="px-3 py-2 text-right font-mono text-gray-400">{b.HighHandicapGame || '—'}</td>
@@ -115,33 +163,37 @@ function RosterPanel({ teamName, bowlers, onClose, onFullStats }) {
             })}
             {active.length === 0 && (
               <tr>
-                <td colSpan={9} className="text-center text-gray-600 py-4 text-sm">No games bowled yet</td>
+                <td colSpan={10} className="text-center text-gray-600 py-4 text-sm">No games bowled yet</td>
               </tr>
             )}
           </tbody>
-          {active.length > 0 && (
+          {rosterActive.length > 0 && (
             <tfoot>
               <tr className="bg-alley-600 border-t border-white/[0.08]">
+                <td />
                 <td className="px-3 py-2 font-ui font-700 text-gray-400 text-xs uppercase tracking-wider">
-                  Team ({active.length} bowlers)
+                  Roster ({rosterActive.length})
+                  {subsActive.length > 0 && (
+                    <span className="ml-1 text-orange-500/70">+{subsActive.length} sub</span>
+                  )}
                 </td>
                 <td className="px-3 py-2 text-center font-mono text-gray-500 text-xs">
-                  {active.reduce((s, b) => s + b.TotalGames, 0)}
+                  {rosterActive.reduce((s, b) => s + b.TotalGames, 0)}
                 </td>
                 <td className="px-3 py-2 text-right font-mono text-pin-400 font-bold">{teamScratchAvg}</td>
                 <td className="px-3 py-2 text-right font-mono text-blue-400">{teamHcpAvg}</td>
                 <td className="px-3 py-2 text-right font-mono text-green-400 font-bold">{teamScratchAvg + teamHcpAvg}</td>
                 <td className="px-3 py-2 text-right font-mono text-gray-300">
-                  {Math.max(...active.map(b => b.HighScratchGame))}
+                  {Math.max(...rosterActive.map(b => b.HighScratchGame ?? 0))}
                 </td>
                 <td className="px-3 py-2 text-right font-mono text-gray-300">
-                  {Math.max(...active.map(b => b.HighScratchSeries))}
+                  {Math.max(...rosterActive.map(b => b.HighScratchSeries ?? 0))}
                 </td>
                 <td className="px-3 py-2 text-right font-mono text-gray-400">
-                  {Math.max(...active.map(b => b.HighHandicapGame))}
+                  {Math.max(...rosterActive.map(b => b.HighHandicapGame ?? 0))}
                 </td>
                 <td className="px-3 py-2 text-right font-mono text-gray-400">
-                  {Math.max(...active.map(b => b.HighHandicapSeries))}
+                  {Math.max(...rosterActive.map(b => b.HighHandicapSeries ?? 0))}
                 </td>
               </tr>
             </tfoot>
@@ -221,7 +273,6 @@ export default function TeamStandings({ weekData, onTeamClick }) {
         <span className="badge badge-gold">{sorted.filter(t => t.teamNum !== 16).length} teams</span>
       </div>
 
-      {/* max-h + overflow-auto on one element makes sticky thead work across both axes */}
       <div className="rounded-lg border border-white/[0.06] overflow-auto max-h-[72vh]">
         <table className="data-table w-full">
           <thead className="sticky top-0 z-10">
@@ -255,13 +306,8 @@ export default function TeamStandings({ weekData, onTeamClick }) {
                       ${isExpanded ? 'border-l-2 border-l-pin-500' : ''}
                     `}
                   >
-                    {/* Place */}
                     <td className="text-center"><PlaceBadge place={t.place} /></td>
-
-                    {/* # */}
                     <td className="text-right font-mono text-gray-500">{t.teamNum}</td>
-
-                    {/* Team Name */}
                     <td className="name-cell">
                       <div className="flex items-center gap-2">
                         <button
@@ -286,21 +332,13 @@ export default function TeamStandings({ weekData, onTeamClick }) {
                         )}
                       </div>
                     </td>
-
-                    {/* Points Won */}
                     <td className="text-right font-mono font-bold text-green-400">{t.pointsWon}</td>
-
-                    {/* Points Lost */}
                     <td className="text-right font-mono text-red-400">{t.pointsLost}</td>
-
-                    {/* Unearned */}
                     <td className="text-right font-mono">
                       {t.unearnedPoints > 0
                         ? <span className="text-yellow-400">{t.unearnedPoints}</span>
                         : <span className="text-gray-700">—</span>}
                     </td>
-
-                    {/* GB */}
                     <td className="text-right font-mono">
                       {isBye || t._gb === null ? (
                         <span className="text-gray-700">—</span>
@@ -310,8 +348,6 @@ export default function TeamStandings({ weekData, onTeamClick }) {
                         <span className="text-gray-300">{t._gb % 1 === 0 ? t._gb : t._gb.toFixed(1)}</span>
                       )}
                     </td>
-
-                    {/* % Won */}
                     <td className="text-right">
                       <span className={`font-mono text-sm font-bold ${
                         t.pctWon >= 50 ? 'text-green-400' : t.pctWon > 0 ? 'text-red-400' : 'text-gray-600'
@@ -319,26 +355,17 @@ export default function TeamStandings({ weekData, onTeamClick }) {
                         {t.pctWon > 0 ? `${t.pctWon}%` : '—'}
                       </span>
                     </td>
-
-                    {/* YTD Won/Lost */}
                     <td className="text-right font-mono text-gray-300">{t.ytdWon}</td>
                     <td className="text-right font-mono text-gray-500">{t.ytdLost}</td>
-
-                    {/* Games Won */}
                     <td className="text-right font-mono text-gray-300 font-bold">{t.gamesWon}</td>
-
-                    {/* Scratch Pins */}
                     <td className="text-right font-mono text-gray-400">
                       {t.scratchPins > 0 ? t.scratchPins.toLocaleString() : '—'}
                     </td>
-
-                    {/* HDCP Pins */}
                     <td className="text-right font-mono text-gray-200">
                       {t.hdcpPins > 0 ? t.hdcpPins.toLocaleString() : '—'}
                     </td>
                   </tr>
 
-                  {/* Expanded inline roster */}
                   {isExpanded && !isBye && (
                     <tr>
                       <td colSpan={SORT_COLS.length} className="px-3 pb-2 bg-alley-800">
