@@ -1,0 +1,1454 @@
+{
+  "meta": {
+    "leagueId": 147337,
+    "leagueName": "Tuesday Nite League",
+    "season": "Spring 2026",
+    "weekNum": 2,
+    "dateBowled": "2026-02-10",
+    "source": "recap-pdf"
+  },
+  "bowlers": [
+    {
+      "bowlerId": 1,
+      "bowlerName": "Jay Torres",
+      "teamId": 1,
+      "teamName": "Team Won",
+      "enteringAverage": 170,
+      "handicap": 45,
+      "games": [
+        117,
+        158,
+        125
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 400,
+      "handicapSeries": 535
+    },
+    {
+      "bowlerId": 2,
+      "bowlerName": "Cora Torres",
+      "teamId": 1,
+      "teamName": "Team Won",
+      "enteringAverage": 119,
+      "handicap": 90,
+      "games": [
+        131,
+        116,
+        144
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 391,
+      "handicapSeries": 589
+    },
+    {
+      "bowlerId": 3,
+      "bowlerName": "Trevor Reed",
+      "teamId": 1,
+      "teamName": "Team Won",
+      "enteringAverage": 125,
+      "handicap": 85,
+      "games": [
+        111,
+        148,
+        150
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 409,
+      "handicapSeries": 592
+    },
+    {
+      "bowlerId": 4,
+      "bowlerName": "Ben Bugayong",
+      "teamId": 1,
+      "teamName": "Team Won",
+      "enteringAverage": 161,
+      "handicap": 53,
+      "games": [
+        169,
+        157,
+        176
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 502,
+      "handicapSeries": 565
+    },
+    {
+      "bowlerId": 5,
+      "bowlerName": "Rose Coyle",
+      "teamId": 2,
+      "teamName": "Team 2",
+      "enteringAverage": 124,
+      "handicap": 86,
+      "games": [
+        129,
+        109,
+        96
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 334,
+      "handicapSeries": 604
+    },
+    {
+      "bowlerId": 6,
+      "bowlerName": "Marshall Coyle",
+      "teamId": 2,
+      "teamName": "Team 2",
+      "enteringAverage": 115,
+      "handicap": 94,
+      "games": [
+        132,
+        125,
+        135
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 392,
+      "handicapSeries": 587
+    },
+    {
+      "bowlerId": 7,
+      "bowlerName": "Gary Mosher",
+      "teamId": 2,
+      "teamName": "Team 2",
+      "enteringAverage": 136,
+      "handicap": 75,
+      "games": [
+        110,
+        136,
+        133
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 379,
+      "handicapSeries": 577
+    },
+    {
+      "bowlerId": 8,
+      "bowlerName": "David Pauli",
+      "teamId": 2,
+      "teamName": "Team 2",
+      "enteringAverage": 151,
+      "handicap": 62,
+      "games": [
+        157,
+        122,
+        179
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 458,
+      "handicapSeries": 647
+    },
+    {
+      "bowlerId": 9,
+      "bowlerName": "Ester Bugoyang",
+      "teamId": 3,
+      "teamName": "Team 3",
+      "enteringAverage": 111,
+      "handicap": 98,
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 0,
+      "handicapSeries": 0
+    },
+    {
+      "bowlerId": 10,
+      "bowlerName": "Edurardo Bugayong",
+      "teamId": 3,
+      "teamName": "Team 3",
+      "enteringAverage": 134,
+      "handicap": 77,
+      "games": [
+        137,
+        134,
+        190
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 461,
+      "handicapSeries": 629
+    },
+    {
+      "bowlerId": 11,
+      "bowlerName": "Sheilah Faller",
+      "teamId": 3,
+      "teamName": "Team 3",
+      "enteringAverage": 168,
+      "handicap": 46,
+      "games": [
+        130,
+        187,
+        185
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 502,
+      "handicapSeries": 637
+    },
+    {
+      "bowlerId": 12,
+      "bowlerName": "Bing Tuazon Jr",
+      "teamId": 3,
+      "teamName": "Team 3",
+      "enteringAverage": 167,
+      "handicap": 47,
+      "games": [
+        180,
+        166,
+        187
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 533,
+      "handicapSeries": 560
+    },
+    {
+      "bowlerId": 69,
+      "bowlerName": "Jeremy Tuazon",
+      "teamId": 3,
+      "teamName": "Team 3",
+      "enteringAverage": 206,
+      "handicap": 12,
+      "games": [
+        141,
+        178,
+        144
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 463,
+      "handicapSeries": 499,
+      "isSubstitute": true,
+      "substituteForBowlerId": 9,
+      "substituteForBowlerName": "Ester Bugoyang",
+      "assignmentMethod": "inferred-from-cumulative-standings",
+      "sourceSection": "temporary-substitutes-division-1"
+    },
+    {
+      "bowlerId": 13,
+      "bowlerName": "Tina Deng",
+      "teamId": 4,
+      "teamName": "Social Butterflies",
+      "enteringAverage": 127,
+      "handicap": 83,
+      "games": [
+        120,
+        139,
+        109
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 368,
+      "handicapSeries": 503
+    },
+    {
+      "bowlerId": 14,
+      "bowlerName": "Tracey Muga",
+      "teamId": 4,
+      "teamName": "Social Butterflies",
+      "enteringAverage": 106,
+      "handicap": 102,
+      "games": [
+        116,
+        93,
+        100
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 309,
+      "handicapSeries": 444
+    },
+    {
+      "bowlerId": 15,
+      "bowlerName": "Heather Fishman",
+      "teamId": 4,
+      "teamName": "Social Butterflies",
+      "enteringAverage": 109,
+      "handicap": 99,
+      "games": [
+        133,
+        122,
+        130
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 385,
+      "handicapSeries": 574
+    },
+    {
+      "bowlerId": 16,
+      "bowlerName": "James Hill",
+      "teamId": 4,
+      "teamName": "Social Butterflies",
+      "enteringAverage": 168,
+      "handicap": 46,
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 0,
+      "handicapSeries": 0
+    },
+    {
+      "bowlerId": 900002,
+      "bowlerName": "Susan Burig",
+      "teamId": 4,
+      "teamName": "Social Butterflies",
+      "enteringAverage": 158,
+      "handicap": 55,
+      "games": [
+        142,
+        181,
+        153
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 476,
+      "handicapSeries": 641,
+      "isSubstitute": true,
+      "substituteForBowlerId": 16,
+      "substituteForBowlerName": "James Hill",
+      "assignmentMethod": "inferred-from-cumulative-standings",
+      "sourceSection": "temporary-substitutes-division-1"
+    },
+    {
+      "bowlerId": 17,
+      "bowlerName": "Freddy Reynoso",
+      "teamId": 5,
+      "teamName": "Team 5",
+      "enteringAverage": 132,
+      "handicap": 79,
+      "games": [
+        119,
+        105,
+        145
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 369,
+      "handicapSeries": 558
+    },
+    {
+      "bowlerId": 19,
+      "bowlerName": "Fabian Rivera",
+      "teamId": 5,
+      "teamName": "Team 5",
+      "enteringAverage": 116,
+      "handicap": 93,
+      "games": [
+        100,
+        121,
+        114
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 335,
+      "handicapSeries": 452
+    },
+    {
+      "bowlerId": 18,
+      "bowlerName": "Jacob Real",
+      "teamId": 5,
+      "teamName": "Team 5",
+      "enteringAverage": 140,
+      "handicap": 72,
+      "games": [
+        161,
+        115,
+        104
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 380,
+      "handicapSeries": 512
+    },
+    {
+      "bowlerId": 20,
+      "bowlerName": "Marvin De Leon",
+      "teamId": 5,
+      "teamName": "Team 5",
+      "enteringAverage": 129,
+      "handicap": 81,
+      "games": [
+        151,
+        125,
+        129
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 405,
+      "handicapSeries": 552
+    },
+    {
+      "bowlerId": 21,
+      "bowlerName": "Cameron Doran",
+      "teamId": 6,
+      "teamName": "Team 6",
+      "enteringAverage": 185,
+      "handicap": 31,
+      "games": [
+        167,
+        161,
+        141
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 469,
+      "handicapSeries": 526
+    },
+    {
+      "bowlerId": 22,
+      "bowlerName": "Kerry Robb",
+      "teamId": 6,
+      "teamName": "Team 6",
+      "enteringAverage": 150,
+      "handicap": 63,
+      "games": [
+        136,
+        159,
+        155
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 450,
+      "handicapSeries": 594
+    },
+    {
+      "bowlerId": 23,
+      "bowlerName": "Alan Fredrickson",
+      "teamId": 6,
+      "teamName": "Team 6",
+      "enteringAverage": 196,
+      "handicap": 21,
+      "games": [
+        177,
+        188,
+        213
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 578,
+      "handicapSeries": 650
+    },
+    {
+      "bowlerId": 24,
+      "bowlerName": "Scott Doran",
+      "teamId": 6,
+      "teamName": "Team 6",
+      "enteringAverage": 188,
+      "handicap": 28,
+      "games": [
+        182,
+        181,
+        184
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 547,
+      "handicapSeries": 610
+    },
+    {
+      "bowlerId": 27,
+      "bowlerName": "Johny Cruz",
+      "teamId": 7,
+      "teamName": "Team 7",
+      "enteringAverage": 144,
+      "handicap": 68,
+      "games": [
+        131,
+        180,
+        143
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 454,
+      "handicapSeries": 565
+    },
+    {
+      "bowlerId": 28,
+      "bowlerName": "Justin Livergood",
+      "teamId": 7,
+      "teamName": "Team 7",
+      "enteringAverage": 98,
+      "handicap": 109,
+      "games": [
+        75,
+        105,
+        103
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 283,
+      "handicapSeries": 601
+    },
+    {
+      "bowlerId": 65,
+      "bowlerName": "Phil Kirby",
+      "teamId": 7,
+      "teamName": "Team 7",
+      "enteringAverage": 105,
+      "handicap": 103,
+      "games": [
+        134,
+        98,
+        106
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 338,
+      "handicapSeries": 665
+    },
+    {
+      "bowlerId": 66,
+      "bowlerName": "Jackson Wescott",
+      "teamId": 7,
+      "teamName": "Team 7",
+      "enteringAverage": 173,
+      "handicap": 42,
+      "games": [
+        145,
+        146,
+        178
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 469,
+      "handicapSeries": 574
+    },
+    {
+      "bowlerId": 67,
+      "bowlerName": "Sara Costina",
+      "teamId": 7,
+      "teamName": "Team 7",
+      "enteringAverage": 150,
+      "handicap": 63,
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 0,
+      "handicapSeries": 0
+    },
+    {
+      "bowlerId": 29,
+      "bowlerName": "Dakota Fine",
+      "teamId": 8,
+      "teamName": "Team 8",
+      "enteringAverage": 164,
+      "handicap": 50,
+      "games": [
+        169,
+        144,
+        229
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 542,
+      "handicapSeries": 710
+    },
+    {
+      "bowlerId": 30,
+      "bowlerName": "Matt Johnson",
+      "teamId": 8,
+      "teamName": "Team 8",
+      "enteringAverage": 101,
+      "handicap": 107,
+      "games": [
+        121,
+        87,
+        98
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 306,
+      "handicapSeries": 582
+    },
+    {
+      "bowlerId": 68,
+      "bowlerName": "Ben Dean",
+      "teamId": 8,
+      "teamName": "Team 8",
+      "enteringAverage": 144,
+      "handicap": 68,
+      "games": [
+        115,
+        130,
+        166
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 411,
+      "handicapSeries": 570
+    },
+    {
+      "bowlerId": 32,
+      "bowlerName": "Micah Greenberg",
+      "teamId": 8,
+      "teamName": "Team 8",
+      "enteringAverage": 169,
+      "handicap": 45,
+      "games": [
+        195,
+        162,
+        163
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 520,
+      "handicapSeries": 616
+    },
+    {
+      "bowlerId": 33,
+      "bowlerName": "Armida Abaoag",
+      "teamId": 9,
+      "teamName": "Team 9",
+      "enteringAverage": 147,
+      "handicap": 65,
+      "games": [
+        124,
+        139,
+        183
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 446,
+      "handicapSeries": 584
+    },
+    {
+      "bowlerId": 34,
+      "bowlerName": "Andy Abaoag",
+      "teamId": 9,
+      "teamName": "Team 9",
+      "enteringAverage": 182,
+      "handicap": 34,
+      "games": [
+        204,
+        180,
+        179
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 563,
+      "handicapSeries": 638
+    },
+    {
+      "bowlerId": 35,
+      "bowlerName": "Spencer Murray-Dais",
+      "teamId": 9,
+      "teamName": "Team 9",
+      "enteringAverage": 175,
+      "handicap": 40,
+      "games": [
+        170,
+        174,
+        157
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 501,
+      "handicapSeries": 540
+    },
+    {
+      "bowlerId": 36,
+      "bowlerName": "Jerome Puttler",
+      "teamId": 9,
+      "teamName": "Team 9",
+      "enteringAverage": 185,
+      "handicap": 31,
+      "games": [
+        158,
+        194,
+        176
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 528,
+      "handicapSeries": 567
+    },
+    {
+      "bowlerId": 37,
+      "bowlerName": "Ever Hernandez",
+      "teamId": 10,
+      "teamName": "Team 10",
+      "enteringAverage": 176,
+      "handicap": 39,
+      "games": [
+        106,
+        179,
+        176
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 461,
+      "handicapSeries": 539
+    },
+    {
+      "bowlerId": 38,
+      "bowlerName": "Kimberly Richey",
+      "teamId": 10,
+      "teamName": "Team 10",
+      "enteringAverage": 146,
+      "handicap": 66,
+      "games": [
+        145,
+        184,
+        133
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 462,
+      "handicapSeries": 642
+    },
+    {
+      "bowlerId": 39,
+      "bowlerName": "Cesar Villa",
+      "teamId": 10,
+      "teamName": "Team 10",
+      "enteringAverage": 160,
+      "handicap": 54,
+      "games": [
+        168,
+        150,
+        140
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 458,
+      "handicapSeries": 566
+    },
+    {
+      "bowlerId": 40,
+      "bowlerName": "John Hernandez",
+      "teamId": 10,
+      "teamName": "Team 10",
+      "enteringAverage": 177,
+      "handicap": 38,
+      "games": [
+        180,
+        180,
+        170
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 530,
+      "handicapSeries": 605
+    },
+    {
+      "bowlerId": 41,
+      "bowlerName": "Andrew Van Dorn",
+      "teamId": 11,
+      "teamName": "Team 11",
+      "enteringAverage": 171,
+      "handicap": 44,
+      "games": [
+        152,
+        179,
+        195
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 526,
+      "handicapSeries": 589
+    },
+    {
+      "bowlerId": 42,
+      "bowlerName": "Roland Werner",
+      "teamId": 11,
+      "teamName": "Team 11",
+      "enteringAverage": 160,
+      "handicap": 54,
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 0,
+      "handicapSeries": 0
+    },
+    {
+      "bowlerId": 43,
+      "bowlerName": "Jason Lee",
+      "teamId": 11,
+      "teamName": "Team 11",
+      "enteringAverage": 185,
+      "handicap": 31,
+      "games": [
+        178,
+        187,
+        178
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 543,
+      "handicapSeries": 687
+    },
+    {
+      "bowlerId": 44,
+      "bowlerName": "Will Pisnieski",
+      "teamId": 11,
+      "teamName": "Team 11",
+      "enteringAverage": 179,
+      "handicap": 36,
+      "games": [
+        222,
+        161,
+        171
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 554,
+      "handicapSeries": 581
+    },
+    {
+      "bowlerId": 70,
+      "bowlerName": "Eric Davis",
+      "teamId": 11,
+      "teamName": "Team 11",
+      "enteringAverage": 170,
+      "handicap": 45,
+      "games": [
+        141,
+        178,
+        128
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 447,
+      "handicapSeries": 582,
+      "isSubstitute": true,
+      "substituteForBowlerId": 42,
+      "substituteForBowlerName": "Roland Werner",
+      "assignmentMethod": "inferred-from-roster-gap"
+    },
+    {
+      "bowlerId": 45,
+      "bowlerName": "Bill Moser",
+      "teamId": 12,
+      "teamName": "Mostly Moser",
+      "enteringAverage": 193,
+      "handicap": 24,
+      "games": [
+        226,
+        231,
+        202
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 659,
+      "handicapSeries": 707
+    },
+    {
+      "bowlerId": 46,
+      "bowlerName": "Emily Moser",
+      "teamId": 12,
+      "teamName": "Mostly Moser",
+      "enteringAverage": 131,
+      "handicap": 80,
+      "games": [
+        127,
+        98,
+        142
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 367,
+      "handicapSeries": 565
+    },
+    {
+      "bowlerId": 48,
+      "bowlerName": "Max Moser",
+      "teamId": 12,
+      "teamName": "Mostly Moser",
+      "enteringAverage": 139,
+      "handicap": 72,
+      "games": [
+        146,
+        167,
+        97
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 410,
+      "handicapSeries": 488
+    },
+    {
+      "bowlerId": 47,
+      "bowlerName": "Justin Perez",
+      "teamId": 12,
+      "teamName": "Mostly Moser",
+      "enteringAverage": 153,
+      "handicap": 60,
+      "games": [
+        130,
+        117,
+        186
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 433,
+      "handicapSeries": 433
+    },
+    {
+      "bowlerId": 49,
+      "bowlerName": "Roger Webb",
+      "teamId": 13,
+      "teamName": "Team 13",
+      "enteringAverage": 157,
+      "handicap": 56,
+      "games": [
+        139,
+        164,
+        160
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 463,
+      "handicapSeries": 514
+    },
+    {
+      "bowlerId": 50,
+      "bowlerName": "Rob Mochizuki",
+      "teamId": 13,
+      "teamName": "Team 13",
+      "enteringAverage": 153,
+      "handicap": 60,
+      "games": [
+        143,
+        143,
+        143
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 429,
+      "handicapSeries": 609
+    },
+    {
+      "bowlerId": 51,
+      "bowlerName": "Michael Fajardo",
+      "teamId": 13,
+      "teamName": "Team 13",
+      "enteringAverage": 181,
+      "handicap": 35,
+      "games": [
+        180,
+        151,
+        164
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 495,
+      "handicapSeries": 534
+    },
+    {
+      "bowlerId": 52,
+      "bowlerName": "Andrew Choy",
+      "teamId": 13,
+      "teamName": "Team 13",
+      "enteringAverage": 191,
+      "handicap": 26,
+      "games": [
+        179,
+        185,
+        190
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 554,
+      "handicapSeries": 614
+    },
+    {
+      "bowlerId": 53,
+      "bowlerName": "Alexander Wiener",
+      "teamId": 14,
+      "teamName": "Team 14",
+      "enteringAverage": 183,
+      "handicap": 33,
+      "games": [
+        233,
+        161,
+        180
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 574,
+      "handicapSeries": 628
+    },
+    {
+      "bowlerId": 54,
+      "bowlerName": "Colin Sonnichsen",
+      "teamId": 14,
+      "teamName": "Team 14",
+      "enteringAverage": 156,
+      "handicap": 57,
+      "games": [
+        134,
+        153,
+        165
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 452,
+      "handicapSeries": 599
+    },
+    {
+      "bowlerId": 55,
+      "bowlerName": "Christine Van Fleet",
+      "teamId": 14,
+      "teamName": "Team 14",
+      "enteringAverage": 123,
+      "handicap": 87,
+      "games": [
+        115,
+        131,
+        149
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 395,
+      "handicapSeries": 626
+    },
+    {
+      "bowlerId": 56,
+      "bowlerName": "Jack Morris",
+      "teamId": 14,
+      "teamName": "Team 14",
+      "enteringAverage": 132,
+      "handicap": 79,
+      "games": [
+        134,
+        121,
+        128
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 383,
+      "handicapSeries": 539
+    },
+    {
+      "bowlerId": 57,
+      "bowlerName": "Jeremy Shoji",
+      "teamId": 15,
+      "teamName": "Team 15",
+      "enteringAverage": 118,
+      "handicap": 91,
+      "games": [
+        120,
+        118,
+        113
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 351,
+      "handicapSeries": 621
+    },
+    {
+      "bowlerId": 58,
+      "bowlerName": "Michael Toledo",
+      "teamId": 15,
+      "teamName": "Team 15",
+      "enteringAverage": 101,
+      "handicap": 107,
+      "games": [
+        91,
+        89,
+        136
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
+      "didBowl": true,
+      "scratchSeries": 316,
+      "handicapSeries": 646
+    },
+    {
+      "bowlerId": 59,
+      "bowlerName": "Newman Huie",
+      "teamId": 15,
+      "teamName": "Team 15",
+      "enteringAverage": 106,
+      "handicap": 102,
+      "games": [
+        150,
+        150,
+        150
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 450,
+      "handicapSeries": 639
+    },
+    {
+      "bowlerId": 60,
+      "bowlerName": "Kiyo Tsutsui",
+      "teamId": 15,
+      "teamName": "Team 15",
+      "enteringAverage": 150,
+      "handicap": 63,
+      "games": [
+        150,
+        150,
+        150
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 450,
+      "handicapSeries": 639
+    },
+    {
+      "bowlerId": 61,
+      "bowlerName": "Isaiah Hankins",
+      "teamId": 16,
+      "teamName": "BYE",
+      "enteringAverage": 150,
+      "handicap": 63,
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 0,
+      "handicapSeries": 0
+    },
+    {
+      "bowlerId": 62,
+      "bowlerName": "Albert Crockenberg",
+      "teamId": 16,
+      "teamName": "BYE",
+      "enteringAverage": 150,
+      "handicap": 63,
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 0,
+      "handicapSeries": 0
+    },
+    {
+      "bowlerId": 63,
+      "bowlerName": "Edwin Chacon",
+      "teamId": 16,
+      "teamName": "BYE",
+      "enteringAverage": 150,
+      "handicap": 63,
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 0,
+      "handicapSeries": 0
+    },
+    {
+      "bowlerId": 64,
+      "bowlerName": "Andrew Gunkel",
+      "teamId": 16,
+      "teamName": "BYE",
+      "enteringAverage": 150,
+      "handicap": 63,
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
+      "didBowl": false,
+      "scratchSeries": 0,
+      "handicapSeries": 0
+    }
+  ]
+}
