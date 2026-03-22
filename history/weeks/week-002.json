@@ -5,7 +5,139 @@
     "season": "Spring 2026",
     "weekNum": 2,
     "dateBowled": "2026-02-10",
-    "source": "recap-pdf"
+    "source": "recap-pdf",
+    "teamRecap": {
+      "1": {
+        "games": [
+          721,
+          772,
+          788
+        ],
+        "total": 2281,
+        "won": 0,
+        "opponentTeamName": "BYE"
+      },
+      "2": {
+        "games": [
+          812,
+          776,
+          827
+        ],
+        "total": 2415,
+        "won": 3,
+        "opponentTeamName": "Team 9"
+      },
+      "3": {
+        "games": [
+          710,
+          787,
+          828
+        ],
+        "total": 2325,
+        "won": 1,
+        "opponentTeamName": "Team 8"
+      },
+      "4": {
+        "games": [
+          719,
+          743,
+          700
+        ],
+        "total": 2162,
+        "won": 0,
+        "opponentTeamName": "Team 14"
+      },
+      "6": {
+        "games": [
+          774,
+          801,
+          805
+        ],
+        "total": 2380,
+        "won": 0,
+        "opponentTeamName": "Team 15"
+      },
+      "7": {
+        "games": [
+          772,
+          816,
+          817
+        ],
+        "total": 2405,
+        "won": 1,
+        "opponentTeamName": "Team 11"
+      },
+      "8": {
+        "games": [
+          833,
+          756,
+          889
+        ],
+        "total": 2478,
+        "won": 3,
+        "opponentTeamName": "Team 3"
+      },
+      "9": {
+        "games": [
+          753,
+          784,
+          792
+        ],
+        "total": 2329,
+        "won": 1,
+        "opponentTeamName": "Team 2"
+      },
+      "10": {
+        "games": [
+          746,
+          840,
+          766
+        ],
+        "total": 2352,
+        "won": 4,
+        "opponentTeamName": "Team 5"
+      },
+      "11": {
+        "games": [
+          816,
+          828,
+          795
+        ],
+        "total": 2439,
+        "won": 3,
+        "opponentTeamName": "Team 7"
+      },
+      "13": {
+        "games": [
+          751,
+          753,
+          767
+        ],
+        "total": 2271,
+        "won": 4,
+        "opponentTeamName": "Mostly Moser"
+      },
+      "14": {
+        "games": [
+          812,
+          762,
+          818
+        ],
+        "total": 2392,
+        "won": 4,
+        "opponentTeamName": "Social Butterflies"
+      },
+      "15": {
+        "games": [
+          837,
+          833,
+          875
+        ],
+        "total": 2545,
+        "won": 4,
+        "opponentTeamName": "Team 6"
+      }
+    }
   },
   "bowlers": [
     {
@@ -261,32 +393,6 @@
       "handicapSeries": 560
     },
     {
-      "bowlerId": 69,
-      "bowlerName": "Jeremy Tuazon",
-      "teamId": 3,
-      "teamName": "Team 3",
-      "enteringAverage": 206,
-      "handicap": 12,
-      "games": [
-        141,
-        178,
-        144
-      ],
-      "absent": [
-        false,
-        false,
-        false
-      ],
-      "didBowl": true,
-      "scratchSeries": 463,
-      "handicapSeries": 499,
-      "isSubstitute": true,
-      "substituteForBowlerId": 9,
-      "substituteForBowlerName": "Ester Bugoyang",
-      "assignmentMethod": "inferred-from-cumulative-standings",
-      "sourceSection": "temporary-substitutes-division-1"
-    },
-    {
       "bowlerId": 13,
       "bowlerName": "Tina Deng",
       "teamId": 4,
@@ -369,32 +475,6 @@
       "didBowl": false,
       "scratchSeries": 0,
       "handicapSeries": 0
-    },
-    {
-      "bowlerId": 900002,
-      "bowlerName": "Susan Burig",
-      "teamId": 4,
-      "teamName": "Social Butterflies",
-      "enteringAverage": 158,
-      "handicap": 55,
-      "games": [
-        142,
-        181,
-        153
-      ],
-      "absent": [
-        false,
-        false,
-        false
-      ],
-      "didBowl": true,
-      "scratchSeries": 476,
-      "handicapSeries": 641,
-      "isSubstitute": true,
-      "substituteForBowlerId": 16,
-      "substituteForBowlerName": "James Hill",
-      "assignmentMethod": "inferred-from-cumulative-standings",
-      "sourceSection": "temporary-substitutes-division-1"
     },
     {
       "bowlerId": 17,
@@ -647,27 +727,6 @@
       "didBowl": true,
       "scratchSeries": 469,
       "handicapSeries": 574
-    },
-    {
-      "bowlerId": 67,
-      "bowlerName": "Sara Costina",
-      "teamId": 7,
-      "teamName": "Team 7",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
     },
     {
       "bowlerId": 29,
@@ -1024,11 +1083,7 @@
       ],
       "didBowl": true,
       "scratchSeries": 447,
-      "handicapSeries": 582,
-      "isSubstitute": true,
-      "substituteForBowlerId": 42,
-      "substituteForBowlerName": "Roland Werner",
-      "assignmentMethod": "inferred-from-roster-gap"
+      "handicapSeries": 582
     },
     {
       "bowlerId": 45,
@@ -1344,111 +1399,6 @@
       "didBowl": false,
       "scratchSeries": 450,
       "handicapSeries": 639
-    },
-    {
-      "bowlerId": 60,
-      "bowlerName": "Kiyo Tsutsui",
-      "teamId": 15,
-      "teamName": "Team 15",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        150,
-        150,
-        150
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 450,
-      "handicapSeries": 639
-    },
-    {
-      "bowlerId": 61,
-      "bowlerName": "Isaiah Hankins",
-      "teamId": 16,
-      "teamName": "BYE",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
-    },
-    {
-      "bowlerId": 62,
-      "bowlerName": "Albert Crockenberg",
-      "teamId": 16,
-      "teamName": "BYE",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
-    },
-    {
-      "bowlerId": 63,
-      "bowlerName": "Edwin Chacon",
-      "teamId": 16,
-      "teamName": "BYE",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
-    },
-    {
-      "bowlerId": 64,
-      "bowlerName": "Andrew Gunkel",
-      "teamId": 16,
-      "teamName": "BYE",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
     }
   ]
 }

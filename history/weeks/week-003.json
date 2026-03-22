@@ -5,7 +5,159 @@
     "season": "Spring 2026",
     "weekNum": 3,
     "dateBowled": "2026-02-17",
-    "source": "recap-pdf"
+    "source": "recap-pdf",
+    "teamRecap": {
+      "1": {
+        "games": [
+          855,
+          827,
+          901
+        ],
+        "total": 2583,
+        "won": 4,
+        "opponentTeamName": "Team 6"
+      },
+      "2": {
+        "games": [
+          908,
+          844,
+          897
+        ],
+        "total": 2649,
+        "won": 0,
+        "opponentTeamName": "Team 5"
+      },
+      "3": {
+        "games": [
+          831,
+          914,
+          776
+        ],
+        "total": 2521,
+        "won": 2,
+        "opponentTeamName": "Lumber Liquidators"
+      },
+      "4": {
+        "games": [
+          914,
+          886,
+          861
+        ],
+        "total": 2661,
+        "won": 0,
+        "opponentTeamName": "Mostly Moser"
+      },
+      "5": {
+        "games": [
+          921,
+          860,
+          904
+        ],
+        "total": 2685,
+        "won": 4,
+        "opponentTeamName": "Team 2"
+      },
+      "6": {
+        "games": [
+          839,
+          821,
+          839
+        ],
+        "total": 2499,
+        "won": 0,
+        "opponentTeamName": "Team Won"
+      },
+      "7": {
+        "games": [
+          962,
+          798,
+          855
+        ],
+        "total": 2615,
+        "won": 3,
+        "opponentTeamName": "Team 13"
+      },
+      "8": {
+        "games": [
+          762,
+          874,
+          843
+        ],
+        "total": 2479,
+        "won": 0,
+        "opponentTeamName": "Team 14"
+      },
+      "9": {
+        "games": [
+          835,
+          846,
+          890
+        ],
+        "total": 2571,
+        "won": 4,
+        "opponentTeamName": "team 16"
+      },
+      "10": {
+        "games": [
+          794,
+          846,
+          965
+        ],
+        "total": 2605,
+        "won": 3,
+        "opponentTeamName": "Team 15"
+      },
+      "11": {
+        "games": [
+          835,
+          849,
+          832
+        ],
+        "total": 2516,
+        "won": 2,
+        "opponentTeamName": "Team 3"
+      },
+      "12": {
+        "games": [
+          924,
+          939,
+          897
+        ],
+        "total": 2760,
+        "won": 4,
+        "opponentTeamName": "Social Butterflies"
+      },
+      "13": {
+        "games": [
+          849,
+          842,
+          841
+        ],
+        "total": 2532,
+        "won": 1,
+        "opponentTeamName": "Team 7"
+      },
+      "14": {
+        "games": [
+          901,
+          879,
+          847
+        ],
+        "total": 2627,
+        "won": 4,
+        "opponentTeamName": "Fill Donahue"
+      },
+      "15": {
+        "games": [
+          806,
+          821,
+          844
+        ],
+        "total": 2471,
+        "won": 1,
+        "opponentTeamName": "Chips Gutter Crew"
+      }
+    }
   },
   "bowlers": [
     {
@@ -363,12 +515,7 @@
       ],
       "didBowl": true,
       "scratchSeries": 517,
-      "handicapSeries": 610,
-      "isSubstitute": true,
-      "substituteForBowlerId": 16,
-      "substituteForBowlerName": "James Hill",
-      "assignmentMethod": "inferred-from-team-block-five",
-      "sourceSection": "team-roster"
+      "handicapSeries": 610
     },
     {
       "bowlerId": 17,
@@ -641,12 +788,7 @@
       ],
       "didBowl": true,
       "scratchSeries": 194,
-      "handicapSeries": 614,
-      "isSubstitute": true,
-      "substituteForBowlerId": 27,
-      "substituteForBowlerName": "Johny Cruz",
-      "assignmentMethod": "inferred-from-team-block-five",
-      "sourceSection": "team-roster"
+      "handicapSeries": 614
     },
     {
       "bowlerId": 29,
@@ -1003,12 +1145,7 @@
       ],
       "didBowl": true,
       "scratchSeries": 484,
-      "handicapSeries": 619,
-      "isSubstitute": true,
-      "substituteForBowlerId": 42,
-      "substituteForBowlerName": "Roland Werner",
-      "assignmentMethod": "inferred-from-team-block-five",
-      "sourceSection": "team-roster"
+      "handicapSeries": 619
     },
     {
       "bowlerId": 45,
@@ -1350,7 +1487,7 @@
       "bowlerId": 61,
       "bowlerName": "Isaiah Hankins",
       "teamId": 16,
-      "teamName": "Team 16",
+      "teamName": "team 16",
       "enteringAverage": 129,
       "handicap": 81,
       "games": [
@@ -1371,7 +1508,7 @@
       "bowlerId": 62,
       "bowlerName": "Albert Crockenberg",
       "teamId": 16,
-      "teamName": "Team 16",
+      "teamName": "team 16",
       "enteringAverage": 116,
       "handicap": 93,
       "games": [
@@ -1387,52 +1524,6 @@
       "didBowl": true,
       "scratchSeries": 350,
       "handicapSeries": 629
-    },
-    {
-      "bowlerId": 63,
-      "bowlerName": "Edwin Chacon",
-      "teamId": 16,
-      "teamName": "Team 16",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        150,
-        150,
-        150
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 450,
-      "handicapSeries": 639,
-      "countedInTeamScore": true,
-      "sourceSection": "team-roster"
-    },
-    {
-      "bowlerId": 64,
-      "bowlerName": "Andrew Gunkel",
-      "teamId": 16,
-      "teamName": "Team 16",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        150,
-        150,
-        150
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 450,
-      "handicapSeries": 639,
-      "countedInTeamScore": true,
-      "sourceSection": "team-roster"
     }
   ]
 }

@@ -5,7 +5,169 @@
     "season": "Spring 2026",
     "weekNum": 5,
     "dateBowled": "2026-03-03",
-    "source": "recap-pdf"
+    "source": "recap-pdf",
+    "teamRecap": {
+      "1": {
+        "games": [
+          858,
+          917,
+          890
+        ],
+        "total": 2665,
+        "won": 3,
+        "opponentTeamName": "Team 13"
+      },
+      "2": {
+        "games": [
+          880,
+          838,
+          829
+        ],
+        "total": 2547,
+        "won": 3,
+        "opponentTeamName": "Mostly Moser"
+      },
+      "3": {
+        "games": [
+          941,
+          749,
+          797
+        ],
+        "total": 2487,
+        "won": 1,
+        "opponentTeamName": "Team 6"
+      },
+      "4": {
+        "games": [
+          832,
+          813,
+          847
+        ],
+        "total": 2492,
+        "won": 0,
+        "opponentTeamName": "Team 15"
+      },
+      "5": {
+        "games": [
+          803,
+          884,
+          840
+        ],
+        "total": 2527,
+        "won": 1,
+        "opponentTeamName": "Fill Donahue"
+      },
+      "6": {
+        "games": [
+          977,
+          851,
+          766
+        ],
+        "total": 2594,
+        "won": 3,
+        "opponentTeamName": "Team 3"
+      },
+      "7": {
+        "games": [
+          893,
+          840,
+          847
+        ],
+        "total": 2580,
+        "won": 1,
+        "opponentTeamName": "Chips Gutter Crew"
+      },
+      "8": {
+        "games": [
+          839,
+          882,
+          857
+        ],
+        "total": 2578,
+        "won": 3,
+        "opponentTeamName": "Team 5"
+      },
+      "9": {
+        "games": [
+          967,
+          885,
+          839
+        ],
+        "total": 2691,
+        "won": 3,
+        "opponentTeamName": "Lumber Liquidators"
+      },
+      "10": {
+        "games": [
+          857,
+          973,
+          857
+        ],
+        "total": 2687,
+        "won": 3,
+        "opponentTeamName": "Team 7"
+      },
+      "11": {
+        "games": [
+          886,
+          852,
+          905
+        ],
+        "total": 2643,
+        "won": 1,
+        "opponentTeamName": "Team 9"
+      },
+      "12": {
+        "games": [
+          847,
+          782,
+          856
+        ],
+        "total": 2485,
+        "won": 1,
+        "opponentTeamName": "Team 2"
+      },
+      "13": {
+        "games": [
+          808,
+          804,
+          899
+        ],
+        "total": 2511,
+        "won": 1,
+        "opponentTeamName": "Team Won"
+      },
+      "14": {
+        "games": [
+          899,
+          944,
+          812
+        ],
+        "total": 2655,
+        "won": 3,
+        "opponentTeamName": "F-ING 10 PIN"
+      },
+      "15": {
+        "games": [
+          947,
+          903,
+          903
+        ],
+        "total": 2753,
+        "won": 4,
+        "opponentTeamName": "Social Butterflies"
+      },
+      "16": {
+        "games": [
+          825,
+          892,
+          825
+        ],
+        "total": 2542,
+        "won": 1,
+        "opponentTeamName": "Team 14"
+      }
+    }
   },
   "bowlers": [
     {
@@ -15,8 +177,16 @@
       "teamName": "Team Won",
       "enteringAverage": 138,
       "handicap": 73,
-      "games": [115, 148, 188],
-      "absent": [false, false, false],
+      "games": [
+        115,
+        148,
+        188
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 451,
       "handicapSeries": 679
@@ -28,8 +198,16 @@
       "teamName": "Team Won",
       "enteringAverage": 124,
       "handicap": 86,
-      "games": [133, 125, 124],
-      "absent": [false, false, false],
+      "games": [
+        133,
+        125,
+        124
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 382,
       "handicapSeries": 640
@@ -41,8 +219,16 @@
       "teamName": "Team Won",
       "enteringAverage": 130,
       "handicap": 81,
-      "games": [120, 120, 120],
-      "absent": [true, true, true],
+      "games": [
+        120,
+        120,
+        120
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
       "didBowl": false,
       "scratchSeries": 360,
       "handicapSeries": 603
@@ -54,13 +240,20 @@
       "teamName": "Team Won",
       "enteringAverage": 172,
       "handicap": 43,
-      "games": [198, 232, 166],
-      "absent": [false, false, false],
+      "games": [
+        198,
+        232,
+        166
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 596,
       "handicapSeries": 743
     },
-
     {
       "bowlerId": 5,
       "bowlerName": "Rose Coyle",
@@ -68,8 +261,16 @@
       "teamName": "Team 2",
       "enteringAverage": 119,
       "handicap": 90,
-      "games": [106, 113, 109],
-      "absent": [false, false, false],
+      "games": [
+        106,
+        113,
+        109
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 328,
       "handicapSeries": 595
@@ -81,8 +282,16 @@
       "teamName": "Team 2",
       "enteringAverage": 128,
       "handicap": 82,
-      "games": [130, 159, 133],
-      "absent": [false, false, false],
+      "games": [
+        130,
+        159,
+        133
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 422,
       "handicapSeries": 677
@@ -94,8 +303,16 @@
       "teamName": "Team 2",
       "enteringAverage": 134,
       "handicap": 77,
-      "games": [169, 94, 144],
-      "absent": [false, false, false],
+      "games": [
+        169,
+        94,
+        144
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 407,
       "handicapSeries": 638
@@ -107,13 +324,20 @@
       "teamName": "Team 2",
       "enteringAverage": 153,
       "handicap": 60,
-      "games": [164, 161, 132],
-      "absent": [false, false, false],
+      "games": [
+        164,
+        161,
+        132
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 457,
       "handicapSeries": 637
     },
-
     {
       "bowlerId": 10,
       "bowlerName": "Edurardo Bugayong",
@@ -121,8 +345,16 @@
       "teamName": "Team 3",
       "enteringAverage": 128,
       "handicap": 82,
-      "games": [164, 100, 100],
-      "absent": [false, false, false],
+      "games": [
+        164,
+        100,
+        100
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 364,
       "handicapSeries": 607
@@ -134,8 +366,16 @@
       "teamName": "Team 3",
       "enteringAverage": 160,
       "handicap": 54,
-      "games": [181, 144, 136],
-      "absent": [false, false, false],
+      "games": [
+        181,
+        144,
+        136
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 461,
       "handicapSeries": 614
@@ -147,8 +387,16 @@
       "teamName": "Team 3",
       "enteringAverage": 177,
       "handicap": 38,
-      "games": [174, 146, 195],
-      "absent": [false, false, false],
+      "games": [
+        174,
+        146,
+        195
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 515,
       "handicapSeries": 623
@@ -160,13 +408,20 @@
       "teamName": "Team 3",
       "enteringAverage": 165,
       "handicap": 49,
-      "games": [205, 142, 149],
-      "absent": [false, false, false],
+      "games": [
+        205,
+        142,
+        149
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 496,
       "handicapSeries": 643
     },
-
     {
       "bowlerId": 13,
       "bowlerName": "Tina Deng",
@@ -174,8 +429,16 @@
       "teamName": "Social Butterflies",
       "enteringAverage": 132,
       "handicap": 79,
-      "games": [122, 122, 122],
-      "absent": [true, true, true],
+      "games": [
+        122,
+        122,
+        122
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
       "didBowl": false,
       "scratchSeries": 366,
       "handicapSeries": 603
@@ -187,8 +450,16 @@
       "teamName": "Social Butterflies",
       "enteringAverage": 110,
       "handicap": 99,
-      "games": [123, 96, 96],
-      "absent": [false, false, false],
+      "games": [
+        123,
+        96,
+        96
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 315,
       "handicapSeries": 606
@@ -200,8 +471,16 @@
       "teamName": "Social Butterflies",
       "enteringAverage": 116,
       "handicap": 93,
-      "games": [103, 100, 145],
-      "absent": [false, false, false],
+      "games": [
+        103,
+        100,
+        145
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 348,
       "handicapSeries": 627
@@ -213,8 +492,16 @@
       "teamName": "Social Butterflies",
       "enteringAverage": 143,
       "handicap": 69,
-      "games": [144, 155, 144],
-      "absent": [false, false, false],
+      "games": [
+        144,
+        155,
+        144
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 443,
       "handicapSeries": 656
@@ -226,13 +513,20 @@
       "teamName": "Social Butterflies",
       "enteringAverage": 185,
       "handicap": 31,
-      "games": [null, null, null],
-      "absent": [true, true, true],
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
       "didBowl": false,
       "scratchSeries": 0,
       "handicapSeries": 0
     },
-
     {
       "bowlerId": 17,
       "bowlerName": "Freddy Reynoso",
@@ -240,8 +534,16 @@
       "teamName": "Team 5",
       "enteringAverage": 139,
       "handicap": 72,
-      "games": [127, 146, 150],
-      "absent": [false, false, false],
+      "games": [
+        127,
+        146,
+        150
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 423,
       "handicapSeries": 639
@@ -253,8 +555,16 @@
       "teamName": "Team 5",
       "enteringAverage": 120,
       "handicap": 90,
-      "games": [null, null, null],
-      "absent": [true, true, true],
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
       "didBowl": false,
       "scratchSeries": 0,
       "handicapSeries": 0
@@ -266,8 +576,16 @@
       "teamName": "Team 5",
       "enteringAverage": 146,
       "handicap": 66,
-      "games": [142, 156, 120],
-      "absent": [false, false, false],
+      "games": [
+        142,
+        156,
+        120
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 418,
       "handicapSeries": 610
@@ -279,13 +597,20 @@
       "teamName": "Team 5",
       "enteringAverage": 139,
       "handicap": 72,
-      "games": [129, 149, 140],
-      "absent": [true, false, false],
-      "didBowl": false,
+      "games": [
+        129,
+        149,
+        140
+      ],
+      "absent": [
+        true,
+        false,
+        false
+      ],
+      "didBowl": true,
       "scratchSeries": 418,
       "handicapSeries": 634
     },
-
     {
       "bowlerId": 21,
       "bowlerName": "Cameron Doran",
@@ -293,8 +618,16 @@
       "teamName": "Team 6",
       "enteringAverage": 190,
       "handicap": 27,
-      "games": [247, 219, 164],
-      "absent": [false, false, false],
+      "games": [
+        247,
+        219,
+        164
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 630,
       "handicapSeries": 723
@@ -306,8 +639,16 @@
       "teamName": "Team 6",
       "enteringAverage": 151,
       "handicap": 62,
-      "games": [174, 156, 127],
-      "absent": [false, false, false],
+      "games": [
+        174,
+        156,
+        127
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 457,
       "handicapSeries": 643
@@ -319,8 +660,16 @@
       "teamName": "Team 6",
       "enteringAverage": 190,
       "handicap": 27,
-      "games": [189, 191, 160],
-      "absent": [false, false, false],
+      "games": [
+        189,
+        191,
+        160
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 540,
       "handicapSeries": 615
@@ -332,13 +681,20 @@
       "teamName": "Team 6",
       "enteringAverage": 180,
       "handicap": 36,
-      "games": [216, 134, 164],
-      "absent": [false, false, false],
+      "games": [
+        216,
+        134,
+        164
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 514,
       "handicapSeries": 613
     },
-
     {
       "bowlerId": 27,
       "bowlerName": "Johny Cruz",
@@ -346,8 +702,16 @@
       "teamName": "Team 7",
       "enteringAverage": 145,
       "handicap": 67,
-      "games": [null, null, null],
-      "absent": [true, true, true],
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
       "didBowl": false,
       "scratchSeries": 0,
       "handicapSeries": 0
@@ -359,8 +723,16 @@
       "teamName": "Team 7",
       "enteringAverage": 104,
       "handicap": 104,
-      "games": [106, 104, 101],
-      "absent": [false, false, false],
+      "games": [
+        106,
+        104,
+        101
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 311,
       "handicapSeries": 623
@@ -372,8 +744,16 @@
       "teamName": "Team 7",
       "enteringAverage": 103,
       "handicap": 105,
-      "games": [134, 87, 100],
-      "absent": [false, false, false],
+      "games": [
+        134,
+        87,
+        100
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 321,
       "handicapSeries": 639
@@ -385,8 +765,16 @@
       "teamName": "Team 7",
       "enteringAverage": 171,
       "handicap": 44,
-      "games": [177, 183, 176],
-      "absent": [false, false, false],
+      "games": [
+        177,
+        183,
+        176
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 536,
       "handicapSeries": 671
@@ -398,17 +786,20 @@
       "teamName": "Team 7",
       "enteringAverage": 70,
       "handicap": 135,
-      "games": [81, 71, 75],
-      "absent": [false, false, false],
+      "games": [
+        81,
+        71,
+        75
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 227,
-      "handicapSeries": 647,
-      "isSubstitute": true,
-      "substituteForBowlerId": 27,
-      "substituteForBowlerName": "Johny Cruz",
-      "assignmentMethod": "inferred-from-team-block-five"
+      "handicapSeries": 647
     },
-
     {
       "bowlerId": 29,
       "bowlerName": "Dakota Fine",
@@ -416,8 +807,16 @@
       "teamName": "Fill Donahue",
       "enteringAverage": 167,
       "handicap": 47,
-      "games": [197, 202, 211],
-      "absent": [false, false, false],
+      "games": [
+        197,
+        202,
+        211
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 610,
       "handicapSeries": 775
@@ -429,8 +828,16 @@
       "teamName": "Fill Donahue",
       "enteringAverage": 110,
       "handicap": 99,
-      "games": [100, 100, 100],
-      "absent": [true, true, true],
+      "games": [
+        100,
+        100,
+        100
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
       "didBowl": false,
       "scratchSeries": 300,
       "handicapSeries": 597
@@ -442,8 +849,16 @@
       "teamName": "Fill Donahue",
       "enteringAverage": 143,
       "handicap": 69,
-      "games": [143, 142, 143],
-      "absent": [false, false, false],
+      "games": [
+        143,
+        142,
+        143
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 428,
       "handicapSeries": 632
@@ -455,13 +870,20 @@
       "teamName": "Fill Donahue",
       "enteringAverage": 158,
       "handicap": 55,
-      "games": [125, 164, 129],
-      "absent": [false, false, false],
+      "games": [
+        125,
+        164,
+        129
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 418,
       "handicapSeries": 574
     },
-
     {
       "bowlerId": 33,
       "bowlerName": "Armida Abaoag",
@@ -469,8 +891,16 @@
       "teamName": "Team 9",
       "enteringAverage": 153,
       "handicap": 60,
-      "games": [175, 150, 143],
-      "absent": [false, false, false],
+      "games": [
+        175,
+        150,
+        143
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 468,
       "handicapSeries": 651
@@ -482,8 +912,16 @@
       "teamName": "Team 9",
       "enteringAverage": 189,
       "handicap": 27,
-      "games": [203, 168, 201],
-      "absent": [false, false, false],
+      "games": [
+        203,
+        168,
+        201
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 572,
       "handicapSeries": 656
@@ -495,8 +933,16 @@
       "teamName": "Team 9",
       "enteringAverage": 187,
       "handicap": 29,
-      "games": [263, 199, 170],
-      "absent": [false, false, false],
+      "games": [
+        263,
+        199,
+        170
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 632,
       "handicapSeries": 737
@@ -508,8 +954,16 @@
       "teamName": "Team 9",
       "enteringAverage": 172,
       "handicap": 43,
-      "games": [159, 201, 158],
-      "absent": [false, false, false],
+      "games": [
+        159,
+        201,
+        158
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 518,
       "handicapSeries": 647
@@ -521,15 +975,20 @@
       "teamName": "Team 9",
       "enteringAverage": 222,
       "handicap": 0,
-      "games": [null, null, null],
-      "absent": [true, true, true],
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
       "didBowl": false,
       "scratchSeries": 0,
-      "handicapSeries": 0,
-      "isSubstitute": true,
-      "assignmentMethod": "roster-carryover"
+      "handicapSeries": 0
     },
-
     {
       "bowlerId": 37,
       "bowlerName": "Ever Hernandez",
@@ -537,8 +996,16 @@
       "teamName": "Chips Gutter Crew",
       "enteringAverage": 182,
       "handicap": 34,
-      "games": [170, 247, 144],
-      "absent": [false, false, false],
+      "games": [
+        170,
+        247,
+        144
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 561,
       "handicapSeries": 666
@@ -550,8 +1017,16 @@
       "teamName": "Chips Gutter Crew",
       "enteringAverage": 146,
       "handicap": 66,
-      "games": [120, 172, 152],
-      "absent": [false, false, false],
+      "games": [
+        120,
+        172,
+        152
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 444,
       "handicapSeries": 642
@@ -563,8 +1038,16 @@
       "teamName": "Chips Gutter Crew",
       "enteringAverage": 159,
       "handicap": 54,
-      "games": [159, 182, 173],
-      "absent": [false, false, false],
+      "games": [
+        159,
+        182,
+        173
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 514,
       "handicapSeries": 685
@@ -576,13 +1059,20 @@
       "teamName": "Chips Gutter Crew",
       "enteringAverage": 182,
       "handicap": 34,
-      "games": [214, 178, 194],
-      "absent": [false, false, false],
+      "games": [
+        214,
+        178,
+        194
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 586,
       "handicapSeries": 694
     },
-
     {
       "bowlerId": 41,
       "bowlerName": "Andrew Van Dorn",
@@ -590,8 +1080,16 @@
       "teamName": "Lumber Liquidators",
       "enteringAverage": 178,
       "handicap": 37,
-      "games": [205, 171, 222],
-      "absent": [false, false, false],
+      "games": [
+        205,
+        171,
+        222
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 598,
       "handicapSeries": 730
@@ -603,8 +1101,16 @@
       "teamName": "Lumber Liquidators",
       "enteringAverage": 162,
       "handicap": 52,
-      "games": [155, 140, 151],
-      "absent": [false, false, false],
+      "games": [
+        155,
+        140,
+        151
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 446,
       "handicapSeries": 593
@@ -616,8 +1122,16 @@
       "teamName": "Lumber Liquidators",
       "enteringAverage": 121,
       "handicap": 89,
-      "games": [null, null, null],
-      "absent": [true, true, true],
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
       "didBowl": false,
       "scratchSeries": 0,
       "handicapSeries": 0
@@ -629,8 +1143,16 @@
       "teamName": "Lumber Liquidators",
       "enteringAverage": 187,
       "handicap": 29,
-      "games": [220, 229, 186],
-      "absent": [false, false, false],
+      "games": [
+        220,
+        229,
+        186
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 635,
       "handicapSeries": 740
@@ -642,17 +1164,20 @@
       "teamName": "Lumber Liquidators",
       "enteringAverage": 159,
       "handicap": 54,
-      "games": [128, 134, 168],
-      "absent": [false, false, false],
+      "games": [
+        128,
+        134,
+        168
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 430,
-      "handicapSeries": 580,
-      "isSubstitute": true,
-      "substituteForBowlerId": 42,
-      "substituteForBowlerName": "Roland Werner",
-      "assignmentMethod": "inferred-from-team-block-five"
+      "handicapSeries": 580
     },
-
     {
       "bowlerId": 45,
       "bowlerName": "Bill Moser",
@@ -660,8 +1185,16 @@
       "teamName": "Mostly Moser",
       "enteringAverage": 195,
       "handicap": 22,
-      "games": [224, 155, 213],
-      "absent": [false, false, false],
+      "games": [
+        224,
+        155,
+        213
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 592,
       "handicapSeries": 661
@@ -673,8 +1206,16 @@
       "teamName": "Mostly Moser",
       "enteringAverage": 133,
       "handicap": 78,
-      "games": [115, 121, 84],
-      "absent": [false, false, false],
+      "games": [
+        115,
+        121,
+        84
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 320,
       "handicapSeries": 536
@@ -686,8 +1227,16 @@
       "teamName": "Mostly Moser",
       "enteringAverage": 160,
       "handicap": 54,
-      "games": [179, 159, 174],
-      "absent": [false, false, false],
+      "games": [
+        179,
+        159,
+        174
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 512,
       "handicapSeries": 680
@@ -699,13 +1248,20 @@
       "teamName": "Mostly Moser",
       "enteringAverage": 169,
       "handicap": 45,
-      "games": [135, 153, 191],
-      "absent": [false, false, false],
+      "games": [
+        135,
+        153,
+        191
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 479,
       "handicapSeries": 608
     },
-
     {
       "bowlerId": 49,
       "bowlerName": "Roger Webb",
@@ -713,8 +1269,16 @@
       "teamName": "Team 13",
       "enteringAverage": 162,
       "handicap": 52,
-      "games": [130, 169, 190],
-      "absent": [false, false, false],
+      "games": [
+        130,
+        169,
+        190
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 489,
       "handicapSeries": 645
@@ -726,8 +1290,16 @@
       "teamName": "Team 13",
       "enteringAverage": 136,
       "handicap": 75,
-      "games": [109, 121, 178],
-      "absent": [false, false, false],
+      "games": [
+        109,
+        121,
+        178
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 408,
       "handicapSeries": 633
@@ -739,8 +1311,16 @@
       "teamName": "Team 13",
       "enteringAverage": 177,
       "handicap": 38,
-      "games": [205, 158, 151],
-      "absent": [false, false, false],
+      "games": [
+        205,
+        158,
+        151
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 514,
       "handicapSeries": 622
@@ -752,13 +1332,20 @@
       "teamName": "Team 13",
       "enteringAverage": 192,
       "handicap": 25,
-      "games": [179, 171, 195],
-      "absent": [false, false, false],
+      "games": [
+        179,
+        171,
+        195
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 545,
       "handicapSeries": 611
     },
-
     {
       "bowlerId": 53,
       "bowlerName": "Alexander Wiener",
@@ -766,8 +1353,16 @@
       "teamName": "Team 14",
       "enteringAverage": 183,
       "handicap": 33,
-      "games": [212, 174, 136],
-      "absent": [false, false, false],
+      "games": [
+        212,
+        174,
+        136
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 522,
       "handicapSeries": 615
@@ -779,8 +1374,16 @@
       "teamName": "Team 14",
       "enteringAverage": 159,
       "handicap": 54,
-      "games": [162, 137, 137],
-      "absent": [false, false, false],
+      "games": [
+        162,
+        137,
+        137
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 436,
       "handicapSeries": 589
@@ -792,8 +1395,16 @@
       "teamName": "Team 14",
       "enteringAverage": 128,
       "handicap": 82,
-      "games": [151, 189, 150],
-      "absent": [false, false, false],
+      "games": [
+        151,
+        189,
+        150
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 490,
       "handicapSeries": 760
@@ -805,13 +1416,20 @@
       "teamName": "Team 14",
       "enteringAverage": 145,
       "handicap": 67,
-      "games": [131, 201, 146],
-      "absent": [true, false, false],
-      "didBowl": false,
+      "games": [
+        131,
+        201,
+        146
+      ],
+      "absent": [
+        true,
+        false,
+        false
+      ],
+      "didBowl": true,
       "scratchSeries": 478,
       "handicapSeries": 691
     },
-
     {
       "bowlerId": 57,
       "bowlerName": "Jeremy Shoji",
@@ -819,8 +1437,16 @@
       "teamName": "Team 15",
       "enteringAverage": 123,
       "handicap": 87,
-      "games": [110, 144, 130],
-      "absent": [false, false, false],
+      "games": [
+        110,
+        144,
+        130
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 384,
       "handicapSeries": 648
@@ -832,8 +1458,16 @@
       "teamName": "Team 15",
       "enteringAverage": 108,
       "handicap": 100,
-      "games": [135, 118, 113],
-      "absent": [false, false, false],
+      "games": [
+        135,
+        118,
+        113
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 366,
       "handicapSeries": 678
@@ -845,8 +1479,16 @@
       "teamName": "Team 15",
       "enteringAverage": 110,
       "handicap": 99,
-      "games": [152, 117, 156],
-      "absent": [false, false, false],
+      "games": [
+        152,
+        117,
+        156
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 425,
       "handicapSeries": 749
@@ -858,13 +1500,20 @@
       "teamName": "Team 15",
       "enteringAverage": 103,
       "handicap": 105,
-      "games": [null, null, null],
-      "absent": [true, true, true],
+      "games": [
+        null,
+        null,
+        null
+      ],
+      "absent": [
+        true,
+        true,
+        true
+      ],
       "didBowl": false,
       "scratchSeries": 0,
       "handicapSeries": 0
     },
-
     {
       "bowlerId": 61,
       "bowlerName": "Isaiah Hankins",
@@ -872,8 +1521,16 @@
       "teamName": "F-ING 10 PIN",
       "enteringAverage": 140,
       "handicap": 72,
-      "games": [159, 181, 140],
-      "absent": [false, false, false],
+      "games": [
+        159,
+        181,
+        140
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 480,
       "handicapSeries": 723
@@ -885,8 +1542,16 @@
       "teamName": "F-ING 10 PIN",
       "enteringAverage": 117,
       "handicap": 92,
-      "games": [103, 161, 93],
-      "absent": [false, false, false],
+      "games": [
+        103,
+        161,
+        93
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 357,
       "handicapSeries": 636
@@ -898,8 +1563,16 @@
       "teamName": "F-ING 10 PIN",
       "enteringAverage": 172,
       "handicap": 43,
-      "games": [132, 151, 173],
-      "absent": [false, false, false],
+      "games": [
+        132,
+        151,
+        173
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 456,
       "handicapSeries": 531
@@ -911,8 +1584,16 @@
       "teamName": "F-ING 10 PIN",
       "enteringAverage": 162,
       "handicap": 52,
-      "games": [179, 147, 167],
-      "absent": [false, false, false],
+      "games": [
+        179,
+        147,
+        167
+      ],
+      "absent": [
+        false,
+        false,
+        false
+      ],
       "didBowl": true,
       "scratchSeries": 493,
       "handicapSeries": 652

@@ -5,7 +5,139 @@
     "season": "Spring 2026",
     "weekNum": 1,
     "dateBowled": "2026-02-03",
-    "source": "recap-pdf"
+    "source": "recap-pdf",
+    "teamRecap": {
+      "1": {
+        "games": [
+          710,
+          752,
+          742
+        ],
+        "total": 2204,
+        "won": 1,
+        "opponentTeamName": "Team 2"
+      },
+      "2": {
+        "games": [
+          703,
+          886,
+          870
+        ],
+        "total": 2459,
+        "won": 3,
+        "opponentTeamName": "Team Won"
+      },
+      "3": {
+        "games": [
+          746,
+          698,
+          772
+        ],
+        "total": 2216,
+        "won": 3,
+        "opponentTeamName": "Team 4"
+      },
+      "4": {
+        "games": [
+          646,
+          719,
+          620
+        ],
+        "total": 1985,
+        "won": 1,
+        "opponentTeamName": "Team 3"
+      },
+      "6": {
+        "games": [
+          819,
+          906,
+          889
+        ],
+        "total": 2614,
+        "won": 4,
+        "opponentTeamName": "Team 5"
+      },
+      "7": {
+        "games": [
+          864,
+          759,
+          828
+        ],
+        "total": 2451,
+        "won": 3,
+        "opponentTeamName": "Team 8"
+      },
+      "8": {
+        "games": [
+          792,
+          788,
+          821
+        ],
+        "total": 2401,
+        "won": 1,
+        "opponentTeamName": "Team 7"
+      },
+      "9": {
+        "games": [
+          756,
+          837,
+          798
+        ],
+        "total": 2391,
+        "won": 1,
+        "opponentTeamName": "Team 10"
+      },
+      "10": {
+        "games": [
+          862,
+          817,
+          817
+        ],
+        "total": 2496,
+        "won": 3,
+        "opponentTeamName": "Team 9"
+      },
+      "11": {
+        "games": [
+          852,
+          753,
+          798
+        ],
+        "total": 2403,
+        "won": 4,
+        "opponentTeamName": "Mostly Moser"
+      },
+      "13": {
+        "games": [
+          860,
+          796,
+          741
+        ],
+        "total": 2397,
+        "won": 3,
+        "opponentTeamName": "Team 14"
+      },
+      "14": {
+        "games": [
+          814,
+          822,
+          720
+        ],
+        "total": 2356,
+        "won": 1,
+        "opponentTeamName": "Team 13"
+      },
+      "15": {
+        "games": [
+          824,
+          844,
+          841
+        ],
+        "total": 2509,
+        "won": 3,
+        "opponentTeamName": "Team 16"
+      }
+    }
   },
   "bowlers": [
     {
@@ -595,27 +727,6 @@
       "didBowl": true,
       "scratchSeries": 572,
       "handicapSeries": 677
-    },
-    {
-      "bowlerId": 67,
-      "bowlerName": "Sara Costina",
-      "teamId": 7,
-      "teamName": "Team 7",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
     },
     {
       "bowlerId": 29,
@@ -1288,90 +1399,6 @@
       "didBowl": true,
       "scratchSeries": 377,
       "handicapSeries": 632
-    },
-    {
-      "bowlerId": 61,
-      "bowlerName": "Isaiah Hankins",
-      "teamId": 16,
-      "teamName": "Team 16",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
-    },
-    {
-      "bowlerId": 62,
-      "bowlerName": "Albert Crockenberg",
-      "teamId": 16,
-      "teamName": "Team 16",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
-    },
-    {
-      "bowlerId": 63,
-      "bowlerName": "Edwin Chacon",
-      "teamId": 16,
-      "teamName": "Team 16",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
-    },
-    {
-      "bowlerId": 64,
-      "bowlerName": "Andrew Gunkel",
-      "teamId": 16,
-      "teamName": "Team 16",
-      "enteringAverage": 150,
-      "handicap": 63,
-      "games": [
-        null,
-        null,
-        null
-      ],
-      "absent": [
-        true,
-        true,
-        true
-      ],
-      "didBowl": false,
-      "scratchSeries": 0,
-      "handicapSeries": 0
     }
   ]
 }
