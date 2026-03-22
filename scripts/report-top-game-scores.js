@@ -60,11 +60,155 @@ function resolveGender(bowler, genderMaps) {
   return null;
 }
 
-function toGameRows(weekJson, genderMaps) {
+function toNumberOrNull(v) {
+  if (v == null || v === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+function getWeekNumberFromWeekObject(week) {
+  return toNumberOrNull(
+    week?.weekNum ??
+      week?.WeekNum ??
+      week?.meta?.weekNum ??
+      week?.meta?.WeekNum
+  );
+}
+
+function getBowlerId(b) {
+  const id = toNumberOrNull(
+    b?.BowlerID ?? b?.bowlerId ?? b?.bowlerID ?? b?.id
+  );
+  return id;
+}
+
+function getBowlerName(b) {
+  return (
+    b?.BowlerName ??
+    b?.bowlerName ??
+    b?.name ??
+    ""
+  );
+}
+
+function getBowlerAverage(b) {
+  return toNumberOrNull(
+    b?.Average ??
+    b?.average ??
+    b?.EnteringAverage ??
+    b?.enteringAverage ??
+    b?.Avg ??
+    b?.avg
+  );
+}
+
+function getBowlerHandicap(b) {
+  return toNumberOrNull(
+    b?.HandicapAfterBowling ??
+    b?.handicapAfterBowling ??
+    b?.HDCP ??
+    b?.Hdcp ??
+    b?.handicap ??
+    b?.Handicap
+  );
+}
+
+function buildPreviousWeekLookup(dataJson) {
+  const byWeekNum = new Map();
+
+  if (!dataJson?.weeks) return byWeekNum;
+
+  for (const week of Object.values(dataJson.weeks)) {
+    const weekNum = getWeekNumberFromWeekObject(week);
+    if (!Number.isFinite(weekNum)) continue;
+
+    const byId = new Map();
+    const byName = new Map();
+
+    for (const b of week.bowlers || []) {
+      const bowlerId = getBowlerId(b);
+      const bowlerName = getBowlerName(b);
+      const average = getBowlerAverage(b);
+      const handicap = getBowlerHandicap(b);
+
+      const record = {
+        bowlerId,
+        bowlerName,
+        average,
+        handicap,
+      };
+
+      if (bowlerId != null) {
+        byId.set(bowlerId, record);
+      }
+
+      if (bowlerName) {
+        byName.set(normalizeName(bowlerName), record);
+      }
+    }
+
+    byWeekNum.set(weekNum, { byId, byName });
+  }
+
+  return byWeekNum;
+}
+
+function resolvePreviousWeekScoringBasis(bowler, previousWeekIndex, currentWeekNum) {
+  const prevWeekNum = Number(currentWeekNum) - 1;
+  if (!Number.isFinite(prevWeekNum) || prevWeekNum < 1) {
+    return {
+      scoringAverage: null,
+      scoringHandicap: Number(bowler.handicap || 0),
+      scoringSource: "current-week-fallback-no-prev-week",
+    };
+  }
+
+  const prevWeek = previousWeekIndex.get(prevWeekNum);
+  if (!prevWeek) {
+    return {
+      scoringAverage: null,
+      scoringHandicap: Number(bowler.handicap || 0),
+      scoringSource: `current-week-fallback-missing-week-${prevWeekNum}`,
+    };
+  }
+
+  const bowlerId = toNumberOrNull(bowler.bowlerId);
+  const bowlerName = normalizeName(bowler.bowlerName);
+
+  let prev = null;
+
+  if (bowlerId != null && prevWeek.byId.has(bowlerId)) {
+    prev = prevWeek.byId.get(bowlerId);
+  } else if (bowlerName && prevWeek.byName.has(bowlerName)) {
+    prev = prevWeek.byName.get(bowlerName);
+  }
+
+  if (prev && prev.handicap != null) {
+    return {
+      scoringAverage: prev.average,
+      scoringHandicap: prev.handicap,
+      scoringSource: `previous-week-${prevWeekNum}`,
+    };
+  }
+
+  return {
+    scoringAverage: null,
+    scoringHandicap: Number(bowler.handicap || 0),
+    scoringSource: `current-week-fallback-no-prev-bowler-match-week-${prevWeekNum}`,
+  };
+}
+
+function toGameRows(weekJson, genderMaps, previousWeekIndex) {
   const rows = [];
+  const currentWeekNum = toNumberOrNull(weekJson?.meta?.weekNum);
 
   for (const b of weekJson.bowlers || []) {
     const gender = resolveGender(b, genderMaps);
+    const scoringBasis = resolvePreviousWeekScoringBasis(
+      b,
+      previousWeekIndex,
+      currentWeekNum
+    );
 
     for (let i = 0; i < 3; i++) {
       const scratch = Array.isArray(b.games) ? b.games[i] : null;
@@ -80,8 +224,11 @@ function toGameRows(weekJson, genderMaps) {
         teamName: b.teamName,
         gender,
         handicap: Number(b.handicap || 0),
+        scoringAverage: scoringBasis.scoringAverage,
+        scoringHandicap: Number(scoringBasis.scoringHandicap || 0),
+        scoringSource: scoringBasis.scoringSource,
         scratch: Number(scratch),
-        handicapScore: Number(scratch) + Number(b.handicap || 0),
+        handicapScore: Number(scratch) + Number(scoringBasis.scoringHandicap || 0),
         absent,
         didBowl: !!b.didBowl,
       });
@@ -113,10 +260,16 @@ function printSection(title, rows, scoreKey) {
     const score =
       scoreKey === "scratch"
         ? `${r.scratch}`
-        : `${r.scratch}+${r.handicap}=${r.handicapScore}`;
+        : `${r.scratch}+${r.scoringHandicap}=${r.handicapScore}`;
+    const sourceLabel =
+      scoreKey === "scratch"
+        ? ""
+        : ` [hdcp source: ${r.scoringSource}${
+            r.scoringAverage != null ? `, avg=${r.scoringAverage}` : ""
+          }]`;
 
     console.log(
-      `  ${String(idx + 1).padStart(2, " ")}. ${r.bowlerName} (${genderLabel}) - ${score} - Team ${r.teamId} ${r.teamName}${absentLabel}`
+      `  ${String(idx + 1).padStart(2, " ")}. ${r.bowlerName} (${genderLabel}) - ${score} - Team ${r.teamId} ${r.teamName}${absentLabel}${sourceLabel}`
     );
   });
 }
@@ -138,8 +291,9 @@ function main() {
   const dataJsonPath = path.join(process.cwd(), "public", "data.json");
   const dataJson = fs.existsSync(dataJsonPath) ? loadJson(dataJsonPath) : null;
   const genderMaps = buildGenderMap(dataJson);
+  const previousWeekIndex = buildPreviousWeekLookup(dataJson);
 
-  const rows = toGameRows(weekJson, genderMaps);
+  const rows = toGameRows(weekJson, genderMaps, previousWeekIndex);
 
   console.log(
     `Week ${weekJson.meta?.weekNum} | ${weekJson.meta?.dateBowled} | ${path.basename(weekPath)}`
