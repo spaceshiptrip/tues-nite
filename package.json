@@ -7,17 +7,26 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+
     "sync": "node sync.js",
+
+    "recap:parse": "node scripts/parse-recap-pdf.js",
     "validate:week": "node scripts/validate-weekly-history.js",
     "merge": "node scripts/merge-bowler-history.js",
     "validate:history": "node scripts/validate-bowler-history.js",
+
     "report": "node scripts/report-bowler-history.js",
+    "report:tops": "node scripts/report-top-game-scores.js",
+
     "week": "npm run sync && npm run validate:week --",
     "week:merge": "npm run merge -- && npm run validate:history",
     "week:full": "npm run sync && npm run validate:week -- && npm run merge -- && npm run validate:history",
+
+    "week:from-recap": "npm run recap:parse -- && npm run validate:week --",
+    "week:rebuild": "npm run recap:parse -- && npm run validate:week -- && npm run merge -- && npm run validate:history",
+
     "week:auto": "node scripts/week-auto.js",
-    "week:diff": "node scripts/diff-week.js",
-    "report:tops": "node scripts/report-top-game-scores.js"
+    "week:diff": "node scripts/diff-week.js"
   },
   "dependencies": {
     "pdf-parse": "^2.4.5",
