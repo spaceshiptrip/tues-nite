@@ -16,7 +16,8 @@
     "week:merge": "npm run merge -- && npm run validate:history",
     "week:full": "npm run sync && npm run validate:week -- && npm run merge -- && npm run validate:history",
     "week:auto": "node scripts/week-auto.js",
-    "week:diff": "node scripts/diff-week.js"
+    "week:diff": "node scripts/diff-week.js",
+    "report:tops": "node scripts/report-top-game-scores.js"
   },
   "dependencies": {
     "pdf-parse": "^2.4.5",
