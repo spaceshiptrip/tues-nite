@@ -4,7 +4,7 @@
     "leagueName": "Tuesday Nite League",
     "season": "Spring 2026",
     "lastMergedWeek": 7,
-    "lastUpdated": "2026-03-21"
+    "lastUpdated": "2026-03-22"
   },
   "bowlers": {
     "1": {
@@ -140,6 +140,33 @@
           "didBowl": true,
           "scratchSeries": 451,
           "handicapSeries": 679,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 1,
+          "teamName": "Team Won",
+          "enteringAverage": 139,
+          "handicap": 72,
+          "games": [
+            148,
+            153,
+            133
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 434,
+          "handicapSeries": 653,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -315,6 +342,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 1,
+          "teamName": "Team Won",
+          "enteringAverage": 121,
+          "handicap": 89,
+          "games": [
+            107,
+            100,
+            114
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 321,
+          "handicapSeries": 579,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -476,6 +530,33 @@
           "didBowl": false,
           "scratchSeries": 360,
           "handicapSeries": 603,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 1,
+          "teamName": "Team Won",
+          "enteringAverage": 129,
+          "handicap": 81,
+          "games": [
+            124,
+            81,
+            178
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 383,
+          "handicapSeries": 626,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -651,6 +732,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 1,
+          "teamName": "Team Won",
+          "enteringAverage": 167,
+          "handicap": 47,
+          "games": [
+            158,
+            134,
+            138
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 430,
+          "handicapSeries": 559,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -819,6 +927,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 2,
+          "teamName": "Team 2",
+          "enteringAverage": 121,
+          "handicap": 89,
+          "games": [
+            135,
+            158,
+            95
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 388,
+          "handicapSeries": 658,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -979,6 +1114,33 @@
           ],
           "didBowl": true,
           "scratchSeries": 422,
+          "handicapSeries": 677,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 2,
+          "teamName": "Team 2",
+          "enteringAverage": 131,
+          "handicap": 80,
+          "games": [
+            116,
+            159,
+            156
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 431,
           "handicapSeries": 677,
           "isSubstitute": false,
           "substituteForBowlerId": null,
@@ -1155,6 +1317,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 2,
+          "teamName": "Team 2",
+          "enteringAverage": 133,
+          "handicap": 78,
+          "games": [
+            132,
+            138,
+            113
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 383,
+          "handicapSeries": 614,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -1316,6 +1505,33 @@
           "didBowl": true,
           "scratchSeries": 457,
           "handicapSeries": 637,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 2,
+          "teamName": "Team 2",
+          "enteringAverage": 153,
+          "handicap": 60,
+          "games": [
+            138,
+            187,
+            145
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 470,
+          "handicapSeries": 650,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -1551,6 +1767,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 3,
+          "teamName": "Team 3",
+          "enteringAverage": 129,
+          "handicap": 81,
+          "games": [
+            117,
+            138,
+            157
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 412,
+          "handicapSeries": 658,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -1712,6 +1955,33 @@
           "didBowl": true,
           "scratchSeries": 461,
           "handicapSeries": 614,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 3,
+          "teamName": "Team 3",
+          "enteringAverage": 160,
+          "handicap": 54,
+          "games": [
+            141,
+            173,
+            167
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 481,
+          "handicapSeries": 643,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -1887,6 +2157,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 3,
+          "teamName": "Team 3",
+          "enteringAverage": 168,
+          "handicap": 46,
+          "games": [
+            174,
+            176,
+            197
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 547,
+          "handicapSeries": 694,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -2048,6 +2345,33 @@
           "didBowl": false,
           "scratchSeries": 366,
           "handicapSeries": 603,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 4,
+          "teamName": "Social Butterflies",
+          "enteringAverage": 131,
+          "handicap": 80,
+          "games": [
+            118,
+            113,
+            148
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 379,
+          "handicapSeries": 616,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -2223,6 +2547,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 4,
+          "teamName": "Social Butterflies",
+          "enteringAverage": 113,
+          "handicap": 96,
+          "games": [
+            137,
+            132,
+            113
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 382,
+          "handicapSeries": 679,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -2384,6 +2735,33 @@
           "didBowl": true,
           "scratchSeries": 348,
           "handicapSeries": 627,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 4,
+          "teamName": "Social Butterflies",
+          "enteringAverage": 118,
+          "handicap": 91,
+          "games": [
+            115,
+            136,
+            131
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 382,
+          "handicapSeries": 661,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -2559,6 +2937,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 4,
+          "teamName": "Social Butterflies",
+          "enteringAverage": 146,
+          "handicap": 66,
+          "games": [
+            133,
+            179,
+            151
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 463,
+          "handicapSeries": 670,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -2720,6 +3125,33 @@
           "didBowl": true,
           "scratchSeries": 423,
           "handicapSeries": 639,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 5,
+          "teamName": "Team 5",
+          "enteringAverage": 140,
+          "handicap": 72,
+          "games": [
+            132,
+            152,
+            155
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 439,
+          "handicapSeries": 655,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -2895,6 +3327,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 5,
+          "teamName": "Team 5",
+          "enteringAverage": 145,
+          "handicap": 67,
+          "games": [
+            128,
+            144,
+            157
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 429,
+          "handicapSeries": 627,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -3056,6 +3515,33 @@
           "didBowl": false,
           "scratchSeries": 0,
           "handicapSeries": 0,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 5,
+          "teamName": "Team 5",
+          "enteringAverage": 133,
+          "handicap": 78,
+          "games": [
+            164,
+            236,
+            142
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 542,
+          "handicapSeries": 812,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -3231,6 +3717,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 5,
+          "teamName": "Team 5",
+          "enteringAverage": 144,
+          "handicap": 68,
+          "games": [
+            134,
+            185,
+            172
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 491,
+          "handicapSeries": 707,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -3392,6 +3905,33 @@
           "didBowl": true,
           "scratchSeries": 630,
           "handicapSeries": 723,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 6,
+          "teamName": "Team 6",
+          "enteringAverage": 191,
+          "handicap": 26,
+          "games": [
+            191,
+            173,
+            225
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 589,
+          "handicapSeries": 670,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -3567,6 +4107,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 6,
+          "teamName": "Team 6",
+          "enteringAverage": 153,
+          "handicap": 60,
+          "games": [
+            161,
+            146,
+            188
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 495,
+          "handicapSeries": 681,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -3728,6 +4295,33 @@
           "didBowl": true,
           "scratchSeries": 540,
           "handicapSeries": 615,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 6,
+          "teamName": "Team 6",
+          "enteringAverage": 187,
+          "handicap": 29,
+          "games": [
+            174,
+            147,
+            201
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 522,
+          "handicapSeries": 603,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -3903,6 +4497,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 6,
+          "teamName": "Team 6",
+          "enteringAverage": 178,
+          "handicap": 37,
+          "games": [
+            155,
+            175,
+            165
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 495,
+          "handicapSeries": 603,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -4064,6 +4685,33 @@
           "didBowl": false,
           "scratchSeries": 0,
           "handicapSeries": 0,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 7,
+          "teamName": "Team 7",
+          "enteringAverage": 153,
+          "handicap": 60,
+          "games": [
+            169,
+            152,
+            210
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 531,
+          "handicapSeries": 732,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -4239,6 +4887,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 7,
+          "teamName": "Team 7",
+          "enteringAverage": 102,
+          "handicap": 106,
+          "games": [
+            79,
+            85,
+            113
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 277,
+          "handicapSeries": 589,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -4400,6 +5075,33 @@
           "didBowl": true,
           "scratchSeries": 610,
           "handicapSeries": 775,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 8,
+          "teamName": "Fill Donahue",
+          "enteringAverage": 170,
+          "handicap": 45,
+          "games": [
+            192,
+            199,
+            171
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 562,
+          "handicapSeries": 703,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -4575,6 +5277,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 8,
+          "teamName": "Fill Donahue",
+          "enteringAverage": 112,
+          "handicap": 97,
+          "games": [
+            124,
+            134,
+            100
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 358,
+          "handicapSeries": 655,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -4736,6 +5465,33 @@
           "didBowl": true,
           "scratchSeries": 418,
           "handicapSeries": 574,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 8,
+          "teamName": "Fill Donahue",
+          "enteringAverage": 158,
+          "handicap": 55,
+          "games": [
+            null,
+            null,
+            null
+          ],
+          "absent": [
+            true,
+            true,
+            true
+          ],
+          "didBowl": false,
+          "scratchSeries": 0,
+          "handicapSeries": 0,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -4911,6 +5667,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 9,
+          "teamName": "Team 9",
+          "enteringAverage": 153,
+          "handicap": 60,
+          "games": [
+            159,
+            145,
+            163
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 467,
+          "handicapSeries": 647,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -5072,6 +5855,33 @@
           "didBowl": true,
           "scratchSeries": 572,
           "handicapSeries": 656,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 9,
+          "teamName": "Team 9",
+          "enteringAverage": 189,
+          "handicap": 27,
+          "games": [
+            null,
+            null,
+            null
+          ],
+          "absent": [
+            true,
+            true,
+            true
+          ],
+          "didBowl": false,
+          "scratchSeries": 0,
+          "handicapSeries": 0,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -5247,6 +6057,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 9,
+          "teamName": "Team 9",
+          "enteringAverage": 189,
+          "handicap": 27,
+          "games": [
+            200,
+            181,
+            218
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 599,
+          "handicapSeries": 686,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -5415,6 +6252,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 9,
+          "teamName": "Team 9",
+          "enteringAverage": 172,
+          "handicap": 43,
+          "games": [
+            198,
+            176,
+            143
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 517,
+          "handicapSeries": 646,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -5575,6 +6439,33 @@
           ],
           "didBowl": true,
           "scratchSeries": 561,
+          "handicapSeries": 666,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 10,
+          "teamName": "Chips Gutter Crew",
+          "enteringAverage": 183,
+          "handicap": 33,
+          "games": [
+            244,
+            179,
+            141
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 564,
           "handicapSeries": 666,
           "isSubstitute": false,
           "substituteForBowlerId": null,
@@ -5751,6 +6642,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 10,
+          "teamName": "Chips Gutter Crew",
+          "enteringAverage": 146,
+          "handicap": 66,
+          "games": [
+            136,
+            136,
+            136
+          ],
+          "absent": [
+            true,
+            true,
+            true
+          ],
+          "didBowl": false,
+          "scratchSeries": 408,
+          "handicapSeries": 606,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -5912,6 +6830,33 @@
           "didBowl": true,
           "scratchSeries": 514,
           "handicapSeries": 685,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 10,
+          "teamName": "Chips Gutter Crew",
+          "enteringAverage": 161,
+          "handicap": 53,
+          "games": [
+            196,
+            152,
+            164
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 512,
+          "handicapSeries": 674,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -6087,6 +7032,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 10,
+          "teamName": "Chips Gutter Crew",
+          "enteringAverage": 182,
+          "handicap": 34,
+          "games": [
+            195,
+            155,
+            187
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 537,
+          "handicapSeries": 639,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -6255,6 +7227,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 11,
+          "teamName": "Lumber Liquidators",
+          "enteringAverage": 177,
+          "handicap": 38,
+          "games": [
+            155,
+            172,
+            201
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 528,
+          "handicapSeries": 639,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -6398,6 +7397,33 @@
         {
           "weekNum": 5,
           "dateBowled": "2026-03-03",
+          "source": "recap-pdf",
+          "teamId": 11,
+          "teamName": "Lumber Liquidators",
+          "enteringAverage": 121,
+          "handicap": 89,
+          "games": [
+            null,
+            null,
+            null
+          ],
+          "absent": [
+            true,
+            true,
+            true
+          ],
+          "didBowl": false,
+          "scratchSeries": 0,
+          "handicapSeries": 0,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
           "source": "recap-pdf",
           "teamId": 11,
           "teamName": "Lumber Liquidators",
@@ -6591,6 +7617,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 11,
+          "teamName": "Lumber Liquidators",
+          "enteringAverage": 163,
+          "handicap": 51,
+          "games": [
+            165,
+            198,
+            142
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 505,
+          "handicapSeries": 661,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -6752,6 +7805,33 @@
           "didBowl": true,
           "scratchSeries": 635,
           "handicapSeries": 740,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 11,
+          "teamName": "Lumber Liquidators",
+          "enteringAverage": 190,
+          "handicap": 27,
+          "games": [
+            209,
+            217,
+            190
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 616,
+          "handicapSeries": 703,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -6927,6 +8007,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 12,
+          "teamName": "Mostly Moser",
+          "enteringAverage": 190,
+          "handicap": 27,
+          "games": [
+            177,
+            147,
+            184
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 508,
+          "handicapSeries": 574,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -7088,6 +8195,33 @@
           "didBowl": true,
           "scratchSeries": 320,
           "handicapSeries": 536,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 12,
+          "teamName": "Mostly Moser",
+          "enteringAverage": 132,
+          "handicap": 79,
+          "games": [
+            177,
+            107,
+            102
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 386,
+          "handicapSeries": 620,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -7263,6 +8397,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 12,
+          "teamName": "Mostly Moser",
+          "enteringAverage": 167,
+          "handicap": 47,
+          "games": [
+            165,
+            168,
+            139
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 472,
+          "handicapSeries": 607,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -7424,6 +8585,33 @@
           "didBowl": true,
           "scratchSeries": 512,
           "handicapSeries": 680,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 12,
+          "teamName": "Mostly Moser",
+          "enteringAverage": 166,
+          "handicap": 48,
+          "games": [
+            203,
+            194,
+            203
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 600,
+          "handicapSeries": 762,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -7599,6 +8787,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 13,
+          "teamName": "Team 13",
+          "enteringAverage": 168,
+          "handicap": 46,
+          "games": [
+            176,
+            193,
+            222
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 591,
+          "handicapSeries": 747,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -7760,6 +8975,33 @@
           "didBowl": true,
           "scratchSeries": 408,
           "handicapSeries": 633,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 13,
+          "teamName": "Team 13",
+          "enteringAverage": 138,
+          "handicap": 73,
+          "games": [
+            170,
+            143,
+            133
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 446,
+          "handicapSeries": 671,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -7935,6 +9177,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 13,
+          "teamName": "Team 13",
+          "enteringAverage": 179,
+          "handicap": 36,
+          "games": [
+            159,
+            157,
+            244
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 560,
+          "handicapSeries": 674,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -8096,6 +9365,33 @@
           "didBowl": true,
           "scratchSeries": 545,
           "handicapSeries": 611,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 13,
+          "teamName": "Team 13",
+          "enteringAverage": 190,
+          "handicap": 27,
+          "games": [
+            181,
+            164,
+            184
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 529,
+          "handicapSeries": 604,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -8271,6 +9567,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 14,
+          "teamName": "Team 14",
+          "enteringAverage": 185,
+          "handicap": 31,
+          "games": [
+            244,
+            186,
+            163
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 593,
+          "handicapSeries": 692,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -8432,6 +9755,33 @@
           "didBowl": true,
           "scratchSeries": 436,
           "handicapSeries": 589,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 14,
+          "teamName": "Team 14",
+          "enteringAverage": 156,
+          "handicap": 57,
+          "games": [
+            148,
+            152,
+            130
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 430,
+          "handicapSeries": 592,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -8607,6 +9957,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 14,
+          "teamName": "Team 14",
+          "enteringAverage": 128,
+          "handicap": 82,
+          "games": [
+            143,
+            153,
+            103
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 399,
+          "handicapSeries": 645,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -8768,6 +10145,33 @@
           "didBowl": false,
           "scratchSeries": 478,
           "handicapSeries": 691,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 14,
+          "teamName": "Team 14",
+          "enteringAverage": 143,
+          "handicap": 69,
+          "games": [
+            119,
+            143,
+            128
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 390,
+          "handicapSeries": 591,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -8943,6 +10347,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 15,
+          "teamName": "Team 15",
+          "enteringAverage": 125,
+          "handicap": 85,
+          "games": [
+            118,
+            124,
+            154
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 396,
+          "handicapSeries": 657,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -9104,6 +10535,33 @@
           "didBowl": true,
           "scratchSeries": 366,
           "handicapSeries": 678,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 15,
+          "teamName": "Team 15",
+          "enteringAverage": 109,
+          "handicap": 99,
+          "games": [
+            114,
+            117,
+            109
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 340,
+          "handicapSeries": 640,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -9279,6 +10737,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 15,
+          "teamName": "Team 15",
+          "enteringAverage": 113,
+          "handicap": 96,
+          "games": [
+            143,
+            106,
+            130
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 379,
+          "handicapSeries": 676,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -9395,6 +10880,33 @@
         {
           "weekNum": 5,
           "dateBowled": "2026-03-03",
+          "source": "recap-pdf",
+          "teamId": 15,
+          "teamName": "Team 15",
+          "enteringAverage": 103,
+          "handicap": 105,
+          "games": [
+            null,
+            null,
+            null
+          ],
+          "absent": [
+            true,
+            true,
+            true
+          ],
+          "didBowl": false,
+          "scratchSeries": 0,
+          "handicapSeries": 0,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
           "source": "recap-pdf",
           "teamId": 15,
           "teamName": "Team 15",
@@ -9554,6 +11066,33 @@
           "didBowl": true,
           "scratchSeries": 480,
           "handicapSeries": 723,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 16,
+          "teamName": "F-ING 10 PIN",
+          "enteringAverage": 138,
+          "handicap": 73,
+          "games": [
+            121,
+            138,
+            137
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 396,
+          "handicapSeries": 612,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -9729,6 +11268,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 16,
+          "teamName": "F-ING 10 PIN",
+          "enteringAverage": 114,
+          "handicap": 95,
+          "games": [
+            99,
+            117,
+            103
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 319,
+          "handicapSeries": 595,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -9890,6 +11456,33 @@
           "didBowl": true,
           "scratchSeries": 456,
           "handicapSeries": 531,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 16,
+          "teamName": "F-ING 10 PIN",
+          "enteringAverage": 172,
+          "handicap": 43,
+          "games": [
+            162,
+            162,
+            162
+          ],
+          "absent": [
+            true,
+            true,
+            true
+          ],
+          "didBowl": false,
+          "scratchSeries": 486,
+          "handicapSeries": 615,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -10065,6 +11658,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 16,
+          "teamName": "F-ING 10 PIN",
+          "enteringAverage": 163,
+          "handicap": 51,
+          "games": [
+            190,
+            153,
+            148
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 491,
+          "handicapSeries": 647,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -10226,6 +11846,33 @@
           "didBowl": true,
           "scratchSeries": 321,
           "handicapSeries": 639,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 7,
+          "teamName": "Team 7",
+          "enteringAverage": 106,
+          "handicap": 102,
+          "games": [
+            137,
+            93,
+            120
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 350,
+          "handicapSeries": 665,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -10401,6 +12048,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 7,
+          "teamName": "Team 7",
+          "enteringAverage": 166,
+          "handicap": 48,
+          "games": [
+            137,
+            161,
+            121
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 419,
+          "handicapSeries": 551,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -10566,6 +12240,33 @@
           "substituteForBowlerId": 27,
           "substituteForBowlerName": "Johny Cruz",
           "assignmentMethod": "inferred-from-team-block-five",
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 7,
+          "teamName": "Team 7",
+          "enteringAverage": 70,
+          "handicap": 135,
+          "games": [
+            null,
+            null,
+            null
+          ],
+          "absent": [
+            true,
+            true,
+            true
+          ],
+          "didBowl": false,
+          "scratchSeries": 0,
+          "handicapSeries": 0,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
           "sourceSection": null
         },
         {
@@ -10737,6 +12438,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 8,
+          "teamName": "Fill Donahue",
+          "enteringAverage": 149,
+          "handicap": 63,
+          "games": [
+            145,
+            157,
+            197
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 499,
+          "handicapSeries": 706,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -10871,6 +12599,33 @@
           "didBowl": true,
           "scratchSeries": 515,
           "handicapSeries": 623,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 3,
+          "teamName": "Team 3",
+          "enteringAverage": 176,
+          "handicap": 39,
+          "games": [
+            160,
+            150,
+            195
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 505,
+          "handicapSeries": 619,
           "isSubstitute": false,
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
@@ -11019,6 +12774,33 @@
           "sourceSection": null
         },
         {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 11,
+          "teamName": "Lumber Liquidators",
+          "enteringAverage": 162,
+          "handicap": 52,
+          "games": [
+            167,
+            170,
+            192
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 529,
+          "handicapSeries": 691,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
           "weekNum": 7,
           "dateBowled": "2026-03-17",
           "source": "recap-pdf",
@@ -11108,6 +12890,33 @@
         {
           "weekNum": 5,
           "dateBowled": "2026-03-03",
+          "source": "recap-pdf",
+          "teamId": 4,
+          "teamName": "Social Butterflies",
+          "enteringAverage": 185,
+          "handicap": 31,
+          "games": [
+            null,
+            null,
+            null
+          ],
+          "absent": [
+            true,
+            true,
+            true
+          ],
+          "didBowl": false,
+          "scratchSeries": 0,
+          "handicapSeries": 0,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
           "source": "recap-pdf",
           "teamId": 4,
           "teamName": "Social Butterflies",
@@ -11277,6 +13086,33 @@
           "substituteForBowlerId": null,
           "substituteForBowlerName": null,
           "assignmentMethod": "roster-carryover",
+          "sourceSection": null
+        },
+        {
+          "weekNum": 6,
+          "dateBowled": "2026-03-10",
+          "source": "recap-pdf",
+          "teamId": 9,
+          "teamName": "Team 9",
+          "enteringAverage": 210,
+          "handicap": 9,
+          "games": [
+            158,
+            278,
+            207
+          ],
+          "absent": [
+            false,
+            false,
+            false
+          ],
+          "didBowl": true,
+          "scratchSeries": 643,
+          "handicapSeries": 643,
+          "isSubstitute": false,
+          "substituteForBowlerId": null,
+          "substituteForBowlerName": null,
+          "assignmentMethod": null,
           "sourceSection": null
         },
         {
